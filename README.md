@@ -6,7 +6,10 @@ The tester package includes a random number generator server (running on port 12
 The Head Simulator is a Java desktop application where a head follows the mouse cursor. The head position is streamed to port 8888 and can be received by a client application. 
 The tester package includes a client that receives the head position and displays it on the console.
 
-# Simulator 3
+# Affect Simulator
+The Affect Simulator is a Java desktop application that simulates the affective state of a user. 
+The user can select the affective state from a group of sliders. 
+The selected affective states are to be streamed to port 7777 and can be received by a client application.
 
 # Simulator 4
 
