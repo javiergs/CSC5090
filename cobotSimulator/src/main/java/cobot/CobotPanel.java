@@ -1,4 +1,4 @@
-package javiergs.cobot;
+package cobot;
 
 import javax.swing.*;
 import java.awt.*;

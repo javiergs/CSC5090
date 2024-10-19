@@ -1,4 +1,4 @@
-package javiergs.cobot;
+package cobot;
 
 import java.awt.*;
 import java.beans.PropertyChangeSupport;

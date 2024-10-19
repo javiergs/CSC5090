@@ -1,4 +1,4 @@
-package javiergs.tester;
+package cobotTester;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,12 +12,12 @@ import java.net.Socket;
  * @author Javier Gonzalez-Sanchez
  * @version 1.0
  */
-public class ServerHandler implements Runnable {
+public class PublisherHandler implements Runnable {
 	
 	private static final Logger logger = LoggerFactory.getLogger(Publisher.class);
 	private Socket socket;
 	
-	public ServerHandler(Socket socket) {
+	public PublisherHandler(Socket socket) {
 		this.socket = socket;
 	}
 	

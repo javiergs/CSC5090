@@ -1,4 +1,4 @@
-package javiergs.tester;
+package cobotTester;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
  *
  * @version 1.0
  */
-public class MainTester {
+public class Main {
 
-	private static final Logger logger = LoggerFactory.getLogger(MainTester.class);
+	private static final Logger logger = LoggerFactory.getLogger(Main.class);
 	
 	public static void main(String[] args) {
 		Publisher server = new Publisher(12345);

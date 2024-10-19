@@ -1,4 +1,4 @@
-package javiergs.tester;
+package cobotTester;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -34,8 +34,8 @@ public class Publisher implements Runnable {
 			logger.info("Server started");
 			while (running) {
 				Socket socket = serverSocket.accept();
-				ServerHandler serverHandler = new ServerHandler(socket);
-				new Thread(serverHandler).start();
+				PublisherHandler publisherHandler = new PublisherHandler(socket);
+				new Thread(publisherHandler).start();
 			}
 			logger.info("Server stopped");
 		} catch (IOException e) {
