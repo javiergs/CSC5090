@@ -1,4 +1,4 @@
-package cobotTester;
+package tester;
 
 import java.io.IOException;
 import java.net.ServerSocket;

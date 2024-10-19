@@ -5,9 +5,8 @@ import java.awt.*;
 
 /**
  * Main class to start the application.
- * This class is responsible for starting the server, setting up the GUI, and handling user input.
+ * This class is responsible for starting a subscriber and setting up a GUI
  * The GUI consists of a work area where the robot arms are drawn, and a menu bar
- * with options to start the client, toggle modes, and exit the application.
  *
  * @author Jack Ortega,
  * @author Neeraja Beesetti,
