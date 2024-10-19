@@ -1,12 +1,10 @@
 # Cobot Simulator
-A Java Desktop Application that receives six numbers via TCP connection and display them as the angles of a 
-six joints robotic arm. 
-The tester package is a random numbers generator server that can be used to test the Cobot Simulator.
+A Java desktop application that receives six numbers via a TCP connection and displays them as the angles of a six-joint robotic arm. 
+The tester package includes a random number generator server for testing the Cobot Simulator.
 
 # Head Simulator
-The Head Simulator is a Java Desktop Application that is a head following the mouse cursor. The head position is streamed 
-to port 8888 and can be received by a client application.
-The tester package is a client that receives the head position and displays it on console.
+The Head Simulator is a Java desktop application where a head follows the mouse cursor. The head position is streamed to port 8888 and can be received by a client application. 
+The tester package includes a client that receives the head position and displays it on the console.
 
 # Simulator 3
 
