@@ -16,6 +16,7 @@
         <module>affectTracker</module>
         <module>eyeSimulator</module>
         <module>headSimulatorTwo</module>
+        <module>library</module>
     </modules>
 
     <properties>
