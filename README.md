@@ -27,5 +27,31 @@ The Affect and Eye Tracker Dashboard is a Java desktop application that receives
 The dashboard displays the affective states and eye gaze of the user in real-time as circles in different colors.
 
 
+<br>
+
+# To-Do List
+
+- [ ] **Implement Publisher**  
+   - Ensure the publisher class works across all components.
+
+- [ ] **Implement Subscriber**  
+   - Ensure the subscriber class works across all components.
+
+- [ ] **Create a Family of Blackboards (Singleton Pattern)**  
+   - Implement a set of blackboards following the singleton pattern for shared communication.
+
+- [ ] **Implement Standard Robot with Animation**  
+   - Design a standard robot class and provide an example implementation for its animation functionality.
+
+- [ ] **Panels Observing the Blackboard**  
+   - Ensure all panels observe the blackboard, displaying a default drawing and updating whenever an event is fired.
+
+- [ ] **Add Menus to Applications**  
+   - Include a menu in all applications with options to start/stop sending or receiving data.
+
+- [ ] **Code Review**  
+   - Ensure all classes adhere to the Single Responsibility Principle (SRP).
+   - Review and justify the use of any global variables.
+   - Verify the accuracy of the class diagrams and collect them for documentation.
 
 
