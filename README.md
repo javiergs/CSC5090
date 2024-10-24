@@ -31,27 +31,27 @@ The dashboard displays the affective states and eye gaze of the user in real-tim
 
 # To-Do List
 
-- [ ] **Implement Publisher**  
+- [ ] :one: **Implement a Common Publisher**  
    - Ensure the publisher class works across all components.
 
-- [ ] **Implement Subscriber**  
+- [ ] :two: **Implement a Common Subscriber**  
    - Ensure the subscriber class works across all components.
 
-- [ ] **Create a Family of Blackboards (Singleton Pattern)**  
+- [ ] :three: **Create a Blackboard with Delegates**  
    - Implement a set of blackboards following the singleton pattern for shared communication.
 
-- [ ] **Implement Standard Robot with Animation**  
+- [ ] :four: **Implement Standard Robot with Animation**  
    - Design a standard robot class and provide an example implementation for its animation functionality.
 
-- [ ] **Panels Observing the Blackboard**  
+- [ ] :five: **Panels Observing the Blackboard**  
    - Ensure all panels observe the blackboard, displaying a default drawing and updating whenever an event is fired.
 
-- [ ] **Add Menus to Applications**  
-   - Include a menu in all applications with options to start/stop sending or receiving data.
+- [ ] :six: **Add Menus to Applications**  
+   - Include a menu in all applications with options to start/stop sending or receiving data, i.e., all Main are "similar"
 
-- [ ] **Code Review**  
-   - Ensure all classes adhere to the Single Responsibility Principle (SRP).
-   - Review and justify the use of any global variables.
-   - Verify the accuracy of the class diagrams and collect them for documentation.
+- [ ] :seven: **Code Review**  
+   - Ensure all classes adhere to the Single Responsibility Principle (SRP). Make recomendations
+   - Review and justify the use of any global variables. Make recomendations
+   - Verify the accuracy of the class diagrams and collect them for documentation. Make recomendations
 
 
