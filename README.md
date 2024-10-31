@@ -63,5 +63,5 @@ The dashboard displays the affective states and eye gaze of the user in real-tim
    - Create a publisher class that stream data to an MQTT Broker (Use PAHO library and Mosquitto Broker)
    - Create a subscriber class that stream data to an MQTT Broker (Use PAHO library and Mosquitto Broker)
 
-- [ ] :ten: **Pull Request**
+- [ ] :one::zero: **Pull Request**
    - Pull request to update your code. Only your Module or the Library!  
