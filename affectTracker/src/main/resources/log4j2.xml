@@ -1,0 +1,22 @@
+<configuration>
+   <import class="ch.qos.logback.classic.encoder.PatternLayoutEncoder" />
+   <import class="ch.qos.logback.core.ConsoleAppender" />
+
+   <appender name="CONSOLE_TXT" class="ConsoleAppender">
+      <encoder class="PatternLayoutEncoder">
+         <pattern>%d{HH:mm:ss:SSS} {%thread} %-5level %logger{36} - %msg%n</pattern>
+      </encoder>
+   </appender>
+
+   <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+      <file>logs/Logback.log</file>
+      <encoder>
+         <pattern>%d{HH:mm:ss:SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      </encoder>
+   </appender>
+
+   <root level="ALL">
+      <appender-ref ref="CONSOLE_TXT" />
+      <appender-ref ref="FILE" />
+   </root>
+</configuration>
