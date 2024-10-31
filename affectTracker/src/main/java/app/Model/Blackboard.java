@@ -148,6 +148,10 @@ public class Blackboard extends PropertyChangeSupport {
 		this.thresholdRadius = thresholdRadius;
 	}
 
+	public int getCircleRadius() {
+		return circleRadius;
+	}
+
 	public void reportEyeThreadError(String ex_message) {
 		firePropertyChange(PROPERTY_NAME_EYETHREAD_ERROR, null, ex_message);
 	}
