@@ -1,13 +1,19 @@
 package app.Model;
 
-import app.Data.Circle;
-import app.Data.ProcessedDataObject;
-
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Deque;
 import java.util.Queue;
-import java.util.concurrent.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import app.Data.Circle;
+import app.Data.ProcessedDataObject;
 
 
 /**
@@ -29,16 +35,16 @@ public class Blackboard extends PropertyChangeSupport {
 	private final BlockingQueue<String> eyeTrackingQueue;
 	private String emotionSocket_Host = "localhost"; // default for testing
 	private int emotionSocket_Port = 6000; // default for testing
+   
 	private final BlockingQueue<String> emotionQueue;
 	private final Queue<ProcessedDataObject> processedDataQueue;
 	public static final String PROPERTY_NAME_PROCESSED_DATA = "processed data";
 
 	public static final String PROPERTY_NAME_VIEW_DATA = "view data";
+   private final Logger logger;
 	private Deque<Circle> circleList;
 	private int maxCircles = 5;
 	private int thresholdRadius = 50;
-	private int circleRadius = 50;
-	public static final int paddingFromTop = 150; // height of the top panel
 	public static final String PROPERTY_NAME_EYETHREAD_ERROR = "eye tracking thread error";
 	public static final String PROPERTY_NAME_EMOTIONTHREAD_ERROR = "eye emotion thread error";
 	private static final int TIMEOUT_IN_MS = 500;
@@ -50,6 +56,7 @@ public class Blackboard extends PropertyChangeSupport {
 		emotionQueue = new LinkedBlockingQueue<>();
 		processedDataQueue = new ConcurrentLinkedQueue<>();
 		circleList = new ConcurrentLinkedDeque<>();
+      logger = LoggerFactory.getLogger(Blackboard.class);
 	}
 	
 	public static Blackboard getInstance() {
