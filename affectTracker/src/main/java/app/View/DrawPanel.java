@@ -27,7 +27,7 @@ public class DrawPanel extends JPanel implements PropertyChangeListener {
 	public DrawPanel() {
 		setBackground(Color.WHITE);
 		setBorder(new MatteBorder(3, 3, 3, 3, Color.BLACK));
-		Blackboard.getInstance().addChangeSupportListener(Blackboard.PROPERTY_NAME_VIEW_DATA, this);
+		Blackboard.getInstance().addPropertyChangeListener(Blackboard.PROPERTY_NAME_VIEW_DATA, this);
 	}
 	
 	@Override

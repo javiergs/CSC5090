@@ -23,9 +23,7 @@ import java.util.concurrent.*;
  * @author Sean Sponsler
  * @version 1.0
  */
-public class Blackboard
-	//Todo: add extends PropertyChangeSupport
-{
+public class Blackboard extends PropertyChangeSupport {
 	private String eyeTrackingSocket_Host = "localhost";  // default for testing
 	private int eyeTrackingSocket_Port = 6001;  // default for testing
 	private final BlockingQueue<String> eyeTrackingQueue;
@@ -34,10 +32,7 @@ public class Blackboard
 	private final BlockingQueue<String> emotionQueue;
 	private final Queue<ProcessedDataObject> processedDataQueue;
 	public static final String PROPERTY_NAME_PROCESSED_DATA = "processed data";
-	
-	// Todo: remove this variable
-	private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
-	
+
 	public static final String PROPERTY_NAME_VIEW_DATA = "view data";
 	private Deque<Circle> circleList;
 	private int maxCircles = 5;
@@ -50,7 +45,7 @@ public class Blackboard
 	private static final Blackboard INSTANCE = new Blackboard();
 	
 	private Blackboard() {
-    // Todo: super(new Object(0));
+		super(new Object());
 		eyeTrackingQueue = new LinkedBlockingQueue<>();
 		emotionQueue = new LinkedBlockingQueue<>();
 		processedDataQueue = new ConcurrentLinkedQueue<>();
@@ -79,7 +74,7 @@ public class Blackboard
 	
 	public void addToProcessedDataQueue(ProcessedDataObject data) {
 		processedDataQueue.add(data);
-		changeSupport.firePropertyChange(PROPERTY_NAME_PROCESSED_DATA, null, null);
+		firePropertyChange(PROPERTY_NAME_PROCESSED_DATA, null, null);
 	}
 	
 	public ProcessedDataObject getFromProcessedDataObjectQueue() {
@@ -92,7 +87,7 @@ public class Blackboard
 	
 	public void setCircleList(Deque<Circle> circleList) {
 		this.circleList = circleList;
-		changeSupport.firePropertyChange(PROPERTY_NAME_VIEW_DATA, null, null);
+		firePropertyChange(PROPERTY_NAME_VIEW_DATA, null, null);
 	}
 	
 	public String getFormattedConnectionSettings() {
@@ -136,12 +131,7 @@ public class Blackboard
 	public void setEmotionSocket_Port(int emotionSocket_Port) {
 		this.emotionSocket_Port = emotionSocket_Port;
 	}
-	
-	//Todo: This looks suspicious. Why is this method here?
-	public void addChangeSupportListener(String propertyName, PropertyChangeListener pcl) {
-		changeSupport.addPropertyChangeListener(propertyName, pcl);
-	}
-	
+
 	public int getMaxCircles() {
 		return maxCircles;
 	}
@@ -157,18 +147,13 @@ public class Blackboard
 	public void setThresholdRadius(int thresholdRadius) {
 		this.thresholdRadius = thresholdRadius;
 	}
-	
-	//Todo: This looks suspicious. Why is this method here?
-	public void removePropertyChangeListener(String propertyName, PropertyChangeListener pcl) {
-		changeSupport.removePropertyChangeListener(propertyName, pcl);
-	}
-	
+
 	public void reportEyeThreadError(String ex_message) {
-		changeSupport.firePropertyChange(PROPERTY_NAME_EYETHREAD_ERROR, null, ex_message);
+		firePropertyChange(PROPERTY_NAME_EYETHREAD_ERROR, null, ex_message);
 	}
 	
 	public void reportEmotionThreadError(String ex_message) {
-		changeSupport.firePropertyChange(PROPERTY_NAME_EMOTIONTHREAD_ERROR, null, ex_message);
+		firePropertyChange(PROPERTY_NAME_EMOTIONTHREAD_ERROR, null, ex_message);
 	}
 	
 }

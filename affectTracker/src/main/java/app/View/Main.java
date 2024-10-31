@@ -53,8 +53,8 @@ public class Main extends JFrame implements PropertyChangeListener {
 		ColorKeyPanel colorKeyPanel = new ColorKeyPanel();
 		colorKeyPanel.setPreferredSize(new Dimension(200, 1000));
 		add(colorKeyPanel, BorderLayout.EAST);
-		Blackboard.getInstance().addChangeSupportListener(Blackboard.PROPERTY_NAME_EYETHREAD_ERROR, this);
-		Blackboard.getInstance().addChangeSupportListener(Blackboard.PROPERTY_NAME_EMOTIONTHREAD_ERROR, this);
+		Blackboard.getInstance().addPropertyChangeListener(Blackboard.PROPERTY_NAME_EYETHREAD_ERROR, this);
+		Blackboard.getInstance().addPropertyChangeListener(Blackboard.PROPERTY_NAME_EMOTIONTHREAD_ERROR, this);
 	}
 	
 	public void connectClients() {

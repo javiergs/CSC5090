@@ -32,7 +32,7 @@ public class ViewDataProcessor extends CustomThread implements PropertyChangeLis
 		super();
 		super.setLog(Logger.getLogger(ViewDataProcessor.class.getName()));
 		super.setName(THREAD_NAME);
-		Blackboard.getInstance().addChangeSupportListener(
+		Blackboard.getInstance().addPropertyChangeListener(
 			Blackboard.PROPERTY_NAME_PROCESSED_DATA, this);
 	}
 	
