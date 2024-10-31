@@ -54,4 +54,14 @@ The dashboard displays the affective states and eye gaze of the user in real-tim
    - Review and justify the use of any global variables. Make recomendations
    - Verify the accuracy of the class diagrams and collect them for documentation. Make recomendations
 
+- [ ] :eight: **Use a Logger**
+   - Keep or include the SFL4J library.
+   - Mandatory for Exceptions
+   - Consider debuging or tracing messages as needed. It is not **perfume** use when needed
 
+- [ ] :nine: **Implement MQTT**
+   - Create a publisher class that stream data to an MQTT Broker (Use PAHO library and Mosquitto Broker)
+   - Create a subscriber class that stream data to an MQTT Broker (Use PAHO library and Mosquitto Broker)
+
+- [ ] :one::zero: **Pull Request**
+   - Pull request to update your code. Only your Module or the Library!  
