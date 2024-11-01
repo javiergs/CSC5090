@@ -45,6 +45,7 @@ public class Blackboard extends PropertyChangeSupport {
 	private Deque<Circle> circleList;
 	private int maxCircles = 5;
 	private int thresholdRadius = 50;
+	private int circleRadius = 50;
 	public static final String PROPERTY_NAME_EYETHREAD_ERROR = "eye tracking thread error";
 	public static final String PROPERTY_NAME_EMOTIONTHREAD_ERROR = "eye emotion thread error";
 	private static final int TIMEOUT_IN_MS = 500;
@@ -153,6 +154,10 @@ public class Blackboard extends PropertyChangeSupport {
 	
 	public void setThresholdRadius(int thresholdRadius) {
 		this.thresholdRadius = thresholdRadius;
+	}
+
+	public int getCircleRadius() {
+		return circleRadius;
 	}
 
 	public void reportEyeThreadError(String ex_message) {

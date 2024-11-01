@@ -22,10 +22,6 @@ import java.util.logging.Logger;
  * @version 1.0
  */
 public class ViewDataProcessor extends CustomThread implements PropertyChangeListener {
-	
-	private static final int MAX_CIRCLES = 5; // FIFO size limit
-	private static final int THRESHOLD_RADIUS = 50; // Radius threshold for consolidation
-	public static final int CIRCLE_RADIUS = 50;
 	private static final String THREAD_NAME = "ViewLogic";
 	
 	public ViewDataProcessor() {
@@ -53,7 +49,7 @@ public class ViewDataProcessor extends CustomThread implements PropertyChangeLis
 	private void handleProcessedData(ProcessedDataObject data) {
 		Deque<Circle> circleList = Blackboard.getInstance().getCircleList();
 		Color circleColor = data.prominentEmotion().getColor();
-		Circle newCircle = new Circle(data.xCoord(), data.yCoord(), circleColor, CIRCLE_RADIUS);
+		Circle newCircle = new Circle(data.xCoord(), data.yCoord(), circleColor, Blackboard.getInstance().getCircleRadius());
 		boolean consolidated = false;
 		for (Circle circle : circleList) {
 			if (isWithinThreshold(circle, newCircle)) {
@@ -63,7 +59,7 @@ public class ViewDataProcessor extends CustomThread implements PropertyChangeLis
 			}
 		}
 		if (!consolidated) {
-			if (circleList.size() == MAX_CIRCLES) {
+			if (circleList.size() == Blackboard.getInstance().getMaxCircles()) {
 				circleList.pollFirst();
 			}
 			circleList.addLast(newCircle); // Add the new circle
@@ -75,7 +71,7 @@ public class ViewDataProcessor extends CustomThread implements PropertyChangeLis
 		int dx = existing.getX() - newCircle.getX();
 		int dy = existing.getY() - newCircle.getY();
 		double distance = Math.sqrt(dx * dx + dy * dy);
-		return distance <= THRESHOLD_RADIUS;
+		return distance <= Blackboard.getInstance().getThresholdRadius();
 	}
 	
 	@Override
