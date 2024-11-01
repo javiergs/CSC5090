@@ -25,7 +25,7 @@ public class EmotionDataServer implements Runnable {
 		Random random = new Random();
 		try (ServerSocket ss = new ServerSocket(6000);
 				 Socket connection = ss.accept();
-				 DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());) {
+				 DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream())) {
 			logger.info("Emotion Connection Made");
 			while (true) {
 				long startTime = System.currentTimeMillis();
@@ -41,7 +41,7 @@ public class EmotionDataServer implements Runnable {
 				Thread.sleep(500);
 			}
 		} catch (Exception e) {
-			logger.error("Emotion Sever: {}", e.getMessage());
+			logger.error("Emotion Server: {}", e.getMessage());
 		}
 	}
 	

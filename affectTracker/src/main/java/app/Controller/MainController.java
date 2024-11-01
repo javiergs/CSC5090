@@ -5,7 +5,8 @@ import app.View.Main;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The {@code MainController} class serves as an event handler for UI actions, implementing
@@ -23,7 +24,7 @@ import java.util.logging.Logger;
  */
 public class MainController implements ActionListener {
 	
-	private static final Logger controllerLog = Logger.getLogger(MainController.class.getName());
+	private static final Logger controllerLog = LoggerFactory.getLogger(MainController.class.getName());
 	private final Main parent;
 	
 	

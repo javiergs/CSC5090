@@ -1,7 +1,7 @@
 package app.Model;
 
 import java.io.IOException;
-import java.util.logging.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The {@code EmotionDataClient} class is responsible for connecting to the emotion data server,
@@ -21,7 +21,7 @@ public class EmotionDataClient extends ClientThread {
 	
 	public EmotionDataClient(String host, int port) {
 		super(host, port);
-		super.setLog(Logger.getLogger(EmotionDataClient.class.getName()));
+		super.setLog(LoggerFactory.getLogger(EmotionDataClient.class.getName()));
 		super.setThreadName(THREAD_NAME);
 	}
  

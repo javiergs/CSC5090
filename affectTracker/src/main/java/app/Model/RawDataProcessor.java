@@ -6,7 +6,7 @@ import app.Data.ProcessedDataObject;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.stream.Collectors;
 
 /**
@@ -30,7 +30,7 @@ public class RawDataProcessor extends CustomThread {
 	
 	public RawDataProcessor() {
 		super();
-		super.setLog(Logger.getLogger(RawDataProcessor.class.getName()));
+		super.setLog(LoggerFactory.getLogger(RawDataProcessor.class.getName()));
 		super.setName(THREAD_NAME);
 	}
 	
@@ -72,10 +72,10 @@ public class RawDataProcessor extends CustomThread {
 		}
 		// debugging client/server communication
 		else if (emotionData != null) {
-			super.getLog().warning(THREAD_NAME + ": Eye-tracking data is missing, but emotion data is present.");
+			super.getLog().warn(THREAD_NAME + ": Eye-tracking data is missing, but emotion data is present.");
 		} else {
 			// Handle timeout case or missing data
-			super.getLog().warning(THREAD_NAME + ": Timed out waiting for data, or one client is slow.");
+			super.getLog().warn(THREAD_NAME + ": Timed out waiting for data, or one client is slow.");
 		}
 	}
     
@@ -100,7 +100,7 @@ public class RawDataProcessor extends CustomThread {
 	}
 	
 	private void logInvalidEyeTrackingData(String data) {
-		super.getLog().warning("Eye-tracking data must be in the form \"int, int\"\n where both are >= 0." +
+		super.getLog().warn("Eye-tracking data must be in the form \"int, int\"\n where both are >= 0." +
 			"Invalid eye-tracking data format: " + data);
 	}
 	
@@ -135,7 +135,7 @@ public class RawDataProcessor extends CustomThread {
 	}
 	
 	private void logInvalidEmotionData(String data) {
-		super.getLog().warning("Emotion data is expected to be a comma seperated list of 5 floats between 0 and 1." +
+		super.getLog().warn("Emotion data is expected to be a comma seperated list of 5 floats between 0 and 1." +
 			"Invalid emotion data format: " + data);
 	}
 	

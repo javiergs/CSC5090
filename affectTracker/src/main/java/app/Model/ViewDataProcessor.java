@@ -8,7 +8,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.Deque;
-import java.util.logging.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The {@code ViewDataProcessor} is alerted of new processed data available in the {@link Blackboard},
@@ -26,7 +26,7 @@ public class ViewDataProcessor extends CustomThread implements PropertyChangeLis
 	
 	public ViewDataProcessor() {
 		super();
-		super.setLog(Logger.getLogger(ViewDataProcessor.class.getName()));
+		super.setLog(LoggerFactory.getLogger(ViewDataProcessor.class.getName()));
 		super.setName(THREAD_NAME);
 		Blackboard.getInstance().addPropertyChangeListener(
 			Blackboard.PROPERTY_NAME_PROCESSED_DATA, this);

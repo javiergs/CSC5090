@@ -3,7 +3,6 @@ package app.Model;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.logging.Level;
 
 /**
  * Establishes data and functions necessary for client threads.
@@ -33,10 +32,17 @@ public abstract class ClientThread extends CustomThread {
 			super.run();
 		} catch (IOException ex) {
 			switch (super.getThreadName()) {
-				case EmotionDataClient.THREAD_NAME -> Blackboard.getInstance().reportEmotionThreadError(ex.getMessage());
-				case EyeTrackingClient.THREAD_NAME -> Blackboard.getInstance().reportEyeThreadError(ex.getMessage());
+				case EmotionDataClient.THREAD_NAME -> {
+					Blackboard.getInstance().reportEmotionThreadError(ex.getMessage());
+					// warn since the panel still can draw
+					super.getLog().warn(super.getThreadName() + ": Unable to connect to server.");
+				}
+				case EyeTrackingClient.THREAD_NAME -> {
+					Blackboard.getInstance().reportEyeThreadError(ex.getMessage());
+					// error since the panel cannot draw
+					super.getLog().error(super.getThreadName() + ": Unable to connect to server.");
+				}
 			}
-			super.getLog().log(Level.SEVERE, super.getThreadName() + ": Unable to connect to server.");
 		}
 	}
 	

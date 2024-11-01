@@ -1,8 +1,7 @@
 package app.Model;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 /**
  * Established data for threads to be managed
@@ -26,10 +25,10 @@ public abstract class CustomThread extends Thread {
 			}
 			
 		} catch (InterruptedException e) {
-			log.log(Level.SEVERE, threadName + " thread was interrupted", e);
+			log.error(threadName + " thread was interrupted", e);
 			Thread.currentThread().interrupt();
 		} catch (Exception e) {
-			log.warning(e.toString());
+			log.warn(e.toString());
 		} finally {
 			cleanUpThread();
 		}
