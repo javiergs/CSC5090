@@ -5,8 +5,13 @@ import app.View.Main;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
 
 /**
  * The {@code MainController} class serves as an event handler for UI actions, implementing
@@ -22,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * @author Sean Sponsler
  * @version 1.0
  */
-public class MainController implements ActionListener {
+public class MainController implements ActionListener, PropertyChangeListener {
 	
 	private static final Logger controllerLog = LoggerFactory.getLogger(MainController.class.getName());
 	private final Main parent;
@@ -44,6 +49,32 @@ public class MainController implements ActionListener {
 				parent.cleanUpThreads();
 			}
 		}
+	}
+
+	@Override
+	//Todo: Main is not recommended to be observer. Move this to the controller.
+	public void propertyChange(PropertyChangeEvent evt) {
+		switch (evt.getPropertyName()) {
+			case Blackboard.PROPERTY_NAME_EYETHREAD_ERROR -> {
+				parent.cleanUpThreads();
+				createConnectionErrorPopUp("Unable to connect to Eye Tracking server. \n" +
+						"Please check that the server is running and the IP address is correct.", (String) evt.getNewValue());
+            }
+			case Blackboard.PROPERTY_NAME_EMOTIONTHREAD_ERROR -> {
+				createConnectionErrorPopUp("Unable to connect to Emotion server. \n" +
+						"Application will run without emotion data.", (String) evt.getNewValue());
+				break;
+			}
+			case Blackboard.PROPERTY_NAME_MQTTBROKER_ERROR ->
+				JOptionPane.showMessageDialog(parent, String.format("Issue with MQTT Broker\n%s", (String) evt.getNewValue()));
+		}
+	}
+
+	public void createConnectionErrorPopUp(String main_message, String error_message) {
+		JOptionPane.showMessageDialog(parent,
+				String.format("%s\n\n%s\nError: %s", main_message,
+						Blackboard.getInstance().getFormattedConnectionSettings(),
+						error_message));
 	}
  
 }
