@@ -6,12 +6,6 @@ import java.awt.*;
 /**
  * The GUI consists of a simulation panel where the robot arms are drawn, and a button panel
  * with buttons to start and stop the simulation.
- *
- * @author Reza Mousakhani
- * @author Damian Dhesi
- * @author Shiv Panchal
- * @author Javier Gonzalez-Sanchez
- * @version 1.0
  */
 public class Main extends JFrame {
 	
@@ -29,16 +23,30 @@ public class Main extends JFrame {
 		Controller controller = new Controller();
 		JMenuBar menuBar = new JMenuBar();
 		JMenu fileMenu = new JMenu("File");
+		JMenu simulationMenu = new JMenu("Simulation");
 		JMenuItem startMenuItem = new JMenuItem("Start client");
 		startMenuItem.addActionListener(controller);
 		JMenuItem stopMenuItem = new JMenuItem("Stop client");
 		stopMenuItem.addActionListener(controller);
 		JMenuItem exitMenuItem = new JMenuItem("Exit");
 		exitMenuItem.addActionListener(controller);
+		JMenuItem startSimulationMenuItem = new JMenuItem("Start simulation");
+		startSimulationMenuItem.addActionListener(controller);
+		JMenuItem stopSimulationMenuItem = new JMenuItem("Stop simulation");
+		stopSimulationMenuItem.addActionListener(controller);
+		JMenuItem pauseMenuItem = new JMenuItem("Pause");
+		pauseMenuItem.addActionListener(controller);
+		JMenuItem resumeMenuItem = new JMenuItem("Resume");
+		resumeMenuItem.addActionListener(controller);
 		fileMenu.add(startMenuItem);
 		fileMenu.add(stopMenuItem);
 		fileMenu.add(exitMenuItem);
+		simulationMenu.add(startSimulationMenuItem);
+		simulationMenu.add(stopSimulationMenuItem);
+		simulationMenu.add(pauseMenuItem);
+		simulationMenu.add(resumeMenuItem);
 		menuBar.add(fileMenu);
+		menuBar.add(simulationMenu);
 		setJMenuBar(menuBar);
 	}
 	

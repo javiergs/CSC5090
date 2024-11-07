@@ -9,12 +9,6 @@ import java.awt.event.ActionListener;
 
 /**
  * The Controller class is responsible for controlling the simulation of the robot arm.
- *
- * @author Reza Mousakhani
- * @author Damian Dhesi
- * @author Shiv Panchal
- * @author Javier Gonzalez-Sanchez
- * @version 1.0
  */
 public class Controller implements ActionListener {
 	
