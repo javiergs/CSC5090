@@ -48,6 +48,7 @@ public class Blackboard extends PropertyChangeSupport {
 	private int circleRadius = 50;
 	public static final String PROPERTY_NAME_EYETHREAD_ERROR = "eye tracking thread error";
 	public static final String PROPERTY_NAME_EMOTIONTHREAD_ERROR = "eye emotion thread error";
+	public static final String PROPERTY_NAME_MQTTBROKER_ERROR = "broker error";
 	private static final int TIMEOUT_IN_MS = 500;
 	private static final Blackboard INSTANCE = new Blackboard();
 	
@@ -62,6 +63,11 @@ public class Blackboard extends PropertyChangeSupport {
 	
 	public static Blackboard getInstance() {
 		return INSTANCE;
+	}
+
+	public void addClientData(String dataWithPrefix){
+		//parse prefix
+		//call the method to add the rest of the data appropriate queue
 	}
 	
 	public void addToEyeTrackingQueue(String data) throws InterruptedException {
@@ -166,6 +172,10 @@ public class Blackboard extends PropertyChangeSupport {
 	
 	public void reportEmotionThreadError(String ex_message) {
 		firePropertyChange(PROPERTY_NAME_EMOTIONTHREAD_ERROR, null, ex_message);
+	}
+
+	public void reportMQTTBrokerError(String ex_message) {
+		firePropertyChange(PROPERTY_NAME_MQTTBROKER_ERROR, null, ex_message);
 	}
 	
 }
