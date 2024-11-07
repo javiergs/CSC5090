@@ -9,6 +9,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 
 /**
@@ -61,16 +64,38 @@ public class Main extends JFrame implements PropertyChangeListener {
 		int eyeTrackingPort = Blackboard.getInstance().getEyeTrackingSocket_Port();
 		int emotionPort = Blackboard.getInstance().getEmotionSocket_Port();
 		cleanUpThreads();
-		CustomThread eyeTrackingThread = new EyeTrackingClient(
-			Blackboard.getInstance().getEyeTrackingSocket_Host(),
-			eyeTrackingPort);
-		CustomThread emotionThread = new EmotionDataClient(
-			Blackboard.getInstance().getEmotionSocket_Host(),
-			emotionPort);
+		EyeTrackingClient eyeTrackingThread;
+		EmotionDataClient emotionThread;
+//		CustomThread eyeTrackingThread = new EyeTrackingClient(
+//			Blackboard.getInstance().getEyeTrackingSocket_Host(),
+//			eyeTrackingPort);
+//		CustomThread emotionThread = new EmotionDataClient(
+//			Blackboard.getInstance().getEmotionSocket_Host(),
+//			emotionPort);
+
+		try (Socket eye_socket = new Socket(Blackboard.getInstance().getEyeTrackingSocket_Host(),
+				eyeTrackingPort);
+			 DataInputStream eye_IS = new DataInputStream(eye_socket.getInputStream())){
+			eyeTrackingThread = new EyeTrackingClient(eye_socket, eye_IS);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		try (Socket emotion_socket = new Socket(Blackboard.getInstance().getEmotionSocket_Host(),
+				emotionPort);
+			 DataInputStream emotion_IS = new DataInputStream(emotion_socket.getInputStream())){
+			emotionThread = new EmotionDataClient(emotion_socket, emotion_IS);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
 		CustomThread dataProcessor = new RawDataProcessor();
 		ViewDataProcessor dpDelegate = new ViewDataProcessor();
-		threads.add(eyeTrackingThread);
-		threads.add(emotionThread);
+//		threads.add(eyeTrackingThread);
+//		threads.add(emotionThread);
+		Thread eye = new Thread(eyeTrackingThread);
+		Thread emotion = new Thread(emotionThread);
+		eye.start();
+		emotion.start();
 		threads.add(dataProcessor);
 		threads.add(dpDelegate);
 		for (CustomThread thread : threads) {
