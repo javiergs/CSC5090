@@ -3,6 +3,8 @@ package head;
 import javax.swing.*;
 import java.awt.*;
 
+import components.ThePublisher;
+
 /**
  * This class creates the main window of the application
  *
@@ -16,8 +18,10 @@ public class Main extends JFrame {
 	public Main() {
 		setJMenuBar(createMenuBar());
 		setLayout(new GridLayout(1, 1));
+
 		Canvas d = new Canvas();
 		add(d);
+		this.createPublisher();
 	}
 	
 	private JMenuBar createMenuBar() {
@@ -32,6 +36,13 @@ public class Main extends JFrame {
 		start.addActionListener(controller);
 		stop.addActionListener(controller);
 		return menuBar;
+	}
+
+	private void createPublisher() {
+		ThePublisher myPublisher = new ThePublisher(5);
+		Thread pubThread = new Thread(myPublisher);
+		pubThread.start();
+
 	}
 	
 	public static void main(String[] args) {

@@ -1,7 +1,7 @@
 package components;
 import org.eclipse.paho.client.mqttv3.*;
 
-public class MQTTPublisher {
+public class MQTTPublisher implements Runnable{
 
     private String BROKER;
     private String CLIENT_ID;
@@ -56,4 +56,11 @@ public class MQTTPublisher {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void run() {
+        connect();
+    }
+
+
 }
