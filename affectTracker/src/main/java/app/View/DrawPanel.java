@@ -2,12 +2,16 @@ package app.View;
 
 import app.Data.Circle;
 import app.Model.Blackboard;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 /**
  * The {@code DrawPanel} class is a custom {@link JPanel} that visually represents
@@ -23,7 +27,10 @@ import java.beans.PropertyChangeListener;
  * @version 1.0
  */
 public class DrawPanel extends JPanel implements PropertyChangeListener {
-	
+
+	private final Logger log = LoggerFactory.getLogger(DrawPanel.class);
+	private Deque<Circle> circleList = new ArrayDeque<>();
+
 	public DrawPanel() {
 		setBackground(Color.WHITE);
 		setBorder(new MatteBorder(3, 3, 3, 3, Color.BLACK));
@@ -33,13 +40,19 @@ public class DrawPanel extends JPanel implements PropertyChangeListener {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		for (Circle c : Blackboard.getInstance().getCircleList()) {
+		for (Circle c : circleList) {
 			c.drawCircle(g);
 		}
 	}
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		repaint();
+		if (evt.getNewValue() instanceof Deque<?>){
+			this.circleList = (Deque<Circle>) evt.getNewValue();
+			repaint();
+		} else {
+			log.warn("Unexpected payload in PropertyChangeEvent: {}", evt.getNewValue());
+		}
+
 	}
 }

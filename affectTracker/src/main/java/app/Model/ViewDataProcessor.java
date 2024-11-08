@@ -76,7 +76,7 @@ public class ViewDataProcessor extends CustomThread implements PropertyChangeLis
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		ProcessedDataObject data = Blackboard.getInstance().getFromProcessedDataObjectQueue();
+		ProcessedDataObject data = (ProcessedDataObject) evt.getNewValue();
 		System.out.println("retrieved processed data: " + data);
 		if (data != null) {
 			handleProcessedData(data);
