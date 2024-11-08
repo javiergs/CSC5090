@@ -55,17 +55,17 @@ public class MainController implements ActionListener, PropertyChangeListener {
 	//Todo: Main is not recommended to be observer. Move this to the controller.
 	public void propertyChange(PropertyChangeEvent evt) {
 		switch (evt.getPropertyName()) {
-			case Blackboard.PROPERTY_NAME_EYETHREAD_ERROR -> {
+			case Blackboard.EYE_DATA_LABEL -> {
 				parent.cleanUpThreads();
 				createConnectionErrorPopUp("Unable to connect to Eye Tracking server. \n" +
 						"Please check that the server is running and the IP address is correct.", (String) evt.getNewValue());
             }
-			case Blackboard.PROPERTY_NAME_EMOTIONTHREAD_ERROR -> {
+			case Blackboard.EMOTION_DATA_LABEL -> {
 				createConnectionErrorPopUp("Unable to connect to Emotion server. \n" +
 						"Application will run without emotion data.", (String) evt.getNewValue());
 				break;
 			}
-			case Blackboard.PROPERTY_NAME_MQTTBROKER_ERROR ->
+			case Blackboard.MQTTBROKER_ERROR ->
 				JOptionPane.showMessageDialog(parent, String.format("Issue with MQTT Broker\n%s", (String) evt.getNewValue()));
 		}
 	}
