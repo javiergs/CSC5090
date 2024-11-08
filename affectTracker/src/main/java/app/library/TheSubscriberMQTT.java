@@ -1,6 +1,5 @@
 package app.library;
 
-import app.Model.Blackboard;
 import java.util.Map;
 import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
@@ -9,20 +8,17 @@ import org.slf4j.LoggerFactory;
 public class TheSubscriberMQTT implements Runnable, MqttCallback {
 
     private final Logger log = LoggerFactory.getLogger(TheSubscriberMQTT.class.getName());
-    private final String broker;
-    private final String clientID;
-
     private final Map<String, String> topicAndPrefixPairs;
+    private final DataDestination dataDestination;
 
-    public TheSubscriberMQTT(String broker, String clientID, Map<String, String> topicAndPrefixPairs) {
-        this.broker = broker;
-        this.clientID = clientID;
+    private static final String PREFIX_DELIMITER = "~";
+    private boolean running = true;
+
+    public TheSubscriberMQTT(String broker, String clientID, Map<String, String> topicAndPrefixPairs, DataDestination destination) throws MqttException {
         this.topicAndPrefixPairs = topicAndPrefixPairs;
-    }
-
-    @Override
-    public void run() {
-        try (MqttClient client = new MqttClient(broker, clientID);){
+        this.dataDestination = destination;
+        try {
+            MqttClient client = new MqttClient(broker, clientID);
             client.setCallback(this);
             client.connect();
             log.info("Connected to broker: " + broker);
@@ -30,15 +26,25 @@ public class TheSubscriberMQTT implements Runnable, MqttCallback {
                 client.subscribe(topic);
                 log.info("Subscribed to topic: " + topic);
             }
-            //keep the thread alive and idle while waiting for new data
-            while (true) {
-                Thread.sleep(1000);
-            }
         } catch (MqttException e) {
             log.warn("Unable to connect to broker --" + e.getMessage());
-            Blackboard.getInstance().reportMQTTBrokerError("Unable to connect to broker --\n\t" + e.getMessage());
+            throw e;
+//            Blackboard.getInstance().reportMQTTBrokerError("Unable to connect to broker --\n\t" + e.getMessage());
+        }
+    }
+
+    @Override
+    public void run() {
+        try {
+            //keep the thread alive and idle while waiting for new data
+            while (running) {
+                Thread.sleep(1000);
+            }
         } catch (InterruptedException e) {
-            log.warn( "Thread was interrupted", e);
+            String mqttErrorPrefixWithDelim = "MQTTE" + PREFIX_DELIMITER ;
+            dataDestination.alertError(mqttErrorPrefixWithDelim +
+                    e.getMessage());
+            log.warn("Thread was interrupted", e);
             Thread.currentThread().interrupt();
         }
     }
@@ -50,7 +56,8 @@ public class TheSubscriberMQTT implements Runnable, MqttCallback {
 
     @Override
     public void messageArrived(String s, MqttMessage mqttMessage) {
-        Blackboard.getInstance().addClientData(topicAndPrefixPairs.get(s) + "~" + mqttMessage);
+        dataDestination.addSubscriberData(topicAndPrefixPairs.get(s) +
+                PREFIX_DELIMITER + mqttMessage);
         log.debug("Message Arrived. Topic: " + s +
                 " Message: " + new String(mqttMessage.getPayload()));
     }
@@ -58,5 +65,9 @@ public class TheSubscriberMQTT implements Runnable, MqttCallback {
     @Override
     public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
 
+    }
+
+    public void stopSubscriber() {
+        running = false;
     }
 }

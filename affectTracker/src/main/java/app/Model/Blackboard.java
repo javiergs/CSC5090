@@ -9,11 +9,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import app.library.DataDestination;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import app.Data.Circle;
 import app.Data.ProcessedDataObject;
+
+import javax.xml.crypto.Data;
 
 
 /**
@@ -29,7 +32,7 @@ import app.Data.ProcessedDataObject;
  * @author Sean Sponsler
  * @version 1.0
  */
-public class Blackboard extends PropertyChangeSupport {
+public class Blackboard extends PropertyChangeSupport implements DataDestination {
 	private String eyeTrackingSocket_Host = "localhost";  // default for testing
 	private int eyeTrackingSocket_Port = 6001;  // default for testing
 	private final BlockingQueue<String> eyeTrackingQueue;
@@ -65,9 +68,14 @@ public class Blackboard extends PropertyChangeSupport {
 		return INSTANCE;
 	}
 
-	public void addClientData(String dataWithPrefix){
+	public void addSubscriberData(String dataWithPrefix){
 		//parse prefix
 		//call the method to add the rest of the data appropriate queue
+	}
+
+	public void alertError(String messageWithPrefix){
+		//parse prefix
+		//alert the controller listener to show the users
 	}
 	
 	public void addToEyeTrackingQueue(String data) throws InterruptedException {
