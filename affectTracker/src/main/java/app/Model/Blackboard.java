@@ -142,7 +142,7 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
 	
 	public void addToProcessedDataQueue(ProcessedDataObject data) {
 		processedDataQueue.add(data);
-		firePropertyChange(PROPERTY_NAME_PROCESSED_DATA, null, null);
+		firePropertyChange(PROPERTY_NAME_PROCESSED_DATA, null, data);
 	}
 	
 	public ProcessedDataObject getFromProcessedDataObjectQueue() {
@@ -155,7 +155,7 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
 	
 	public void setCircleList(Deque<Circle> circleList) {
 		this.circleList = circleList;
-		firePropertyChange(PROPERTY_NAME_VIEW_DATA, null, null);
+		firePropertyChange(PROPERTY_NAME_VIEW_DATA, null, circleList);
 	}
 	
 	public String getFormattedConnectionSettings() {

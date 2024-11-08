@@ -27,9 +27,6 @@ import java.util.ArrayList;
  * @author Sean Sponsler
  */
 public class Main extends JFrame {
-	//TODO: change events from blackboard to include the information necessary for listeners
-	//TODO: change listeners to use the data from the events and not from the Blackboard
-	
 	private static final String TESTING_FLAG = "-test";
 	private final ArrayList<CustomThread> threads;
 	private TheSubscriber eyeSubscriber = null;
