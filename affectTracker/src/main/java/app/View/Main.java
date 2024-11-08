@@ -29,7 +29,7 @@ import java.util.ArrayList;
  * @author Andrew Estrada
  * @author Sean Sponsler
  */
-public class Main extends JFrame implements PropertyChangeListener {
+public class Main extends JFrame {
 	
 	private static final String TESTING_FLAG = "-test";
 	private final ArrayList<CustomThread> threads;
@@ -56,8 +56,8 @@ public class Main extends JFrame implements PropertyChangeListener {
 		ColorKeyPanel colorKeyPanel = new ColorKeyPanel();
 		colorKeyPanel.setPreferredSize(new Dimension(200, 1000));
 		add(colorKeyPanel, BorderLayout.EAST);
-		Blackboard.getInstance().addPropertyChangeListener(Blackboard.PROPERTY_NAME_EYETHREAD_ERROR, this);
-		Blackboard.getInstance().addPropertyChangeListener(Blackboard.PROPERTY_NAME_EMOTIONTHREAD_ERROR, this);
+		Blackboard.getInstance().addPropertyChangeListener(Blackboard.PROPERTY_NAME_EYETHREAD_ERROR, controller);
+		Blackboard.getInstance().addPropertyChangeListener(Blackboard.PROPERTY_NAME_EMOTIONTHREAD_ERROR, controller);
 	}
 	
 	public void connectClients() {
@@ -119,29 +119,8 @@ public class Main extends JFrame implements PropertyChangeListener {
 		emotionServerThread.start();
 		eyeTrackingThread.start();
 	}
-	
-	public void createConnectionErrorPopUp(String main_message, String error_message) {
-		JOptionPane.showMessageDialog(this,
-			String.format("%s\n\n%s\nError: %s", main_message,
-				Blackboard.getInstance().getFormattedConnectionSettings(),
-				error_message));
-	}
-	
-	@Override
+
 	//Todo: Move this to the controller. Do not create threads until confirmed connection.
-	//Todo: Main is not recommended to be observer. Move this to the controller.
-	public void propertyChange(PropertyChangeEvent evt) {
-		switch (evt.getPropertyName()) {
-			case Blackboard.PROPERTY_NAME_EYETHREAD_ERROR -> {
-				cleanUpThreads();
-				createConnectionErrorPopUp("Unable to connect to Eye Tracking server. \n" +
-					"Please check that the server is running and the IP address is correct.", (String) evt.getNewValue());
-			}
-			case Blackboard.PROPERTY_NAME_EMOTIONTHREAD_ERROR ->
-				createConnectionErrorPopUp("Unable to connect to Emotion server. \n" +
-					"Application will run without emotion data.", (String) evt.getNewValue());
-		}
-	}
 	
 	public static void main(String[] args) {
 		Main window = new Main();
