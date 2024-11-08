@@ -28,15 +28,13 @@ import java.util.stream.Collectors;
  * @author Sean Sponsler
  * @version 1.0
  */
-public class RawDataProcessor extends Thread implements PropertyChangeListener {
+public class RawDataProcessor implements Runnable, PropertyChangeListener {
 	
 	public static final String THREAD_NAME = "DataProcessor";
 	private static final Logger LOGGER = LoggerFactory.getLogger(RawDataProcessor.class);
 	private boolean running = true;
 	
 	public RawDataProcessor() {
-		super();
-		super.setName(THREAD_NAME);
 		Blackboard.getInstance().addPropertyChangeListener(Blackboard.STOPPED,  this);
 		Blackboard.getInstance().addPropertyChangeListener(Blackboard.STARTED,  this);
 	}
@@ -44,13 +42,13 @@ public class RawDataProcessor extends Thread implements PropertyChangeListener {
 	@Override
 	public void run() {
 		try {
-				while (true) {
-					if (running) {
-						doYourWork();
-					}
-					// this may not be the best solution...
-					sleep(1000);
+			while (true) {
+				if (running) {
+					doYourWork();
 				}
+				// TODO: It stops working if the spam is commented out?
+				LOGGER.info("DataProcessor loop" + running);
+			}
 		} catch (InterruptedException e) {
 			LOGGER.error(THREAD_NAME + " thread was interrupted", e);
 			Thread.currentThread().interrupt();
@@ -167,7 +165,7 @@ public class RawDataProcessor extends Thread implements PropertyChangeListener {
 				running = false;
 			}
 			case Blackboard.STARTED -> {
-				LOGGER.info("blackboard started, starting rdp");
+				LOGGER.info("blackboard stopped, stopping rdp");
 				running = true;
 			}
 		}

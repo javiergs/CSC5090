@@ -86,9 +86,9 @@ public class Main extends JFrame {
 			emotionThread.start();
 		}
 
-		if (threads.isEmpty()) {
-			Thread dataProcessor = new RawDataProcessor();
-			ViewDataProcessor dpDelegate = new ViewDataProcessor();
+		if (threads.isEmpty()){
+			Thread dataProcessor = new Thread(new RawDataProcessor());
+			Thread dpDelegate = new Thread(new ViewDataProcessor());
 
 			threads.add(dataProcessor);
 			threads.add(dpDelegate);

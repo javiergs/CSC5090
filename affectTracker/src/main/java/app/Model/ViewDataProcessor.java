@@ -22,16 +22,15 @@ import org.slf4j.LoggerFactory;
  * @author Sean Sponsler
  * @version 1.0
  */
-public class ViewDataProcessor extends Thread implements PropertyChangeListener {
+public class ViewDataProcessor implements Runnable, PropertyChangeListener {
 	private static final String THREAD_NAME = "ViewLogic";
 	private static final Logger LOGGER = LoggerFactory.getLogger(RawDataProcessor.class);
 
 	public ViewDataProcessor() {
 		super();
-		super.setName(THREAD_NAME);
 		Blackboard.getInstance().addPropertyChangeListener(Blackboard.PROPERTY_NAME_PROCESSED_DATA, this);
 	}
-	
+
 	@Override
 	public void run() {
 		try {
