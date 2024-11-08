@@ -8,6 +8,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.Deque;
+
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -21,26 +23,35 @@ import org.slf4j.LoggerFactory;
  * @author Sean Sponsler
  * @version 1.0
  */
-public class ViewDataProcessor extends CustomThread implements PropertyChangeListener {
+public class ViewDataProcessor extends Thread implements PropertyChangeListener {
 	private static final String THREAD_NAME = "ViewLogic";
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(RawDataProcessor.class);
+
 	public ViewDataProcessor() {
 		super();
-		super.setLog(LoggerFactory.getLogger(ViewDataProcessor.class.getName()));
 		super.setName(THREAD_NAME);
 		Blackboard.getInstance().addPropertyChangeListener(
 			Blackboard.PROPERTY_NAME_PROCESSED_DATA, this);
 	}
 	
 	@Override
-	public void doYourWork() throws InterruptedException, IOException {
-		//keep the thread alive and idle while waiting for new data
-		synchronized (this) {
-			wait();
+	public void run() {
+		try {
+			//keep the thread alive and idle while waiting for new data
+			synchronized (this) {
+				wait();
+			}
+		} catch (InterruptedException e) {
+			LOGGER.error(THREAD_NAME + " thread was interrupted", e);
+			Thread.currentThread().interrupt();
+		} catch (Exception e) {
+			LOGGER.warn(e.toString());
+		} finally {
+			cleanUpThread();
 		}
 	}
 	
-	@Override
+//	@Override
 	public void cleanUpThread() {
 		Blackboard.getInstance().removePropertyChangeListener(
 			Blackboard.PROPERTY_NAME_PROCESSED_DATA, this);

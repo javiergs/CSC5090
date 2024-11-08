@@ -28,7 +28,7 @@ import java.util.ArrayList;
  */
 public class Main extends JFrame {
 	private static final String TESTING_FLAG = "-test";
-	private final ArrayList<CustomThread> threads;
+	private final ArrayList<Thread> threads;
 	private TheSubscriber eyeSubscriber = null;
 	private TheSubscriber emotionSubscriber = null;
 	
@@ -64,7 +64,7 @@ public class Main extends JFrame {
 		int emotionPort = Blackboard.getInstance().getEmotionSocket_Port();
 		cleanUpThreads();
 
-		CustomThread dataProcessor = new RawDataProcessor();
+		Thread dataProcessor = new RawDataProcessor();
 		ViewDataProcessor dpDelegate = new ViewDataProcessor();
 
 		try {
@@ -92,7 +92,7 @@ public class Main extends JFrame {
 
 		threads.add(dataProcessor);
 		threads.add(dpDelegate);
-		for (CustomThread thread : threads) {
+		for (Thread thread : threads) {
 			thread.start();
 		}
 	}
@@ -106,11 +106,12 @@ public class Main extends JFrame {
 			emotionSubscriber.stopSubscriber();
 			emotionSubscriber = null;
 		}
-		for (CustomThread thread : threads) {
-			if (thread != null) {
-				thread.stopThread();
-			}
-		}
+		// TODO: What?
+//		for (Thread thread : threads) {
+//			if (thread != null) {
+//				thread.stopThread();
+//			}
+//		}
 		threads.clear();
 	}
 	

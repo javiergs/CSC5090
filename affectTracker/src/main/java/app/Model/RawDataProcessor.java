@@ -6,6 +6,8 @@ import app.Data.ProcessedDataObject;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.stream.Collectors;
 
@@ -24,64 +26,68 @@ import java.util.stream.Collectors;
  * @author Sean Sponsler
  * @version 1.0
  */
-public class RawDataProcessor extends CustomThread {
+public class RawDataProcessor extends Thread {
 	
 	public static final String THREAD_NAME = "DataProcessor";
+	private static final Logger LOGGER = LoggerFactory.getLogger(RawDataProcessor.class);
 	
 	public RawDataProcessor() {
 		super();
-		super.setLog(LoggerFactory.getLogger(RawDataProcessor.class.getName()));
 		super.setName(THREAD_NAME);
 	}
 	
 	@Override
-	public void doYourWork() throws InterruptedException, IOException {
-		// Poll with a timeout to prevent blocking indefinitely
-		String eyeTrackingData = Blackboard.getInstance().pollEyeTrackingQueue();
-		String emotionData = Blackboard.getInstance().pollEmotionQueue();
-		if (eyeTrackingData != null) {
-			super.getLog().info("ProcessingThread: Processing data pair: " + eyeTrackingData + ", " + emotionData);
-			// Process the pair of data
-			List<Integer> coordinates = convertToIntegerList(eyeTrackingData);
-			List<Float> emotionScores = null;
-			Emotion prominentEmotion;
-			if (emotionData != null) {
-				emotionScores = convertToFloatList(emotionData);
-				//if the emotion data is invalid, use neutral
-				if (!isValidEmotionData(emotionScores)) {
-					logInvalidEmotionData(emotionData);
-					prominentEmotion = Emotion.NONE;
+	public void run() {
+		try {
+			// Poll with a timeout to prevent blocking indefinitely
+			String eyeTrackingData = Blackboard.getInstance().pollEyeTrackingQueue();
+			String emotionData = Blackboard.getInstance().pollEmotionQueue();
+			if (eyeTrackingData != null) {
+				LOGGER.info("ProcessingThread: Processing data pair: " + eyeTrackingData + ", " + emotionData);
+				// Process the pair of data
+				List<Integer> coordinates = convertToIntegerList(eyeTrackingData);
+				List<Float> emotionScores = null;
+				Emotion prominentEmotion;
+				if (emotionData != null) {
+					emotionScores = convertToFloatList(emotionData);
+					//if the emotion data is invalid, use neutral
+					if (!isValidEmotionData(emotionScores)) {
+						logInvalidEmotionData(emotionData);
+						prominentEmotion = Emotion.NONE;
+					} else {
+						prominentEmotion = getProminentEmotion(emotionScores);
+					}
 				} else {
-					prominentEmotion = getProminentEmotion(emotionScores);
+					prominentEmotion = Emotion.NONE;
 				}
+				if (!isValidEyeTrackingData(coordinates)) {
+					logInvalidEyeTrackingData(eyeTrackingData);
+					return; //we can't do anything without eye tracking
+				}
+				ProcessedDataObject processedData = new ProcessedDataObject(
+						coordinates.get(0),
+						coordinates.get(1),
+						prominentEmotion,
+						emotionScores
+				);
+
+				Blackboard.getInstance().addToProcessedDataQueue(processedData);
+			}
+			// debugging client/server communication
+			else if (emotionData != null) {
+				LOGGER.warn(THREAD_NAME + ": Eye-tracking data is missing, but emotion data is present.");
 			} else {
-				prominentEmotion = Emotion.NONE;
+				// Handle timeout case or missing data
+				LOGGER.warn(THREAD_NAME + ": Timed out waiting for data, or one client is slow.");
 			}
-			if (!isValidEyeTrackingData(coordinates)) {
-				logInvalidEyeTrackingData(eyeTrackingData);
-				return; //we can't do anything without eye tracking
-			}
-			ProcessedDataObject processedData = new ProcessedDataObject(
-				coordinates.get(0),
-				coordinates.get(1),
-				prominentEmotion,
-				emotionScores
-			);
-			
-			Blackboard.getInstance().addToProcessedDataQueue(processedData);
-		}
-		// debugging client/server communication
-		else if (emotionData != null) {
-			super.getLog().warn(THREAD_NAME + ": Eye-tracking data is missing, but emotion data is present.");
-		} else {
-			// Handle timeout case or missing data
-			super.getLog().warn(THREAD_NAME + ": Timed out waiting for data, or one client is slow.");
+		} catch (InterruptedException e) {
+			LOGGER.error(THREAD_NAME + " thread was interrupted", e);
+			Thread.currentThread().interrupt();
+		} catch (Exception e) {
+			LOGGER.warn(e.toString());
 		}
 	}
-    
-    @Override
-    public void cleanUpThread() {
-    }
+
     
     private boolean isValidEyeTrackingData(List<Integer> data) {
 		return data != null && data.stream().allMatch(number -> number >= 0);
@@ -100,7 +106,7 @@ public class RawDataProcessor extends CustomThread {
 	}
 	
 	private void logInvalidEyeTrackingData(String data) {
-		super.getLog().warn("Eye-tracking data must be in the form \"int, int\"\n where both are >= 0." +
+		LOGGER.warn("Eye-tracking data must be in the form \"int, int\"\n where both are >= 0." +
 			"Invalid eye-tracking data format: " + data);
 	}
 	
@@ -135,7 +141,7 @@ public class RawDataProcessor extends CustomThread {
 	}
 	
 	private void logInvalidEmotionData(String data) {
-		super.getLog().warn("Emotion data is expected to be a comma seperated list of 5 floats between 0 and 1." +
+		LOGGER.warn("Emotion data is expected to be a comma seperated list of 5 floats between 0 and 1." +
 			"Invalid emotion data format: " + data);
 	}
 	
