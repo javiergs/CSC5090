@@ -23,11 +23,12 @@ public class Main extends JFrame {
 		int squareSize = (2 * screenSize.height) / 3;
 		setSize(squareSize, squareSize);
 		setLocationRelativeTo(null);
-		// controller
-		Controller controller = new Controller();
-		addComponentListener(controller);
+		// menuController
+		ComponentController componentController = new ComponentController();
+		addComponentListener(componentController);
 		// menu bar
-		setJMenuBar(createMenuBar(controller));
+		MenuController menuController = new MenuController();
+		setJMenuBar(createMenuBar(menuController));
 		// status bar
 		StatusBarPanel statusBarPanel = new StatusBarPanel("not started");
 		add(statusBarPanel, BorderLayout.SOUTH);
@@ -38,19 +39,19 @@ public class Main extends JFrame {
 		Blackboard.getInstance().addPropertyChangeListener(cobotPanel);
 	}
 	
-	private JMenuBar createMenuBar(Controller controller) {
+	private JMenuBar createMenuBar(MenuController menuController) {
 		JMenu fileMenu = new JMenu("Options");
 		// item - start
 		JMenuItem connectItem = new JMenuItem("Start client");
-		connectItem.addActionListener(controller);
+		connectItem.addActionListener(menuController);
 		fileMenu.add(connectItem);
 		// item - stop
 		JMenuItem pauseItem = new JMenuItem("Stop client");
-		pauseItem.addActionListener(controller);
+		pauseItem.addActionListener(menuController);
 		fileMenu.add(pauseItem);
 		// item - exit
 		JMenuItem exitItem = new JMenuItem("Exit");
-		exitItem.addActionListener(controller);
+		exitItem.addActionListener(menuController);
 		fileMenu.add(exitItem);
 		// menu bar
 		JMenuBar menuBar = new JMenuBar();

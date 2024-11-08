@@ -6,11 +6,9 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 
 /**
- * Controller class that listens for button clicks and calls the appropriate methods in the Client class.
+ * MenuController class that listens for button clicks and calls the appropriate methods in the Client class.
  *
  * @author Jack Ortega,
  * @author Neeraja Beesetti,
@@ -18,9 +16,9 @@ import java.awt.event.ComponentListener;
  * @author Javier Gonzalez-Sanchez
  * @version 2.0
  */
-public class Controller implements ActionListener, ComponentListener {
+public class MenuController implements ActionListener {
 	
-	private static final Logger logger = LoggerFactory.getLogger(Controller.class);
+	private static final Logger logger = LoggerFactory.getLogger(MenuController.class);
 	private Subscriber subscriber;
 	
 	@Override
@@ -57,25 +55,8 @@ public class Controller implements ActionListener, ComponentListener {
 		if (subscriber.isRunning()) {
 			logger.info("Stopping subscriber");
 			subscriber.stop();
+			Blackboard.getInstance().updateStatusLabel("disconnected");
 		}
-	}
-	
-	@Override
-	public void componentResized(ComponentEvent e) {
-		logger.info("Resizing window{}x{}", e.getComponent().getWidth(), e.getComponent().getHeight());
-		Blackboard.getInstance().updateOrigin(e.getComponent().getWidth(), e.getComponent().getHeight());
-	}
-	
-	@Override
-	public void componentMoved(ComponentEvent e) {
-	}
-	
-	@Override
-	public void componentShown(ComponentEvent e) {
-	}
-	
-	@Override
-	public void componentHidden(ComponentEvent e) {
 	}
 	
 }
