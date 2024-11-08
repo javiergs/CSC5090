@@ -8,15 +8,26 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Map;
+import test.Subscriber;
+import test.MQTTSubscriber;
 
 public class Main extends JFrame implements ActionListener, PropertyChangeListener {
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
-    private MQTTPublisher publisher;
-    private JMenuItem startMenuItem;
-    private JMenuItem stopMenuItem;
+    private MQTTPublisher mqttPublisher;
+    private Publisher tcpPublisher;
+    private Subscriber tcpSubscriber;
+    private MQTTSubscriber mqttSubscriber;
+    private Thread subscriberThread;
+
+    private JMenuItem startTCPMenuItem;
+    private JMenuItem startMQTTMenuItem;
+    private JMenuItem stopSubscriberMenuItem;
     private JMenuItem configureMenuItem;
-    private JMenuItem startTransmitMenuItem;
+    private JMenuItem startTrackingMenuItem;
+    private JMenuItem stopTrackingMenuItem;
 
     public static void main(String[] args) {
         Main main = new Main();
@@ -29,29 +40,43 @@ public class Main extends JFrame implements ActionListener, PropertyChangeListen
 
     public Main() {
         Blackboard.getInstance().addObserver(this);
-        publisher = new MQTTPublisher();
+        mqttPublisher = new MQTTPublisher();
+        tcpPublisher = new Publisher("localhost", 5000);  // Replace with actual TCP server address
 
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("Options");
 
-        startMenuItem = new JMenuItem("Start");
-        stopMenuItem = new JMenuItem("Stop");
+        startTCPMenuItem = new JMenuItem("Start TCP Subscriber");
+        startMQTTMenuItem = new JMenuItem("Start MQTT Subscriber");
+        stopSubscriberMenuItem = new JMenuItem("Stop Subscriber");
         configureMenuItem = new JMenuItem("Configure");
-        startTransmitMenuItem = new JMenuItem("Start Transmit");
+        startTrackingMenuItem = new JMenuItem("Start Tracking");
+        stopTrackingMenuItem = new JMenuItem("Stop Tracking");
 
-        menu.add(startMenuItem);
-        menu.add(stopMenuItem);
+        menu.add(startTCPMenuItem);
+        menu.add(startMQTTMenuItem);
+        menu.add(stopSubscriberMenuItem);
         menu.add(configureMenuItem);
-        menu.add(startTransmitMenuItem);
+        menu.add(startTrackingMenuItem);
+        menu.add(stopTrackingMenuItem);
         menuBar.add(menu);
         setJMenuBar(menuBar);
 
-        startMenuItem.addActionListener(this);
-        stopMenuItem.addActionListener(this);
+        startTCPMenuItem.addActionListener(this);
+        startMQTTMenuItem.addActionListener(this);
+        stopSubscriberMenuItem.addActionListener(this);
         configureMenuItem.addActionListener(this);
-        startTransmitMenuItem.addActionListener(this);
+        startTrackingMenuItem.addActionListener(this);
+        stopTrackingMenuItem.addActionListener(this);
 
-        stopMenuItem.setEnabled(false);
+        // Initial state of buttons
+        startTCPMenuItem.setEnabled(true);
+        startMQTTMenuItem.setEnabled(true);
+        stopSubscriberMenuItem.setEnabled(false);
+        configureMenuItem.setEnabled(false);
+        startTrackingMenuItem.setEnabled(false);
+        stopTrackingMenuItem.setEnabled(false);
+
         WorkArea workArea = new WorkArea();
         add(workArea);
         logger.debug("Main UI initialized with menu and work area.");
@@ -59,21 +84,80 @@ public class Main extends JFrame implements ActionListener, PropertyChangeListen
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == startMenuItem) {
-            Blackboard.getInstance().startTracking();
-            startMenuItem.setEnabled(false);
-            stopMenuItem.setEnabled(true);
-            logger.info("Tracking started.");
-        } else if (e.getSource() == stopMenuItem) {
-            Blackboard.getInstance().stopTracking();
-            startMenuItem.setEnabled(true);
-            stopMenuItem.setEnabled(false);
-            logger.info("Tracking stopped.");
+        if (e.getSource() == startTCPMenuItem) {
+            startSubscriber("TCP");
+        } else if (e.getSource() == startMQTTMenuItem) {
+            startSubscriber("MQTT");
+        } else if (e.getSource() == stopSubscriberMenuItem) {
+            stopSubscriber();
         } else if (e.getSource() == configureMenuItem) {
             configureSettings();
-        } else if (e.getSource() == startTransmitMenuItem) {
-            startTransmit();
+        } else if (e.getSource() == startTrackingMenuItem) {
+            startTracking();
+        } else if (e.getSource() == stopTrackingMenuItem) {
+            stopTracking();
         }
+    }
+
+    private void startSubscriber(String type) {
+        stopSubscriber();  // Ensure any previous subscriber is stopped
+
+        if (type.equals("TCP")) {
+            try {
+                tcpSubscriber = new Subscriber("localhost", 5000, Blackboard.getInstance());
+                subscriberThread = new Thread(tcpSubscriber);
+                subscriberThread.start();
+                logger.info("TCP Subscriber started.");
+            } catch (Exception e) {
+                logger.error("Failed to start TCP Subscriber", e);
+            }
+        } else if (type.equals("MQTT")) {
+            try {
+                Map<String, String> topics = new HashMap<>();
+                topics.put("eye-tracking/topic", "Data");
+                mqttSubscriber = new MQTTSubscriber(Blackboard.getInstance());
+                subscriberThread = new Thread(mqttSubscriber);
+                subscriberThread.start();
+                logger.info("MQTT Subscriber started.");
+            } catch (Exception e) {
+                logger.error("Failed to start MQTT Subscriber", e);
+            }
+        }
+
+        // Update button states
+        startTCPMenuItem.setEnabled(false);
+        startMQTTMenuItem.setEnabled(false);
+        configureMenuItem.setEnabled(true);
+        stopSubscriberMenuItem.setEnabled(true);
+        startTrackingMenuItem.setEnabled(false);
+        stopTrackingMenuItem.setEnabled(false);
+    }
+
+    private void stopSubscriber() {
+        if (tcpSubscriber != null) {
+            tcpSubscriber.stopSubscriber();
+            tcpSubscriber = null;
+            logger.info("TCP Subscriber stopped.");
+        }
+
+        if (mqttSubscriber != null) {
+            mqttSubscriber.stopSubscriber();
+            mqttSubscriber = null;
+            logger.info("MQTT Subscriber stopped.");
+        }
+
+        if (subscriberThread != null) {
+            subscriberThread.interrupt();
+            subscriberThread = null;
+        }
+
+        // Reset button states
+        startTCPMenuItem.setEnabled(true);
+        startMQTTMenuItem.setEnabled(true);
+        configureMenuItem.setEnabled(false);
+        startTrackingMenuItem.setEnabled(false);
+        stopTrackingMenuItem.setEnabled(false);
+        stopSubscriberMenuItem.setEnabled(false);
     }
 
     private void configureSettings() {
@@ -89,20 +173,38 @@ public class Main extends JFrame implements ActionListener, PropertyChangeListen
             setSize(width, height);
             Blackboard.getInstance().setTransmissionSpeed(speed);
             logger.info("Configuration updated: width={}, height={}, transmission speed={}", width, height, speed);
+
+            startTrackingMenuItem.setEnabled(true);
+            configureMenuItem.setEnabled(false);
+
         } catch (NumberFormatException ex) {
             logger.error("Invalid configuration input", ex);
             JOptionPane.showMessageDialog(this, "Invalid configuration input. Please enter numerical values.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void startTransmit() {
-        logger.info("Data transmission initiated.");
-        JOptionPane.showMessageDialog(this, "Data transmission started.", "Info", JOptionPane.INFORMATION_MESSAGE);
+    private void startTracking() {
+        Blackboard.getInstance().startTracking();
+        startTrackingMenuItem.setEnabled(false);
+        stopTrackingMenuItem.setEnabled(true);
+        logger.info("Tracking started.");
+    }
+
+    private void stopTracking() {
+        Blackboard.getInstance().stopTracking();
+        startTrackingMenuItem.setEnabled(false);
+        stopTrackingMenuItem.setEnabled(false);
+        configureMenuItem.setEnabled(false);
+        stopSubscriberMenuItem.setEnabled(true);
+        startTCPMenuItem.setEnabled(false);
+        startMQTTMenuItem.setEnabled(false);
+        logger.info("Tracking stopped.");
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String message = "Clicks: " + Blackboard.getInstance().getClickPositions();
-        publisher.publish(message);
+        mqttPublisher.publish(message);  // Publishes using MQTT
+        tcpPublisher.publish(message);   // Publishes using TCP
     }
 }
