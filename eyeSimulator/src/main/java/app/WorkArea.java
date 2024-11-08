@@ -7,20 +7,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
-public class WorkArea extends JPanel implements MouseListener, BlackboardObserver {
+public class WorkArea extends JPanel implements MouseListener, PropertyChangeListener {
 
     private static final Logger logger = LoggerFactory.getLogger(WorkArea.class);
-    private EventManager eventManager;
 
-    public WorkArea(EventManager eventManager) {
-        this.eventManager = eventManager;
-        eventManager.addObserver(this);
+    public WorkArea() {
+        Blackboard.getInstance().addObserver(this);
         addMouseListener(this);
         logger.debug("WorkArea initialized and observing EventManager.");
     }
 
+    /**
+     * Draws circles at the clicked locations
+     * @param g the <code>Graphics</code> object to protect
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -30,13 +34,16 @@ public class WorkArea extends JPanel implements MouseListener, BlackboardObserve
         }
     }
 
+    /**
+     * Sends the location of a mouse click to the backboard and notifies the event manager of the change
+     * @param e the event to be processed
+     */
     @Override
     public void mouseReleased(MouseEvent e) {
         if (Blackboard.getInstance().isTracking()) {
             Point clickPosition = e.getPoint();
             Blackboard.getInstance().addClick(clickPosition);
             repaint();
-            eventManager.notifyObservers();
             logger.debug("Click recorded at position ({}, {}).", clickPosition.x, clickPosition.y);
         }
     }
@@ -54,7 +61,7 @@ public class WorkArea extends JPanel implements MouseListener, BlackboardObserve
     public void mouseExited(MouseEvent e) {}
 
     @Override
-    public void update() {
+    public void propertyChange(PropertyChangeEvent evt) {
         repaint();
     }
 }

@@ -6,12 +6,13 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class Main extends JFrame implements ActionListener, BlackboardObserver {
+public class Main extends JFrame implements ActionListener, PropertyChangeListener {
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
     private MQTTPublisher publisher;
-    private EventManager eventManager;
     private JMenuItem startMenuItem;
     private JMenuItem stopMenuItem;
     private JMenuItem configureMenuItem;
@@ -27,8 +28,7 @@ public class Main extends JFrame implements ActionListener, BlackboardObserver {
     }
 
     public Main() {
-        eventManager = new EventManager();
-        eventManager.addObserver(this);
+        Blackboard.getInstance().addObserver(this);
         publisher = new MQTTPublisher();
 
         JMenuBar menuBar = new JMenuBar();
@@ -52,7 +52,7 @@ public class Main extends JFrame implements ActionListener, BlackboardObserver {
         startTransmitMenuItem.addActionListener(this);
 
         stopMenuItem.setEnabled(false);
-        WorkArea workArea = new WorkArea(eventManager);
+        WorkArea workArea = new WorkArea();
         add(workArea);
         logger.debug("Main UI initialized with menu and work area.");
     }
@@ -63,13 +63,11 @@ public class Main extends JFrame implements ActionListener, BlackboardObserver {
             Blackboard.getInstance().startTracking();
             startMenuItem.setEnabled(false);
             stopMenuItem.setEnabled(true);
-            eventManager.notifyObservers();
             logger.info("Tracking started.");
         } else if (e.getSource() == stopMenuItem) {
             Blackboard.getInstance().stopTracking();
             startMenuItem.setEnabled(true);
             stopMenuItem.setEnabled(false);
-            eventManager.notifyObservers();
             logger.info("Tracking stopped.");
         } else if (e.getSource() == configureMenuItem) {
             configureSettings();
@@ -98,13 +96,12 @@ public class Main extends JFrame implements ActionListener, BlackboardObserver {
     }
 
     private void startTransmit() {
-        eventManager.notifyObservers();
         logger.info("Data transmission initiated.");
         JOptionPane.showMessageDialog(this, "Data transmission started.", "Info", JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override
-    public void update() {
+    public void propertyChange(PropertyChangeEvent evt) {
         String message = "Clicks: " + Blackboard.getInstance().getClickPositions();
         publisher.publish(message);
     }
