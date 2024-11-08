@@ -42,10 +42,12 @@ public class MainController implements ActionListener, PropertyChangeListener {
 			case ("Start") -> {
 				controllerLog.info(String.format("Connection attempted with:\n%s",
 					Blackboard.getInstance().getFormattedConnectionSettings()));
+				Blackboard.getInstance().startedProcessing();
 				parent.connectClients();
 			}
 			case ("Stop") -> {
 				controllerLog.info("Stop Pressed. Disconnecting.");
+				Blackboard.getInstance().stoppedProcessing();
 				parent.cleanUpThreads();
 			}
 		}

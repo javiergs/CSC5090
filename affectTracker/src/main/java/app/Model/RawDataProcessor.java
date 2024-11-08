@@ -3,12 +3,16 @@ package app.Model;
 import app.Data.Emotion;
 import app.Data.ProcessedDataObject;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
 import java.util.stream.Collectors;
 
 /**
@@ -26,60 +30,29 @@ import java.util.stream.Collectors;
  * @author Sean Sponsler
  * @version 1.0
  */
-public class RawDataProcessor extends Thread {
+public class RawDataProcessor extends Thread implements PropertyChangeListener {
 	
 	public static final String THREAD_NAME = "DataProcessor";
 	private static final Logger LOGGER = LoggerFactory.getLogger(RawDataProcessor.class);
+	private boolean running = true;
 	
 	public RawDataProcessor() {
 		super();
 		super.setName(THREAD_NAME);
+		Blackboard.getInstance().addPropertyChangeListener(Blackboard.STOPPED,  this);
+		Blackboard.getInstance().addPropertyChangeListener(Blackboard.STARTED,  this);
 	}
 	
 	@Override
 	public void run() {
 		try {
-			// Poll with a timeout to prevent blocking indefinitely
-			String eyeTrackingData = Blackboard.getInstance().pollEyeTrackingQueue();
-			String emotionData = Blackboard.getInstance().pollEmotionQueue();
-			if (eyeTrackingData != null) {
-				LOGGER.info("ProcessingThread: Processing data pair: " + eyeTrackingData + ", " + emotionData);
-				// Process the pair of data
-				List<Integer> coordinates = convertToIntegerList(eyeTrackingData);
-				List<Float> emotionScores = null;
-				Emotion prominentEmotion;
-				if (emotionData != null) {
-					emotionScores = convertToFloatList(emotionData);
-					//if the emotion data is invalid, use neutral
-					if (!isValidEmotionData(emotionScores)) {
-						logInvalidEmotionData(emotionData);
-						prominentEmotion = Emotion.NONE;
-					} else {
-						prominentEmotion = getProminentEmotion(emotionScores);
+				while (true) {
+					if (running) {
+						doYourWork();
 					}
-				} else {
-					prominentEmotion = Emotion.NONE;
+					// this may not be the best solution...
+					sleep(1000);
 				}
-				if (!isValidEyeTrackingData(coordinates)) {
-					logInvalidEyeTrackingData(eyeTrackingData);
-					return; //we can't do anything without eye tracking
-				}
-				ProcessedDataObject processedData = new ProcessedDataObject(
-						coordinates.get(0),
-						coordinates.get(1),
-						prominentEmotion,
-						emotionScores
-				);
-
-				Blackboard.getInstance().addToProcessedDataQueue(processedData);
-			}
-			// debugging client/server communication
-			else if (emotionData != null) {
-				LOGGER.warn(THREAD_NAME + ": Eye-tracking data is missing, but emotion data is present.");
-			} else {
-				// Handle timeout case or missing data
-				LOGGER.warn(THREAD_NAME + ": Timed out waiting for data, or one client is slow.");
-			}
 		} catch (InterruptedException e) {
 			LOGGER.error(THREAD_NAME + " thread was interrupted", e);
 			Thread.currentThread().interrupt();
@@ -88,6 +61,49 @@ public class RawDataProcessor extends Thread {
 		}
 	}
 
+	private void doYourWork() throws InterruptedException {
+		// Poll with a timeout to prevent blocking indefinitely
+		String eyeTrackingData = Blackboard.getInstance().pollEyeTrackingQueue();
+		String emotionData = Blackboard.getInstance().pollEmotionQueue();
+		if (eyeTrackingData != null) {
+			LOGGER.info("ProcessingThread: Processing data pair: " + eyeTrackingData + ", " + emotionData);
+			// Process the pair of data
+			List<Integer> coordinates = convertToIntegerList(eyeTrackingData);
+			List<Float> emotionScores = null;
+			Emotion prominentEmotion;
+			if (emotionData != null) {
+				emotionScores = convertToFloatList(emotionData);
+				//if the emotion data is invalid, use neutral
+				if (!isValidEmotionData(emotionScores)) {
+					logInvalidEmotionData(emotionData);
+					prominentEmotion = Emotion.NONE;
+				} else {
+					prominentEmotion = getProminentEmotion(emotionScores);
+				}
+			} else {
+				prominentEmotion = Emotion.NONE;
+			}
+			if (!isValidEyeTrackingData(coordinates)) {
+				logInvalidEyeTrackingData(eyeTrackingData);
+				return; //we can't do anything without eye tracking
+			}
+			ProcessedDataObject processedData = new ProcessedDataObject(
+					coordinates.get(0),
+					coordinates.get(1),
+					prominentEmotion,
+					emotionScores
+			);
+
+			Blackboard.getInstance().addToProcessedDataQueue(processedData);
+		}
+		// debugging client/server communication
+		else if (emotionData != null) {
+			LOGGER.warn(THREAD_NAME + ": Eye-tracking data is missing, but emotion data is present.");
+		} else {
+			// Handle timeout case or missing data
+			LOGGER.warn(THREAD_NAME + ": Timed out waiting for data, or one client is slow.");
+		}
+	}
     
     private boolean isValidEyeTrackingData(List<Integer> data) {
 		return data != null && data.stream().allMatch(number -> number >= 0);
@@ -144,5 +160,19 @@ public class RawDataProcessor extends Thread {
 		LOGGER.warn("Emotion data is expected to be a comma seperated list of 5 floats between 0 and 1." +
 			"Invalid emotion data format: " + data);
 	}
-	
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		switch (evt.getPropertyName()) {
+			case Blackboard.STOPPED -> {
+				LOGGER.info("blackboard stopped, stopping rdp");
+				running = false;
+			}
+			case Blackboard.STARTED -> {
+				LOGGER.info("blackboard started, starting rdp");
+				running = true;
+			}
+		}
+
+	}
 }

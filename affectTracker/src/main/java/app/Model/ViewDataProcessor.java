@@ -30,8 +30,7 @@ public class ViewDataProcessor extends Thread implements PropertyChangeListener 
 	public ViewDataProcessor() {
 		super();
 		super.setName(THREAD_NAME);
-		Blackboard.getInstance().addPropertyChangeListener(
-			Blackboard.PROPERTY_NAME_PROCESSED_DATA, this);
+		Blackboard.getInstance().addPropertyChangeListener(Blackboard.PROPERTY_NAME_PROCESSED_DATA, this);
 	}
 	
 	@Override

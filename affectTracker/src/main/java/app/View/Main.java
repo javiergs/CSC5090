@@ -3,6 +3,7 @@ package app.View;
 import app.Controller.MainController;
 import app.Model.*;
 import app.library.TheSubscriber;
+import org.slf4j.LoggerFactory;
 import test.EmotionDataServer;
 import test.EyeTrackingServer;
 
@@ -64,9 +65,6 @@ public class Main extends JFrame {
 		int emotionPort = Blackboard.getInstance().getEmotionSocket_Port();
 		cleanUpThreads();
 
-		Thread dataProcessor = new RawDataProcessor();
-		ViewDataProcessor dpDelegate = new ViewDataProcessor();
-
 		try {
 			eyeSubscriber = new TheSubscriber(Blackboard.getInstance().getEyeTrackingSocket_Host(),
 					eyeTrackingPort, Blackboard.EYE_DATA_LABEL, Blackboard.getInstance());
@@ -89,11 +87,15 @@ public class Main extends JFrame {
 			emotionThread.start();
 		}
 
+		if (threads.isEmpty()) {
+			Thread dataProcessor = new RawDataProcessor();
+			ViewDataProcessor dpDelegate = new ViewDataProcessor();
 
-		threads.add(dataProcessor);
-		threads.add(dpDelegate);
-		for (Thread thread : threads) {
-			thread.start();
+			threads.add(dataProcessor);
+			threads.add(dpDelegate);
+			for (Thread thread : threads) {
+				thread.start();
+			}
 		}
 	}
 	
@@ -106,13 +108,6 @@ public class Main extends JFrame {
 			emotionSubscriber.stopSubscriber();
 			emotionSubscriber = null;
 		}
-		// TODO: What?
-//		for (Thread thread : threads) {
-//			if (thread != null) {
-//				thread.stopThread();
-//			}
-//		}
-		threads.clear();
 	}
 	
 	private void startServerThreads() {
