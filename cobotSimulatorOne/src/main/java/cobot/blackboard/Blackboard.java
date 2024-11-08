@@ -19,7 +19,7 @@ public class Blackboard extends PropertyChangeSupport {
 	private static Blackboard instance;
 	
 	public static final int ARM_COUNT = 6;
-	public static final int ARM_LENGTH = 80;
+	public static final int ARM_LENGTH = 50;
 
 	private final ArmHelper armHelper;
 	private final OriginHelper originHelper;
