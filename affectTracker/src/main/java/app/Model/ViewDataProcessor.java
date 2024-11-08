@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  * The {@code ViewDataProcessor} is alerted of new processed data available in the {@link Blackboard},
  * converts it into the appropriate {@link Circle} data for visualization.
  * <p>
- * This class extends {@link CustomThread} and implements {@link PropertyChangeListener} and is intended to be run as a separate thread.
+ * This class implements {@link PropertyChangeListener} and is intended to be run as a separate thread.
  * It handles the consolidation of circles based on proximity and dynamically updates the display.
  *
  * @author Andrew Estrada
