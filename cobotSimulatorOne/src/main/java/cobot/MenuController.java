@@ -1,5 +1,6 @@
 package cobot;
 
+import encoder.StringEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,7 @@ public class MenuController implements ActionListener {
 	
 	private void startClient() {
 		logger.info("Starting subscriber");
-		subscriber = new Subscriber("localhost", 12345);
+		subscriber = new Subscriber("localhost", 12345, new StringEncoder());
 		Thread subscriberThread = new Thread(subscriber);
 		subscriberThread.start();
 		try {

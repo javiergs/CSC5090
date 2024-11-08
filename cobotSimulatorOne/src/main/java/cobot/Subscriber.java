@@ -1,5 +1,6 @@
 package cobot;
 
+import encoder.EncoderHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,15 +19,16 @@ import java.net.Socket;
  * @version 2.0
  */
 public class Subscriber implements Runnable {
-	
 	private static final Logger logger = LoggerFactory.getLogger(Subscriber.class);
 	private String ip;
 	private int port;
 	private boolean running = false;
+	private EncoderHelper encoderHelper;
 	
-	public Subscriber(String ip, int port) {
+	public Subscriber(String ip, int port, EncoderHelper encoderHelper) {
 		this.ip = ip;
 		this.port = port;
+		this.encoderHelper = encoderHelper;
 	}
 	
 	@Override
@@ -40,7 +42,7 @@ public class Subscriber implements Runnable {
 			while (running) {
 				String command = in.readLine();
 				if (command != null) {
-					parse(command);
+					Blackboard.getInstance().updateArmAngles(encoderHelper.parse(command));
 				}
 			}
 			logger.info("Subscriber is stopping");
@@ -57,20 +59,7 @@ public class Subscriber implements Runnable {
 	public void stop() {
 		running = false;
 	}
-	
-	private void parse(String command) {
-		String[] tokens = command.split(",");
-		try {
-			int[] numbers = new int[6];
-			for (int i = 0; i < 6; i++) {
-				numbers[i] = Integer.parseInt(tokens[i]);
-			}
-			Blackboard.getInstance().updateArmAngles(numbers);
-		} catch (NumberFormatException e) {
-			logger.error("Error parsing command", e);
-		}
-	}
-	
+
 	public boolean isRunning() {
 		return running;
 	}
