@@ -45,7 +45,7 @@ public class CobotPanel extends JPanel implements PropertyChangeListener {
 	}
 	
 	private void drawReachableRadius(Graphics g) {
-		int totalArmLength = Blackboard.getInstance().ARM_COUNT * Blackboard.getInstance().ARM_LENGTH;
+		int totalArmLength = Blackboard.getInstance().getArmCount() * Blackboard.getInstance().getArmLength();
 		g.setColor(new Color(200, 200, 200, 100));
 		Point center = Blackboard.getInstance().getCenter();
 		g.drawOval(center.x - totalArmLength, center.y - totalArmLength, totalArmLength * 2, totalArmLength * 2);
@@ -62,8 +62,8 @@ public class CobotPanel extends JPanel implements PropertyChangeListener {
 	
 	private Point drawArmAndJoint(Graphics2D g2d, Point prevPoint, double angle, Color armColor) {
 		// calc new endpoint
-		int endX = (int) (prevPoint.x + Blackboard.getInstance().ARM_LENGTH * Math.cos(Math.toRadians(angle)));
-		int endY = (int) (prevPoint.y + Blackboard.getInstance().ARM_LENGTH * Math.sin(Math.toRadians(angle)));
+		int endX = (int) (prevPoint.x + Blackboard.getInstance().getArmLength() * Math.cos(Math.toRadians(angle)));
+		int endY = (int) (prevPoint.y + Blackboard.getInstance().getArmLength() * Math.sin(Math.toRadians(angle)));
 		Point endPoint = new Point(endX, endY);
 		drawArm(g2d, prevPoint, endPoint, armColor);
 		drawJoint(g2d, prevPoint);

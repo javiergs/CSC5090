@@ -49,6 +49,13 @@ public class Blackboard extends PropertyChangeSupport {
 		firePropertyChange("origin", null, originHelper.getCenter());
 	}
 
+	public int getArmCount() {
+		return ARM_COUNT;
+	}
+	public int getArmLength() {
+		return ARM_LENGTH;
+	}
+
 	public List<Double> getArmAngles() {
 		return armHelper.getArmAngles();
 	}
@@ -64,5 +71,6 @@ public class Blackboard extends PropertyChangeSupport {
 	public Point getCenter() {
 		return originHelper.getCenter();
 	}
+
 	
 }
