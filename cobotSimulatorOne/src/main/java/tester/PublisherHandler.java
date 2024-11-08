@@ -34,9 +34,6 @@ public class PublisherHandler implements Runnable {
 				for (int i = 0; i < angles.length; i++) {
 					angles[i] = (int) (Math.random() * 360);
 				}
-				logger.info("Sending angles to client: {},{},{},{},{},{}",
-					angles[0], angles[1], angles[2], angles[3], angles[4], angles[5]);
-
 				String encodedAngles = encoder.encode(angles);
 				logger.info("Sending angles to client using {}: {}", encoder.getClass().getSimpleName(), encodedAngles);
 

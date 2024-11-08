@@ -33,8 +33,6 @@ public class JsonEncoder implements EncoderHelper {
         for (int i = 0; i < angles.length; i++) {
             json.put("angle" + (i + 1), angles[i]);
         }
-
-        logger.info("Encoded into JSON: " + json);
         return json.toString();
     }
 

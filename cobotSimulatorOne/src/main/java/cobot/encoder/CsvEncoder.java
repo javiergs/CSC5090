@@ -30,7 +30,6 @@ public class CsvEncoder implements EncoderHelper {
             sb.append(angles[i]);
             if (i < angles.length - 1) sb.append(",");
         }
-        logger.info("Encoded into CSV: " + sb);
         return sb.toString();
     }
 }

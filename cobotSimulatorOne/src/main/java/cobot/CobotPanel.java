@@ -106,7 +106,9 @@ public class CobotPanel extends JPanel implements PropertyChangeListener {
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		repaint();
+		if (evt.getPropertyName().equals("armAngles") || evt.getPropertyName().equals("origin")) {
+			repaint();
+		}
 	}
 	
 }
