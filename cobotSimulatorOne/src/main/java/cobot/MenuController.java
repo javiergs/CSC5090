@@ -19,10 +19,10 @@ import java.awt.event.ActionListener;
  * @version 2.0
  */
 public class MenuController implements ActionListener {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(MenuController.class);
 	private Subscriber subscriber;
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("Start client")) {
@@ -33,7 +33,7 @@ public class MenuController implements ActionListener {
 			System.exit(0);
 		}
 	}
-	
+
 	private void startClient() {
 		logger.info("Starting subscriber");
 		subscriber = new Subscriber("localhost", 12345, new CsvEncoder());
@@ -45,20 +45,23 @@ public class MenuController implements ActionListener {
 			e.printStackTrace();
 		}
 		if (!subscriber.isRunning()) {
+			logger.info("Client could not connect to server");
 			JOptionPane.showMessageDialog(null, "Could not connect to server", "Error", JOptionPane.ERROR_MESSAGE);
-		Blackboard.getInstance().updateStatusLabel("disconnected");
+			Blackboard.getInstance().updateStatusLabel("disconnected");
 		} else {
+			logger.info("Client connected to server");
 			JOptionPane.showMessageDialog(null, "Connected to server", "Success", JOptionPane.INFORMATION_MESSAGE);
 			Blackboard.getInstance().updateStatusLabel("connected");
 		}
 	}
-	
+
 	private void pauseClient() {
 		if (subscriber.isRunning()) {
 			logger.info("Stopping subscriber");
 			subscriber.stop();
+			JOptionPane.showMessageDialog(null, "Stopping Client...", "Success", JOptionPane.INFORMATION_MESSAGE);
 			Blackboard.getInstance().updateStatusLabel("disconnected");
 		}
 	}
-	
+
 }

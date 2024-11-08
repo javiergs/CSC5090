@@ -17,13 +17,21 @@ public class Main {
 	public static void main(String[] args) {
 		Publisher server = new Publisher(12345);
 		new Thread(server).start();
-		System.out.println("Press any key to stop the server");
-		try {
-			System.in.read();
-			server.stop();
-		} catch (Exception e) {
-			logger.error("Error in MainTester", e);
-		}
+		System.out.println("Enter any key to stop the server");
+
+		Thread stopServerThread = new Thread(() -> {
+			try {
+				System.in.read();
+				server.stop();
+				System.out.println("Server stopped.");
+				System.exit(0);
+
+			} catch (Exception e) {
+				logger.error("MainTester: Error in stopping server", e);
+			}
+		});
+
+		stopServerThread.start();
 	}
 	
 }
