@@ -6,14 +6,16 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Blackboard extends PropertyChangeSupport {
+public class Blackboard extends PropertyChangeSupport implements DataDestination {
     private static Blackboard instance;
     private final List<Point> clickPositions;
     private int transmissionSpeed;
     private boolean tracking;
+    private final PropertyChangeSupport propertyChangeSupport;
 
     private Blackboard() {
-        super(instance);
+        super(new Object());  // Initialize with a dummy object
+        this.propertyChangeSupport = new PropertyChangeSupport(this);
         this.clickPositions = new ArrayList<>();
         this.transmissionSpeed = 60;
         this.tracking = false;
@@ -27,18 +29,18 @@ public class Blackboard extends PropertyChangeSupport {
     }
 
     public void addObserver(PropertyChangeListener listener) {
-        this.addPropertyChangeListener(listener);
+        this.propertyChangeSupport.addPropertyChangeListener(listener);
     }
 
     public void removeObserver(PropertyChangeListener listener) {
-        this.removePropertyChangeListener(listener);
+        this.propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
     public synchronized void addClick(Point click) {
         if (tracking && clickPositions.size() < transmissionSpeed) {
-            List<Point> oldValue = new ArrayList<>(clickPositions); // copy current list state
+            List<Point> oldValue = new ArrayList<>(clickPositions);
             clickPositions.add(click);
-            firePropertyChange("clickPositions", oldValue, clickPositions);
+            propertyChangeSupport.firePropertyChange("clickPositions", oldValue, clickPositions);
         }
     }
 
@@ -61,12 +63,24 @@ public class Blackboard extends PropertyChangeSupport {
     public synchronized void startTracking() {
         boolean oldValue = tracking;
         tracking = true;
-        firePropertyChange("clickPositions", oldValue, true);
+        propertyChangeSupport.firePropertyChange("clickPositions", oldValue, true);
     }
 
     public synchronized void stopTracking() {
         boolean oldValue = tracking;
         tracking = false;
-        firePropertyChange("clickPositions", oldValue, false);
+        propertyChangeSupport.firePropertyChange("clickPositions", oldValue, false);
+    }
+
+    // Implementation of DataDestination methods
+    @Override
+    public void addSubscriberData(String dataWithPrefix) {
+        // Process the incoming data and update the Blackboard as needed
+        System.out.println("Received data: " + dataWithPrefix);
+    }
+
+    @Override
+    public void alertError(String messageWithPrefix) {
+        System.err.println("Error received: " + messageWithPrefix);
     }
 }
