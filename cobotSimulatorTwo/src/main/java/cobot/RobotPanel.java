@@ -1,14 +1,26 @@
 package cobot;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class RobotPanel extends JPanel implements ActionListener {
+public class RobotPanel extends JPanel implements ActionListener, PropertyChangeListener {
+    //Object for holding angles, generalizes better
+        public record RobotAngles(int[] angles) {
+            public RobotAngles(int[] angles) {
+                this.angles = angles;
+                if (this.angles.length != 6) {
+                    //TODO: Adjust array so size is 6
+                }
+            }
+        }
 
     private Timer simulationTimer;
     private boolean simulate = false;
-    private int[] targetAngles = new int[6];
+    private RobotAngles angles;
     private int phase = 1;
 
     public RobotPanel() {
@@ -16,10 +28,6 @@ public class RobotPanel extends JPanel implements ActionListener {
     }
 
     public void startSimulation() {
-        if (AngleBlackboard.getInstance().getAngles() == null) {
-            JOptionPane.showMessageDialog(this, "No angles to simulate.");
-            return;
-        }
         simulate = true;
         phase = 1;
         runSimulation();
@@ -33,9 +41,6 @@ public class RobotPanel extends JPanel implements ActionListener {
     }
 
     private void runSimulation() {
-        int[] angles = AngleBlackboard.getInstance().getAngles();
-        System.arraycopy(angles, 0, targetAngles, 0, angles.length);
-
         final int delay = 50;  // Delay for smooth animation
         simulationTimer = new Timer(delay, this);
         simulationTimer.start();
@@ -57,32 +62,32 @@ public class RobotPanel extends JPanel implements ActionListener {
 
         switch (phase) {
             case 1:
-                if (adjustAngleTowardsTarget(0, targetAngles[0])) {
+                if (adjustAngleTowardsTarget(0, angles.angles()[0])) {
                     phase = 2;
                 }
                 break;
             case 2:
-                if (adjustAngleTowardsTarget(1, targetAngles[1])) {
+                if (adjustAngleTowardsTarget(1, angles.angles()[1])) {
                     phase = 3;
                 }
                 break;
             case 3:
-                if (adjustAngleTowardsTarget(2, targetAngles[2])) {
+                if (adjustAngleTowardsTarget(2, angles.angles()[2])) {
                     phase = 4;
                 }
                 break;
             case 4:
-                if (adjustAngleTowardsTarget(3, targetAngles[3])) {
+                if (adjustAngleTowardsTarget(3, angles.angles()[3])) {
                     phase = 5;
                 }
                 break;
             case 5:
-                if (adjustAngleTowardsTarget(4, targetAngles[4])) {
+                if (adjustAngleTowardsTarget(4, angles.angles()[4])) {
                     phase = 6;
                 }
                 break;
             case 6:
-                if (adjustAngleTowardsTarget(5, targetAngles[5])) {
+                if (adjustAngleTowardsTarget(5, angles.angles()[5])) {
                     finished = true;
                 }
                 break;
@@ -95,7 +100,7 @@ public class RobotPanel extends JPanel implements ActionListener {
     }
 
     private boolean adjustAngleTowardsTarget(int index, int targetAngle) {
-        int[] angles = AngleBlackboard.getInstance().getAngles();
+        int[] angles = this.angles.angles();
         int currentAngle = angles[index];
         int step = 1;  // Step size for smoother animation
 
@@ -110,7 +115,25 @@ public class RobotPanel extends JPanel implements ActionListener {
             angles[index] -= step;
         }
 
-        AngleBlackboard.getInstance().setAngles(angles);  // Update angles on the Blackboard
         return false;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        drawArm(g);
+    }
+
+    public void drawArm(Graphics g) {
+        //TODO: do the drawing
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getNewValue() instanceof RobotAngles) {
+            if (!simulationTimer.isRunning()) { //only update once done simulating
+                this.angles = (RobotAngles) evt.getNewValue();
+            }
+        }
     }
 }
