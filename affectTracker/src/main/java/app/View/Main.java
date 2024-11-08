@@ -3,7 +3,6 @@ package app.View;
 import app.Controller.MainController;
 import app.Model.*;
 import app.library.TheSubscriber;
-import org.slf4j.LoggerFactory;
 import test.EmotionDataServer;
 import test.EyeTrackingServer;
 

@@ -6,7 +6,6 @@ import app.Data.ProcessedDataObject;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
 import java.util.Deque;
 
 import org.slf4j.Logger;
