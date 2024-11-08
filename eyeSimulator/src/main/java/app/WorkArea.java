@@ -18,13 +18,9 @@ public class WorkArea extends JPanel implements MouseListener, PropertyChangeLis
     public WorkArea() {
         Blackboard.getInstance().addObserver(this);
         addMouseListener(this);
-        logger.debug("WorkArea initialized and observing EventManager.");
+        logger.debug("WorkArea initialized and observing Blackboard.");
     }
 
-    /**
-     * Draws circles at the clicked locations
-     * @param g the <code>Graphics</code> object to protect
-     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -34,10 +30,6 @@ public class WorkArea extends JPanel implements MouseListener, PropertyChangeLis
         }
     }
 
-    /**
-     * Sends the location of a mouse click to the backboard and notifies the event manager of the change
-     * @param e the event to be processed
-     */
     @Override
     public void mouseReleased(MouseEvent e) {
         if (Blackboard.getInstance().isTracking()) {
