@@ -22,11 +22,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Install OpenJDK 20
-      run: |
-        sudo apt update
-        sudo apt install -y openjdk-20-jdk
-        java -version
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
     
     - name: Build with Maven
       run: |
