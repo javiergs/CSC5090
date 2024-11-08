@@ -1,5 +1,7 @@
 package tester;
 
+import cobot.encoder.CsvEncoder;
+import cobot.encoder.EncoderHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,9 +18,11 @@ public class PublisherHandler implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(Publisher.class);
 	public static final int ANGLES_TRANSMIT_DELAY_SECONDS = 1;
 	private Socket socket;
+	private EncoderHelper encoder;
 	
-	public PublisherHandler(Socket socket) {
+	public PublisherHandler(Socket socket, EncoderHelper encoderHelper) {
 		this.socket = socket;
+		this.encoder = encoderHelper;
 	}
 	
 	@Override
@@ -32,17 +36,16 @@ public class PublisherHandler implements Runnable {
 				}
 				logger.info("Sending angles to client: {},{},{},{},{},{}",
 					angles[0], angles[1], angles[2], angles[3], angles[4], angles[5]);
-				out.println(
-					angles[0] + "," +
-						angles[1] + "," +
-						angles[2] + "," +
-						angles[3] + "," +
-						angles[4] + "," +
-						angles[5]);
+
+				String encodedAngles = encoder.encode(angles);
+				logger.info("Sending angles to client using {}: {}", encoder.getClass().getSimpleName(), encodedAngles);
+
+				out.println(encodedAngles);
+
 				Thread.sleep(ANGLES_TRANSMIT_DELAY_SECONDS*1000);
 			}
 		} catch (Exception ex) {
-			logger.error("Error in ServerHandler", ex);
+			logger.error("Error in PublisherHandler", ex);
 		}
 	}
 	

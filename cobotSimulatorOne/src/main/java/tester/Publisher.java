@@ -3,6 +3,8 @@ package tester;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import cobot.encoder.CsvEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +36,7 @@ public class Publisher implements Runnable {
 			logger.info("Server started");
 			while (running) {
 				Socket socket = serverSocket.accept();
-				PublisherHandler publisherHandler = new PublisherHandler(socket);
+				PublisherHandler publisherHandler = new PublisherHandler(socket, new CsvEncoder());
 				new Thread(publisherHandler).start();
 			}
 			logger.info("Server stopped");

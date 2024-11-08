@@ -24,12 +24,12 @@ public class Subscriber implements Runnable {
 	private String ip;
 	private int port;
 	private boolean running = false;
-	private EncoderHelper encoderHelper;
+	private EncoderHelper encoder;
 	
 	public Subscriber(String ip, int port, EncoderHelper encoderHelper) {
 		this.ip = ip;
 		this.port = port;
-		this.encoderHelper = encoderHelper;
+		this.encoder = encoderHelper;
 	}
 	
 	@Override
@@ -43,7 +43,7 @@ public class Subscriber implements Runnable {
 			while (running) {
 				String command = in.readLine();
 				if (command != null) {
-					Blackboard.getInstance().updateArmAngles(encoderHelper.parse(command));
+					Blackboard.getInstance().updateArmAngles(encoder.parse(command));
 				}
 			}
 			logger.info("Subscriber is stopping");
