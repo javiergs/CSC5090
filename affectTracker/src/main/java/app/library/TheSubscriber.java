@@ -33,7 +33,7 @@ public class TheSubscriber implements Runnable{
             while (running) {
                 long startTime = System.currentTimeMillis();
                 String str = inputStream.readUTF();
-                dataDestination.addSubscriberData(str);
+                dataDestination.addSubscriberData( dataPrefix + str);
                 long endTime = System.currentTimeMillis();
                 log.info("Received data: " + str + " in " + (endTime - startTime) + "ms");
             }

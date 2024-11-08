@@ -16,8 +16,6 @@ import org.slf4j.LoggerFactory;
 import app.Data.Circle;
 import app.Data.ProcessedDataObject;
 
-import javax.xml.crypto.Data;
-
 
 /**
  * The {@code Blackboard} class serves as the central hub for managing data across different components
@@ -44,15 +42,16 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
 	public static final String PROPERTY_NAME_PROCESSED_DATA = "processed data";
 
 	public static final String PROPERTY_NAME_VIEW_DATA = "view data";
-   private final Logger logger;
+    private final Logger logger;
 	private Deque<Circle> circleList;
 	private int maxCircles = 5;
 	private int thresholdRadius = 50;
 	private int circleRadius = 50;
-	public static final String PROPERTY_NAME_EYETHREAD_ERROR = "eye tracking thread error";
-	public static final String PROPERTY_NAME_EMOTIONTHREAD_ERROR = "eye emotion thread error";
-	public static final String PROPERTY_NAME_MQTTBROKER_ERROR = "broker error";
+	public static final String EYE_DATA_LABEL = "EYE";
+	public static final String EMOTION_DATA_LABEL = "EMOTION";
+	public static final String MQTTBROKER_ERROR = "broker error";
 	private static final int TIMEOUT_IN_MS = 500;
+	private static final String PREFIX_DELIMITER = "~";
 	private static final Blackboard INSTANCE = new Blackboard();
 	
 	private Blackboard() {
@@ -61,21 +60,68 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
 		emotionQueue = new LinkedBlockingQueue<>();
 		processedDataQueue = new ConcurrentLinkedQueue<>();
 		circleList = new ConcurrentLinkedDeque<>();
-      logger = LoggerFactory.getLogger(Blackboard.class);
+      	logger = LoggerFactory.getLogger(Blackboard.class);
 	}
 	
 	public static Blackboard getInstance() {
 		return INSTANCE;
 	}
 
+	/**
+	 * parses prefix and calls the method to add the data to the appropriate data structure
+	 *
+	 * @param dataWithPrefix string of data with a prefix to denote the source
+	 */
 	public void addSubscriberData(String dataWithPrefix){
-		//parse prefix
-		//call the method to add the rest of the data appropriate queue
+		if (isValidMessage(dataWithPrefix)) {
+			String[] prefixAndData = dataWithPrefix.split(PREFIX_DELIMITER, 2);
+			try{
+				switch (prefixAndData[0]) {
+					case EYE_DATA_LABEL -> addToEyeTrackingQueue(prefixAndData[1]);
+					case EMOTION_DATA_LABEL -> addToEmotionQueue(prefixAndData[1]);
+					default -> logger.warn("Data from unknown source with prefix \"" + prefixAndData[0]
+							+ "\" : " + prefixAndData[1]);
+				}
+			} catch (InterruptedException e) {
+				logger.warn("Data with prefix \"" + prefixAndData[0] +
+						"\" was interrupted and was unable to added to the queue  : " + prefixAndData[1]);
+            }
+        } else {
+			logger.warn("Data with invalid format : " + dataWithPrefix);
+		}
 	}
 
+	/**
+	 * parses prefix and calls the appropriate method to alert listeners of the error
+	 *
+	 * @param messageWithPrefix string of data with a prefix to denote the source
+	 */
 	public void alertError(String messageWithPrefix){
-		//parse prefix
-		//alert the controller listener to show the users
+
+		if (isValidMessage(messageWithPrefix)) {
+			String[] prefixAndMessage = messageWithPrefix.split(PREFIX_DELIMITER, 2);
+
+			switch (prefixAndMessage[0]) {
+				case EYE_DATA_LABEL -> reportEyeThreadError(prefixAndMessage[1]);
+				case EMOTION_DATA_LABEL -> reportEmotionThreadError(prefixAndMessage[1]);
+				case MQTTBROKER_ERROR -> reportMQTTBrokerError(prefixAndMessage[1]);
+				default -> logger.warn("Alerted of error with unknown prefix \"" + prefixAndMessage[0]
+						+ "\" : " + prefixAndMessage[1]);
+			}
+
+		} else {
+			logger.warn("Alerted of error without prefix : " + messageWithPrefix);
+		}
+	}
+
+	/**
+	 * ensures the message has a prefix and a body separated by the prefix delimiter
+	 *
+	 * @param messageWithPrefix string received from subscriber
+	 * @return	true if message has prefix and body
+	 */
+	public boolean isValidMessage(String messageWithPrefix){
+		return messageWithPrefix.split(PREFIX_DELIMITER).length == 2;
 	}
 	
 	public void addToEyeTrackingQueue(String data) throws InterruptedException {
@@ -175,15 +221,15 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
 	}
 
 	public void reportEyeThreadError(String ex_message) {
-		firePropertyChange(PROPERTY_NAME_EYETHREAD_ERROR, null, ex_message);
+		firePropertyChange(EYE_DATA_LABEL, null, ex_message);
 	}
 	
 	public void reportEmotionThreadError(String ex_message) {
-		firePropertyChange(PROPERTY_NAME_EMOTIONTHREAD_ERROR, null, ex_message);
+		firePropertyChange(EMOTION_DATA_LABEL, null, ex_message);
 	}
 
 	public void reportMQTTBrokerError(String ex_message) {
-		firePropertyChange(PROPERTY_NAME_MQTTBROKER_ERROR, null, ex_message);
+		firePropertyChange(MQTTBROKER_ERROR, null, ex_message);
 	}
 	
 }

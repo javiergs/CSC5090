@@ -2,16 +2,13 @@ package app.View;
 
 import app.Controller.MainController;
 import app.Model.*;
+import app.library.TheSubscriber;
 import test.EmotionDataServer;
 import test.EyeTrackingServer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.DataInputStream;
 import java.io.IOException;
-import java.net.Socket;
 import java.util.ArrayList;
 
 /**
@@ -30,9 +27,13 @@ import java.util.ArrayList;
  * @author Sean Sponsler
  */
 public class Main extends JFrame {
+	//TODO: change events from blackboard to include the information necessary for listeners
+	//TODO: change listeners to use the data from the events and not from the Blackboard
 	
 	private static final String TESTING_FLAG = "-test";
 	private final ArrayList<CustomThread> threads;
+	private TheSubscriber eyeSubscriber = null;
+	private TheSubscriber emotionSubscriber = null;
 	
 	public Main() {
 		threads = new ArrayList<>();
@@ -56,42 +57,41 @@ public class Main extends JFrame {
 		ColorKeyPanel colorKeyPanel = new ColorKeyPanel();
 		colorKeyPanel.setPreferredSize(new Dimension(200, 1000));
 		add(colorKeyPanel, BorderLayout.EAST);
-		Blackboard.getInstance().addPropertyChangeListener(Blackboard.PROPERTY_NAME_EYETHREAD_ERROR, controller);
-		Blackboard.getInstance().addPropertyChangeListener(Blackboard.PROPERTY_NAME_EMOTIONTHREAD_ERROR, controller);
+		Blackboard.getInstance().addPropertyChangeListener(Blackboard.EYE_DATA_LABEL, controller);
+		Blackboard.getInstance().addPropertyChangeListener(Blackboard.EMOTION_DATA_LABEL, controller);
 	}
 	
 	public void connectClients() {
 		int eyeTrackingPort = Blackboard.getInstance().getEyeTrackingSocket_Port();
 		int emotionPort = Blackboard.getInstance().getEmotionSocket_Port();
 		cleanUpThreads();
-		EyeTrackingClient eyeTrackingThread;
-		EmotionDataClient emotionThread = null;
-
-		try {
-			Socket eye_socket = new Socket(Blackboard.getInstance().getEyeTrackingSocket_Host(),
-					eyeTrackingPort);
-			DataInputStream eye_IS = new DataInputStream(eye_socket.getInputStream());
-			eyeTrackingThread = new EyeTrackingClient(eye_socket, eye_IS);
-		} catch (IOException e) {
-
-			//Do not continue if we do not have Eye Tracking Info
-			return;
-		}
-		try {
-			Socket emotion_socket = new Socket(Blackboard.getInstance().getEmotionSocket_Host(),
-					emotionPort);
-			DataInputStream emotion_IS = new DataInputStream(emotion_socket.getInputStream());
-			emotionThread = new EmotionDataClient(emotion_socket, emotion_IS);
-		} catch (IOException e) {
-			//
-		}
 
 		CustomThread dataProcessor = new RawDataProcessor();
 		ViewDataProcessor dpDelegate = new ViewDataProcessor();
-		Thread eye = new Thread(eyeTrackingThread);
-		Thread emotion = new Thread(emotionThread);
-		eye.start();
-		emotion.start();
+
+		try {
+			eyeSubscriber = new TheSubscriber(Blackboard.getInstance().getEyeTrackingSocket_Host(),
+					eyeTrackingPort, Blackboard.EYE_DATA_LABEL, Blackboard.getInstance());
+		} catch (IOException e) {
+			Blackboard.getInstance().reportEyeThreadError(e.getMessage());
+			//do not continue if we don't have access to eye data
+			return;
+		}
+		try {
+			emotionSubscriber = new TheSubscriber(Blackboard.getInstance().getEmotionSocket_Host(),
+					emotionPort, Blackboard.EMOTION_DATA_LABEL, Blackboard.getInstance());
+		} catch (IOException e) {
+			Blackboard.getInstance().reportEmotionThreadError(e.getMessage());
+        }
+
+		Thread eyeThread = new Thread(eyeSubscriber);
+		eyeThread.start();
+		if (emotionSubscriber != null){
+			Thread emotionThread = new Thread(emotionSubscriber);
+			emotionThread.start();
+		}
+
+
 		threads.add(dataProcessor);
 		threads.add(dpDelegate);
 		for (CustomThread thread : threads) {
@@ -100,6 +100,14 @@ public class Main extends JFrame {
 	}
 	
 	public void cleanUpThreads() {
+		if (eyeSubscriber != null ){
+			eyeSubscriber.stopSubscriber();
+			eyeSubscriber = null;
+		}
+		if (emotionSubscriber != null ){
+			emotionSubscriber.stopSubscriber();
+			emotionSubscriber = null;
+		}
 		for (CustomThread thread : threads) {
 			if (thread != null) {
 				thread.stopThread();
@@ -116,8 +124,8 @@ public class Main extends JFrame {
 		eyeTrackingThread.start();
 	}
 
-	//Todo: Move this to the controller. Do not create threads until confirmed connection.
-	
+	//Todo: clean up threads, may not need CustomThread class at all
+
 	public static void main(String[] args) {
 		Main window = new Main();
 		window.setTitle ("Eye Tracking & Emotion Hub");
