@@ -1,7 +1,7 @@
 package cobot;
 
-import blackboard.Blackboard;
-import encoder.EncoderHelper;
+import cobot.blackboard.Blackboard;
+import cobot.encoder.EncoderHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

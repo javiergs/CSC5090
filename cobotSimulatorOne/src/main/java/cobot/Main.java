@@ -1,6 +1,6 @@
 package cobot;
 
-import blackboard.Blackboard;
+import cobot.blackboard.Blackboard;
 
 import javax.swing.*;
 import java.awt.*;

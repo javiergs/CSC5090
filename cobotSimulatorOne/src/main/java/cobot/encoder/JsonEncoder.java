@@ -1,4 +1,4 @@
-package encoder;
+package cobot.encoder;
 
 import org.json.JSONArray;
 import org.slf4j.Logger;

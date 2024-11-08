@@ -1,4 +1,4 @@
-package encoder;
+package cobot.encoder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

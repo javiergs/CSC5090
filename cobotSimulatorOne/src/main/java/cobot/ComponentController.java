@@ -1,6 +1,6 @@
 package cobot;
 
-import blackboard.Blackboard;
+import cobot.blackboard.Blackboard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

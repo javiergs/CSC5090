@@ -1,10 +1,8 @@
-package blackboard;
+package cobot.blackboard;
 
 import java.awt.*;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Blackboard class to store shared data between classes.

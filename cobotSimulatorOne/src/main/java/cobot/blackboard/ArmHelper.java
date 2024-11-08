@@ -1,4 +1,4 @@
-package blackboard;
+package cobot.blackboard;
 
 import java.util.ArrayList;
 import java.util.List;
