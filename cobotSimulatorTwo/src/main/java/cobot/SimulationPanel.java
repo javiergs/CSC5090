@@ -12,6 +12,8 @@ import java.beans.PropertyChangeListener;
 public class SimulationPanel extends JPanel implements PropertyChangeListener {
 	private JLabel staticStatusLabel;
 	private JLabel dynamicStatusLabel;
+
+	private static boolean RUNNING = false;
 	public SimulationPanel() {
 		staticStatusLabel = new JLabel("Status: ");
 		staticStatusLabel.setFont(new Font("Arial", Font.BOLD, 20));
@@ -25,10 +27,20 @@ public class SimulationPanel extends JPanel implements PropertyChangeListener {
 		this.add(staticStatusLabel);
 		this.add(dynamicStatusLabel);
 	}
+
+	public static void startRunning() {
+		RUNNING = true;
+	}
+
+	public static void stopRunning() {
+		RUNNING = false;
+	}
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		repaint();
+		if (RUNNING) {
+			repaint();
+		}
 	}
 	
 	@Override

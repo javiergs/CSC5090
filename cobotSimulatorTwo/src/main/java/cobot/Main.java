@@ -1,5 +1,8 @@
 package cobot;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -8,6 +11,8 @@ import java.awt.*;
  * with buttons to start and stop the simulation.
  */
 public class Main extends JFrame {
+	private static final Logger logger = LoggerFactory.getLogger(Main.class);
+	public static int PORT = 12345;
 	
 	public Main() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -17,6 +22,11 @@ public class Main extends JFrame {
 		createMenuBar();
 		setLayout(new GridLayout(1, 1));
 		add(simulationPanel, BorderLayout.CENTER);
+
+		logger.info("Starting publisher");
+		Publisher publisher = new Publisher(PORT);
+		Thread publisherThread = new Thread(publisher);
+		publisherThread.start();
 	}
 	
 	private void createMenuBar() {
