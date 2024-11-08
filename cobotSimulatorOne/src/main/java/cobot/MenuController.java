@@ -21,6 +21,8 @@ import java.awt.event.ActionListener;
 public class MenuController implements ActionListener {
 
 	private static final Logger logger = LoggerFactory.getLogger(MenuController.class);
+	public static final String LOCALHOST = "localhost";
+	public static final int PORT = 12345;
 	private Subscriber subscriber;
 
 	@Override
@@ -36,7 +38,7 @@ public class MenuController implements ActionListener {
 
 	private void startClient() {
 		logger.info("Starting subscriber");
-		subscriber = new Subscriber("localhost", 12345, new CsvEncoder());
+		subscriber = new Subscriber(LOCALHOST, PORT, new CsvEncoder());
 		Thread subscriberThread = new Thread(subscriber);
 		subscriberThread.start();
 		try {

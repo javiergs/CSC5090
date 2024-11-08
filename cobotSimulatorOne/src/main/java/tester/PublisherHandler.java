@@ -13,8 +13,8 @@ import java.net.Socket;
  * @version 1.0
  */
 public class PublisherHandler implements Runnable {
-	
 	private static final Logger logger = LoggerFactory.getLogger(Publisher.class);
+	public static final int ANGLES_TRANSMIT_DELAY_SECONDS = 1;
 	private Socket socket;
 	
 	public PublisherHandler(Socket socket) {
@@ -23,7 +23,7 @@ public class PublisherHandler implements Runnable {
 	
 	@Override
 	public void run() {
-		int angles[] = new int[6];
+		int[] angles = new int[6];
 		try {
 			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 			while (true) {
@@ -39,7 +39,7 @@ public class PublisherHandler implements Runnable {
 						angles[3] + "," +
 						angles[4] + "," +
 						angles[5]);
-				Thread.sleep(1000);
+				Thread.sleep(ANGLES_TRANSMIT_DELAY_SECONDS*1000);
 			}
 		} catch (Exception ex) {
 			logger.error("Error in ServerHandler", ex);

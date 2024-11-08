@@ -12,10 +12,11 @@ import org.slf4j.LoggerFactory;
  */
 public class Main {
 
+	public static final int PORT = 12345;
 	private static final Logger logger = LoggerFactory.getLogger(Main.class);
 	
 	public static void main(String[] args) {
-		Publisher server = new Publisher(12345);
+		Publisher server = new Publisher(PORT);
 		new Thread(server).start();
 		System.out.println("Enter any key to stop the server");
 
