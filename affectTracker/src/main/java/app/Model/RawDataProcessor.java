@@ -46,8 +46,7 @@ public class RawDataProcessor implements Runnable, PropertyChangeListener {
 				if (running) {
 					doYourWork();
 				}
-				// TODO: It stops working if the spam is commented out?
-				LOGGER.info("DataProcessor loop" + running);
+				Thread.sleep(1000);
 			}
 		} catch (InterruptedException e) {
 			LOGGER.error(THREAD_NAME + " thread was interrupted", e);
