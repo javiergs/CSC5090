@@ -49,7 +49,7 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
 	private int circleRadius = 50;
 	public static final String EYE_DATA_LABEL = "EYE";
 	public static final String EMOTION_DATA_LABEL = "EMOTION";
-	public static final String MQTTBROKER_ERROR = "broker error";
+	public static final String MQTTBROKER_ERROR = "MQTTE";
 	private static final int TIMEOUT_IN_MS = 500;
 	private static final String PREFIX_DELIMITER = "~";
 	private static final Blackboard INSTANCE = new Blackboard();

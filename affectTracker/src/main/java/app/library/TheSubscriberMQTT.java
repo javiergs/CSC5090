@@ -11,6 +11,7 @@ public class TheSubscriberMQTT implements Runnable, MqttCallback {
     private final Map<String, String> topicAndPrefixPairs;
     private final DataDestination dataDestination;
 
+    private static final String MQTT_PREFIX = "MQTTE";
     private static final String PREFIX_DELIMITER = "~";
     private boolean running = true;
 
@@ -29,8 +30,7 @@ public class TheSubscriberMQTT implements Runnable, MqttCallback {
         } catch (MqttException e) {
             log.warn("Unable to connect to broker --" + e.getMessage());
             throw e;
-//            Blackboard.getInstance().reportMQTTBrokerError("Unable to connect to broker --\n\t" + e.getMessage());
-        }
+       }
     }
 
     @Override
@@ -41,7 +41,7 @@ public class TheSubscriberMQTT implements Runnable, MqttCallback {
                 Thread.sleep(1000);
             }
         } catch (InterruptedException e) {
-            String mqttErrorPrefixWithDelim = "MQTTE" + PREFIX_DELIMITER ;
+            String mqttErrorPrefixWithDelim = MQTT_PREFIX + PREFIX_DELIMITER ;
             dataDestination.alertError(mqttErrorPrefixWithDelim +
                     e.getMessage());
             log.warn("Thread was interrupted", e);
