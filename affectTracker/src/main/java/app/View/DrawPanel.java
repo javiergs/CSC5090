@@ -1,7 +1,6 @@
 package app.View;
 
 import app.Data.Circle;
-import app.Model.Blackboard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +14,7 @@ import java.util.Deque;
 
 /**
  * The {@code DrawPanel} class is a custom {@link JPanel} that visually represents
- * circles stored in the {@link Blackboard}. Each circle is drawn with its respective
+ * circles received from PropertyChangeEvents. Each circle is drawn with its respective
  * color, and an outline is added around each circle.
  * <p>
  * This panel is used as part of a graphical interface to display real-time visualizations
@@ -34,7 +33,6 @@ public class DrawPanel extends JPanel implements PropertyChangeListener {
 	public DrawPanel() {
 		setBackground(Color.WHITE);
 		setBorder(new MatteBorder(3, 3, 3, 3, Color.BLACK));
-		Blackboard.getInstance().addPropertyChangeListener(Blackboard.PROPERTY_NAME_VIEW_DATA, this);
 	}
 	
 	@Override

@@ -56,6 +56,7 @@ public class Main extends JFrame {
 		add(colorKeyPanel, BorderLayout.EAST);
 		Blackboard.getInstance().addPropertyChangeListener(Blackboard.EYE_DATA_LABEL, controller);
 		Blackboard.getInstance().addPropertyChangeListener(Blackboard.EMOTION_DATA_LABEL, controller);
+		Blackboard.getInstance().addPropertyChangeListener(Blackboard.PROPERTY_NAME_VIEW_DATA, drawPanel);
 	}
 	
 	public void connectClients() {
