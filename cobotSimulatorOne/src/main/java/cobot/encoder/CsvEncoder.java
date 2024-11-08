@@ -3,8 +3,8 @@ package cobot.encoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class StringEncoder implements EncoderHelper {
-    private static final Logger logger = LoggerFactory.getLogger(StringEncoder.class);
+public class CsvEncoder implements EncoderHelper {
+    private static final Logger logger = LoggerFactory.getLogger(CsvEncoder.class);
 
     @Override
     public int[] parse(String command) {

@@ -1,7 +1,7 @@
 package cobot;
 
 import cobot.blackboard.Blackboard;
-import cobot.encoder.StringEncoder;
+import cobot.encoder.CsvEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +36,7 @@ public class MenuController implements ActionListener {
 	
 	private void startClient() {
 		logger.info("Starting subscriber");
-		subscriber = new Subscriber("localhost", 12345, new StringEncoder());
+		subscriber = new Subscriber("localhost", 12345, new CsvEncoder());
 		Thread subscriberThread = new Thread(subscriber);
 		subscriberThread.start();
 		try {
