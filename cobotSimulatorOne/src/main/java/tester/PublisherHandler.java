@@ -1,49 +1,46 @@
 package tester;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.PrintWriter;
-import java.net.Socket;
-
 /**
- * ServerHandler class that sends random angles to a connected client every second.
- *
- * @author Javier Gonzalez-Sanchez
- * @version 1.0
+ * Handles each connection from the Publisher, sending pre-encoded data.
  */
 public class PublisherHandler implements Runnable {
-	
-	private static final Logger logger = LoggerFactory.getLogger(Publisher.class);
+	private static final Logger logger = LoggerFactory.getLogger(PublisherHandler.class);
 	private Socket socket;
-	
+	private PrintWriter out;
+	private BlockingQueue<String> messageQueue;
+
 	public PublisherHandler(Socket socket) {
 		this.socket = socket;
+		this.messageQueue = new LinkedBlockingQueue<>(); // Queue for handling messages
 	}
-	
+
+	public void sendEncodedMessage(String encodedMessage) {
+		messageQueue.offer(encodedMessage); // Add message to queue
+	}
+
 	@Override
 	public void run() {
-		int angles[] = new int[6];
 		try {
-			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+			out = new PrintWriter(socket.getOutputStream(), true);
 			while (true) {
-				for (int i = 0; i < angles.length; i++) {
-					angles[i] = (int) (Math.random() * 360);
-				}
-				logger.info("Sending angles to client: {},{},{},{},{},{}",
-					angles[0], angles[1], angles[2], angles[3], angles[4], angles[5]);
-				out.println(
-					angles[0] + "," +
-						angles[1] + "," +
-						angles[2] + "," +
-						angles[3] + "," +
-						angles[4] + "," +
-						angles[5]);
-				Thread.sleep(1000);
+				String message = messageQueue.take(); // Block until a message is available
+				out.println(message);
+				logger.info("Sent message to client: {}", message);
 			}
-		} catch (Exception ex) {
-			logger.error("Error in ServerHandler", ex);
+		} catch (IOException e) {
+			logger.error("Error in PublisherHandler output stream", e);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			logger.error("PublisherHandler interrupted", e);
 		}
 	}
-	
 }
