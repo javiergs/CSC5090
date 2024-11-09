@@ -38,6 +38,7 @@ public class MQTTServer implements Runnable, PropertyChangeListener {
             while (isReady) {
                 try {
                     Thread.sleep(1000 / 30);
+                    if (point == null) continue;
                     mqttPublisher.publish(topic, point.toString());
 
                 } catch (Exception e) {

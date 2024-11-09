@@ -1,21 +1,24 @@
 package components;
 import org.eclipse.paho.client.mqttv3.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class MQTTPublisher implements Runnable{
+public class MQTTPublisher{
 
-    private String BROKER;
-    private String CLIENT_ID;
+    private final String BROKER;
+    private final String CLIENT_ID;
     private MqttClient client;
-
+    private static final Logger logger = LoggerFactory.getLogger(MQTTPublisher.class);
 
 
     public MQTTPublisher(String broker, String clientId){
+
         this.BROKER = broker;
         this.CLIENT_ID = clientId;
         try {
             client = new MqttClient(BROKER, CLIENT_ID);
         } catch (MqttException e) {
-            e.printStackTrace();
+            logger.error("Error in Publisher", e);
         }
     }
 
@@ -25,7 +28,7 @@ public class MQTTPublisher implements Runnable{
             client.connect();
             System.out.println(CLIENT_ID + " connected to " + BROKER);
         } catch (MqttException e) {
-            e.printStackTrace();
+            logger.error("Error in Publisher", e);
         }
     }
 
@@ -38,7 +41,7 @@ public class MQTTPublisher implements Runnable{
             client.disconnect();
             System.out.println(CLIENT_ID + " disconnected from " + BROKER);
         } catch (MqttException e) {
-            e.printStackTrace();
+            logger.error("Error in Publisher", e);
         }
     }
 
@@ -53,14 +56,10 @@ public class MQTTPublisher implements Runnable{
 
             System.out.println("Message published on " + topic + ": " + message);
         } catch (MqttException e) {
-            e.printStackTrace();
+            logger.error("Error in Publisher", e);
         }
     }
 
-    @Override
-    public void run() {
-        connect();
-    }
 
 
 }

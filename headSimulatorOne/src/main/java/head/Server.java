@@ -1,5 +1,6 @@
 package head;
 
+import components.ThePublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,24 +26,18 @@ public class Server implements Runnable, PropertyChangeListener {
 	@Override
 	public void run() {
 		try {
-			ServerSocket serverSocket = new ServerSocket(port);
-			logger.info("Server is waiting for connections");
-			Socket clientSocket = serverSocket.accept();
-			logger.info("Client connected");
-			ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+			ThePublisher publisher = new ThePublisher(port);
+			publisher.connect();
 			isReady = true;
 			while (isReady) {
 				try {
 					Thread.sleep(1000 / 30);
 					if (point == null)  continue;
-					outputStream.writeObject(point);
-					outputStream.flush();
+					publisher.publish(point);
 				} catch (Exception e) {
 					logger.error("Error in Server: {}", e.getMessage(), e);
 				}
 			}
-		} catch (IOException e) {
-			logger.error("I/O error in Server: {}", e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error("Unexpected error in Server: {}", e.getMessage(), e);
 		} finally {

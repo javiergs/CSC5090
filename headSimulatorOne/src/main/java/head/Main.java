@@ -21,7 +21,6 @@ public class Main extends JFrame {
 
 		Canvas d = new Canvas();
 		add(d);
-		this.createPublisher();
 	}
 	
 	private JMenuBar createMenuBar() {
@@ -38,13 +37,6 @@ public class Main extends JFrame {
 		return menuBar;
 	}
 
-	private void createPublisher() {
-		ThePublisher myPublisher = new ThePublisher(5);
-		Thread pubThread = new Thread(myPublisher);
-		pubThread.start();
-
-	}
-	
 	public static void main(String[] args) {
 		Main main = new Main();
 		main.setTitle("Head Movement Simulator");

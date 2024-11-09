@@ -13,7 +13,7 @@ public class Encoder implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(ThePublisher.class);
 	private Socket socket;
 
-	public PublisherHandler(Socket socket) {
+	public Encoder(Socket socket) {
 		this.socket = socket;
 	}
 
