@@ -2,26 +2,16 @@ package head;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import components.MQTTPublisher;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/**
- * Controller class that listens for button clicks and calls the appropriate methods in the Client class.
- *
- * @author Javier Gonzalez-Sanchez
- *
- * @version 1.0
- */
+
 public class Controller implements ActionListener {
 	
 	private static final Logger logger = LoggerFactory.getLogger(Controller.class);
 	private Server server;
 	private MQTTServer mqttServer;
-	private MQTTPublisher mqttPublisher;
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("Start client")) {
@@ -34,29 +24,22 @@ public class Controller implements ActionListener {
 	}
 	
 	private void startClient() {
-		logger.info("Starting server");
-
-
-		// MQTT Server
+		logger.info("Starting MQTT server");
 		mqttServer = new MQTTServer("tcp://test.mosquitto.org:1883", "TestPublisher", "test/topic");
 		Thread mqttServerThread = new Thread(mqttServer);
 		mqttServerThread.start();
 		Blackboard.getInstance().addPropertyChangeListener(mqttServer);
 
-
+		logger.info("Starting server");
 		server = new Server(8888);
 		Thread serverThread = new Thread(server);
 		serverThread.start();
 		Blackboard.getInstance().addPropertyChangeListener(server);
 
-
-
-
-
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("Error in Controller", e);
 		}
 		if (!server.isReady()) {
 			Blackboard.getInstance().updateStatusLabel("disconnected");

@@ -30,7 +30,6 @@ public class MQTTServer implements Runnable, PropertyChangeListener {
             MQTTPublisher mqttPublisher = new MQTTPublisher(broker, clientId);
             mqttPublisher.connect();
 
-
             if (mqttPublisher.isConnected()) {
                 isReady = true;
             }
@@ -51,8 +50,6 @@ public class MQTTServer implements Runnable, PropertyChangeListener {
             isReady = false;
         }
     }
-
-
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {

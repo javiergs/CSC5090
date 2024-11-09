@@ -25,7 +25,6 @@ public class ThePublisher{
 		isConnected = false;
 	}
 
-
 	public void connect() {
 		try {
 			ServerSocket serverSocket = new ServerSocket(port);
@@ -38,7 +37,6 @@ public class ThePublisher{
             throw new RuntimeException(e);
         }
     }
-
 
 	public void publish(Object obj){
 		if (!isConnected) {
@@ -53,7 +51,4 @@ public class ThePublisher{
 		}
 
 	}
-	
-
-	
 }

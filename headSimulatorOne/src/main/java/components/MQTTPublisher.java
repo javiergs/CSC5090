@@ -22,7 +22,6 @@ public class MQTTPublisher{
         }
     }
 
-
     public void connect(){
         try {
             client.connect();
@@ -59,7 +58,4 @@ public class MQTTPublisher{
             logger.error("Error in Publisher", e);
         }
     }
-
-
-
 }
