@@ -1,4 +1,5 @@
 package cobot;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,17 +9,18 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Random;
 
-public class Publisher implements Runnable{
+public class Publisher implements Runnable {
     private static final Logger logger =
             LoggerFactory.getLogger(Publisher.class);
     private final int port;
 
     //Wait time can be adjusted as necessary, just to stop from spamming client
-    private final static int WAIT_TIME = 5000;
+    private final static int WAIT_TIME = 30000;
 
     public Publisher(int port) {
         this.port = port;
     }
+
     @Override
     public void run() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
@@ -46,7 +48,7 @@ public class Publisher implements Runnable{
                     out = new PrintWriter(client.getOutputStream(), true);
                 }
 
-                logger.info("Wait 5 seconds");
+                logger.info("Wait 30 seconds");
                 try {
                     Thread.sleep(WAIT_TIME);
                 } catch (InterruptedException ignored) {}
@@ -56,4 +58,5 @@ public class Publisher implements Runnable{
             logger.error(e.getMessage());
         }
     }
+
 }

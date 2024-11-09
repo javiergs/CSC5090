@@ -2,138 +2,92 @@ package cobot;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
-public class RobotPanel extends JPanel implements ActionListener, PropertyChangeListener {
-    //Object for holding angles, generalizes better
-        public record RobotAngles(int[] angles) {
-            public RobotAngles(int[] angles) {
-                this.angles = angles;
-                if (this.angles.length != 6) {
-                    //TODO: Adjust array so size is 6
-                }
-            }
-        }
+public class RobotPanel extends JPanel {
 
-    private Timer simulationTimer;
-    private boolean simulate = false;
-    private RobotAngles angles;
-    private int phase = 1;
+	private final JLabel staticStatusLabel;
+	private final JLabel dynamicStatusLabel;
+	private final RobotPanelHandler controller;
 
-    public RobotPanel() {
-        // Setup RobotPanel (if additional setup is needed)
-    }
+	public RobotPanel(RobotPanelHandler controller) {
+		this.controller = controller;
 
-    public void startSimulation() {
-        simulate = true;
-        phase = 1;
-        runSimulation();
-    }
+		staticStatusLabel = new JLabel("Status: ");
+		staticStatusLabel.setFont(new Font("Arial", Font.BOLD, 20));
+		staticStatusLabel.setForeground(Color.BLACK);
 
-    public void stopSimulation() {
-        if (simulationTimer != null && simulationTimer.isRunning()) {
-            simulationTimer.stop();
-        }
-        simulate = false;
-    }
+		dynamicStatusLabel = new JLabel("Idle");
+		dynamicStatusLabel.setFont(new Font("Arial", Font.BOLD, 20));
+		dynamicStatusLabel.setForeground(Color.RED);
 
-    private void runSimulation() {
-        final int delay = 50;  // Delay for smooth animation
-        simulationTimer = new Timer(delay, this);
-        simulationTimer.start();
-    }
+		setLayout(new FlowLayout(FlowLayout.CENTER));
+		add(staticStatusLabel);
+		add(dynamicStatusLabel);
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (!simulate) {
-            simulationTimer.stop();
-            return;
-        }
+		controller.blackboard.addPropertyChangeListener(evt -> {
+			if ("ProgressUpdated".equals(evt.getPropertyName())) {
+				setRunningStatus();
+			} else if ("AnglesAdded".equals(evt.getPropertyName())) {
+				setIdleStatus();
+			}
+			repaint();
+		});
+	}
 
-        updateAngles();
-        repaint();  // Repaint to reflect changes
-    }
+	public void setRunningStatus() {
+		dynamicStatusLabel.setText("Running");
+		dynamicStatusLabel.setForeground(Color.decode("#008000"));  // Green when running
+	}
 
-    private void updateAngles() {
-        boolean finished = false;
+	public void setIdleStatus() {
+		dynamicStatusLabel.setText("Idle");
+		dynamicStatusLabel.setForeground(Color.RED);  // Red when idle
+	}
 
-        switch (phase) {
-            case 1:
-                if (adjustAngleTowardsTarget(0, angles.angles()[0])) {
-                    phase = 2;
-                }
-                break;
-            case 2:
-                if (adjustAngleTowardsTarget(1, angles.angles()[1])) {
-                    phase = 3;
-                }
-                break;
-            case 3:
-                if (adjustAngleTowardsTarget(2, angles.angles()[2])) {
-                    phase = 4;
-                }
-                break;
-            case 4:
-                if (adjustAngleTowardsTarget(3, angles.angles()[3])) {
-                    phase = 5;
-                }
-                break;
-            case 5:
-                if (adjustAngleTowardsTarget(4, angles.angles()[4])) {
-                    phase = 6;
-                }
-                break;
-            case 6:
-                if (adjustAngleTowardsTarget(5, angles.angles()[5])) {
-                    finished = true;
-                }
-                break;
-        }
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		drawArm(g);
+	}
 
-        if (finished) {
-            simulationTimer.stop();
-            JOptionPane.showMessageDialog(this, "All angle sets have been simulated!");
-        }
-    }
+	private void drawArm(Graphics g) {
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.setStroke(new BasicStroke(6));
 
-    private boolean adjustAngleTowardsTarget(int index, int targetAngle) {
-        int[] angles = this.angles.angles();
-        int currentAngle = angles[index];
-        int step = 1;  // Step size for smoother animation
+		int x = 300, y = 450;
+		int length = 50;
 
-        if (Math.abs(currentAngle - targetAngle) <= step) {
-            angles[index] = targetAngle;
-            return true;
-        }
+		Color[] colors = {Color.decode("#6667ab"), Color.decode("#f18aad"), Color.decode("#ea6759"),
+				Color.decode("#f88f58"), Color.decode("#f3c65f"), Color.decode("#8bc28c")};
 
-        if (currentAngle < targetAngle) {
-            angles[index] += step;
-        } else if (currentAngle > targetAngle) {
-            angles[index] -= step;
-        }
+		int[] currentAngles = controller.getCurrentAngles();
+		Point[] jointPositions = new Point[currentAngles.length + 1];
+		jointPositions[0] = new Point(x, y); // Initial starting joint
 
-        return false;
-    }
+		for (int i = 0; i < currentAngles.length; i++) {
+			g2d.setColor(colors[i]);
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        drawArm(g);
-    }
+			Point newEndPoint = drawSegment(g2d, x, y, length, currentAngles[i]);
+			x = newEndPoint.x;
+			y = newEndPoint.y;
 
-    public void drawArm(Graphics g) {
-        //TODO: do the drawing
-    }
+			jointPositions[i + 1] = newEndPoint;
+		}
 
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getNewValue() instanceof RobotAngles) {
-            if (!simulationTimer.isRunning()) { //only update once done simulating
-                this.angles = (RobotAngles) evt.getNewValue();
-            }
-        }
-    }
+		for (Point joint : jointPositions) {
+			drawJoint(g2d, joint.x, joint.y);
+		}
+	}
+
+	private Point drawSegment(Graphics2D g2d, int x1, int y1, int length, int angle) {
+		int x2 = x1 + (int) (length * Math.cos(Math.toRadians(angle)));
+		int y2 = y1 - (int) (length * Math.sin(Math.toRadians(angle)));
+		g2d.drawLine(x1, y1, x2, y2);
+		return new Point(x2, y2);
+	}
+
+	private void drawJoint(Graphics2D g2d, int x, int y) {
+		g2d.setColor(Color.WHITE);
+		g2d.fillOval(x - 5, y - 5, 10, 10);
+	}
 }

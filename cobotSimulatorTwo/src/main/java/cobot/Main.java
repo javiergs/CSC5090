@@ -17,11 +17,16 @@ public class Main extends JFrame {
 	public Main() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
-		SimulationPanel simulationPanel = new SimulationPanel();
+
+		RobotPanelHandler simulationPanel = new RobotPanelHandler();
+		RobotPanel robotPanel = new RobotPanel(simulationPanel);
 		Blackboard.getInstance().addPropertyChangeListener(simulationPanel);
+
+		ProgressBar progressBar = new ProgressBar();
 		createMenuBar();
-		setLayout(new GridLayout(1, 1));
-		add(simulationPanel, BorderLayout.CENTER);
+
+		add(robotPanel, BorderLayout.CENTER);
+		add(progressBar, BorderLayout.SOUTH);
 
 		logger.info("Starting publisher");
 		Publisher publisher = new Publisher(PORT);

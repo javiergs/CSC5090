@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Objects;
 
 /**
  * The Controller class is responsible for controlling the simulation of the robot arm.
@@ -15,6 +14,7 @@ public class Controller implements ActionListener {
 	
 	private static final Logger logger = LoggerFactory.getLogger(Controller.class);
 	private Subscriber subscriber = null;
+	private RobotPanelHandler robotPanelHandler;
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -69,12 +69,12 @@ public class Controller implements ActionListener {
 
 	private void startSimulation() {
 		logger.info("Starting simulation");
-		SimulationPanel.startRunning();
+		robotPanelHandler.startSimulation();
 	}
 
 	private void stopSimulation() {
 		logger.info("Stopping simulation");
-		SimulationPanel.stopRunning();
+		robotPanelHandler.stopSimulation();
 	}
 
 }
