@@ -9,7 +9,6 @@ import test.EyeTrackingServer;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * The {@code Main} class serves as the entry point for the Eye Tracking & Emotion Hub application.
@@ -28,12 +27,10 @@ import java.util.ArrayList;
  */
 public class Main extends JFrame {
 	private static final String TESTING_FLAG = "-test";
-	private final ArrayList<Thread> threads;
 	private TheSubscriber eyeSubscriber = null;
 	private TheSubscriber emotionSubscriber = null;
 	
 	public Main() {
-		threads = new ArrayList<>();
 		setLayout(new BorderLayout());
 		JMenuBar menuBar = new JMenuBar();
 		JMenu actionsMenu = new JMenu("Actions");
@@ -57,6 +54,11 @@ public class Main extends JFrame {
 		Blackboard.getInstance().addPropertyChangeListener(Blackboard.EYE_DATA_LABEL, controller);
 		Blackboard.getInstance().addPropertyChangeListener(Blackboard.EMOTION_DATA_LABEL, controller);
 		Blackboard.getInstance().addPropertyChangeListener(Blackboard.PROPERTY_NAME_VIEW_DATA, drawPanel);
+
+		Thread dataProcessor = new Thread(new RawDataProcessor());
+		Thread dpDelegate = new Thread(new ViewDataProcessor());
+		dataProcessor.start();
+		dpDelegate.start();
 	}
 	
 	public void connectClients() {
@@ -84,17 +86,6 @@ public class Main extends JFrame {
 		if (emotionSubscriber != null){
 			Thread emotionThread = new Thread(emotionSubscriber);
 			emotionThread.start();
-		}
-
-		if (threads.isEmpty()){
-			Thread dataProcessor = new Thread(new RawDataProcessor());
-			Thread dpDelegate = new Thread(new ViewDataProcessor());
-
-			threads.add(dataProcessor);
-			threads.add(dpDelegate);
-			for (Thread thread : threads) {
-				thread.start();
-			}
 		}
 	}
 	

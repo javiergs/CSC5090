@@ -43,7 +43,7 @@ public class RawDataProcessor implements Runnable, PropertyChangeListener {
 	public void run() {
 		try {
 			while (true) {
-				if (running) {
+				while (running) {
 					doYourWork();
 				}
 				Thread.sleep(1000);
