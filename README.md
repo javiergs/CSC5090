@@ -43,7 +43,7 @@ The dashboard displays the affective states and eye gaze of the user in real-tim
 - [ ] :four: **Implement Standard Robot with Animation**  
    - Design a standard robot class and provide an example implementation for its animation functionality.
 
-- [ ] :five: **Panels Observing the app.library.Blackboard**  
+- [ ] :five: **Panels Observing the Blackboard**  
    - Ensure all panels observe the blackboard, displaying a default drawing and updating whenever an event is fired.
 
 - [ ] :six: **Add Menus to Applications**  
