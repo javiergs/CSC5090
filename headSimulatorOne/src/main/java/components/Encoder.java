@@ -24,7 +24,7 @@ public class Encoder implements Runnable {
 			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 			while (true) {
 				for (int i = 0; i < mouse.length; i++) {
-					mouse[i] = (int) (Math.random() * 360);
+					mouse[i] = (int) (Math.random() * 400);
 				}
 				logger.info("Sending mousepos to client: {},{}",
 					mouse[0], mouse[1]);
