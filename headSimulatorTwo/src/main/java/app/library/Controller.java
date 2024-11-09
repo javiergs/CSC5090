@@ -1,3 +1,5 @@
+package app.library;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Controller class is responsible for controlling the eye tracking simulation.
+ * app.library.Controller class is responsible for controlling the eye tracking simulation.
  * Authors as listed in your README.md file.
  *
  * @author Ashton
@@ -52,10 +54,10 @@ public class Controller implements MouseMotionListener, ActionListener {
 		String selectedAction = (String) menu.getSelectedItem();
 		if (selectedAction.equals("Start")) {
 			server.start();
-			logger.info("Server started by user action.");
+			logger.info("app.library.Server started by user action.");
 		} else if (selectedAction.equals("Stop")) {
 			server.stop();
-			logger.info("Server stopped by user action.");
+			logger.info("app.library.Server stopped by user action.");
 		}
 	}
 }

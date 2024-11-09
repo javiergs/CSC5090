@@ -1,6 +1,6 @@
 package app.library;
 
-import app.Model.Blackboard;
+import app.Model.app.library.Blackboard;
 import java.util.Map;
 import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
@@ -36,7 +36,7 @@ public class TheSubscriberMQTT implements Runnable, MqttCallback {
             }
         } catch (MqttException e) {
             log.warn("Unable to connect to broker --" + e.getMessage());
-            Blackboard.getInstance().reportMQTTBrokerError("Unable to connect to broker --\n\t" + e.getMessage());
+            app.library.Blackboard.getInstance().reportMQTTBrokerError("Unable to connect to broker --\n\t" + e.getMessage());
         } catch (InterruptedException e) {
             log.warn( "Thread was interrupted", e);
             Thread.currentThread().interrupt();
@@ -50,7 +50,7 @@ public class TheSubscriberMQTT implements Runnable, MqttCallback {
 
     @Override
     public void messageArrived(String s, MqttMessage mqttMessage) {
-        Blackboard.getInstance().addClientData(topicAndPrefixPairs.get(s) + "~" + mqttMessage);
+        app.library.Blackboard.getInstance().addClientData(topicAndPrefixPairs.get(s) + "~" + mqttMessage);
         log.debug("Message Arrived. Topic: " + s +
                 " Message: " + new String(mqttMessage.getPayload()));
     }

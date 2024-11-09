@@ -1,9 +1,13 @@
+package app.library;
+
+
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Blackboard class used as a centralized observer/observable manager. Maintains list of observers that update when changes
- * are made to TrackArea. Follows Observer/Observable pattern.
+ * app.library.Blackboard class used as a centralized observer/observable manager. Maintains list of observers that update when changes
+ * are made to app.library.TrackArea. Follows Observer/Observable pattern.
  *
  * @author Ashton
  * @author David H.

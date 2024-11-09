@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>src</artifactId>
+    <artifactId>headSimulatorTwo</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -15,26 +15,33 @@
     </properties>
 
     <dependencies>
+        <!-- WebSocket library -->
         <dependency>
             <groupId>org.java-websocket</groupId>
             <artifactId>Java-WebSocket</artifactId>
             <version>1.5.2</version>
         </dependency>
+
+        <!-- SLF4J API -->
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.25</version>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.32</version>
         </dependency>
+
+        <!-- Logback (for SLF4J binding) -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>1.5.6</version>
+            <version>1.2.11</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.5.6</version>
+            <version>1.2.11</version>
         </dependency>
+
+        <!-- Additional library (if available in a repository) -->
         <dependency>
             <groupId>javiergs</groupId>
             <artifactId>library</artifactId>
@@ -51,13 +58,10 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>20</source>
-                    <target>20</target>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
-
-
 </project>

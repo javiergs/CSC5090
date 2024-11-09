@@ -1,3 +1,5 @@
+package app.library;
+
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -8,7 +10,7 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * Server class to handle WebSocket connections and messages.
+ * app.library.Server class to handle WebSocket connections and messages.
  * Authors as listed in your README.md file.
  *
  * @author Ashton
@@ -33,7 +35,7 @@ public class Server implements Runnable {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
-				logger.warn("Server interrupted", e);
+				logger.warn("app.library.Server interrupted", e);
 				running = false;
 			}
 		}
@@ -52,7 +54,7 @@ public class Server implements Runnable {
 			running = true;
 			serverThread = new Thread(this);
 			serverThread.start();
-			logger.info("Server thread started.");
+			logger.info("app.library.Server thread started.");
 		}
 	}
 
@@ -60,7 +62,7 @@ public class Server implements Runnable {
 		if (serverThread != null && serverThread.isAlive()) {
 			running = false;
 			serverThread.interrupt();
-			logger.info("Server thread stopping...");
+			logger.info("app.library.Server thread stopping...");
 		}
 	}
  

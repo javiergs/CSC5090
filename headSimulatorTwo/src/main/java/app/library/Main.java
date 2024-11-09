@@ -1,10 +1,14 @@
+package app.library;
+
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Main class is responsible for controlling the eye tracking simulation.
+ * app.library.Main class is responsible for controlling the eye tracking simulation.
  * Authors as listed in your README.md file.
  *
  * @author Ashton
@@ -15,8 +19,8 @@ import org.slf4j.LoggerFactory;
 public class Main extends JFrame {
 
 	private Server server;
+	private TheSubscriber subscriber;
 	private static final Logger logger = LoggerFactory.getLogger(Main.class);
-
 
 	public Main() {
 		server = new Server();
@@ -28,15 +32,26 @@ public class Main extends JFrame {
 		dropdownPanel.add(dropdownMenu);
 		add(dropdownPanel, BorderLayout.NORTH);
 
-		Blackboard blackboard = new Blackboard();  // Create Blackboard instance
-
+		Blackboard blackboard = new Blackboard();
 		TrackArea area = new TrackArea(server, dropdownMenu, blackboard);
 		add(area, BorderLayout.CENTER);
 
 		Controller c = new Controller(area, server, dropdownMenu);
 		dropdownMenu.addActionListener(c);
 
-		blackboard.setDrawingState("Updated TrackArea");  // Example update to Blackboard
+		blackboard.setDrawingState("Updated TrackArea");
+
+		// Initialize TheSubscriber
+		try {
+			String ipHost = "127.0.0.1"; // Example IP, replace with actual if needed
+			int port = 9090;             // Example port, replace with actual if needed
+			String dataPrefix = "PointData";
+			subscriber = new TheSubscriber(ipHost, port, dataPrefix, DataRepository.getInstance());
+			new Thread(subscriber).start();
+			logger.info("TheSubscriber initialized and started.");
+		} catch (IOException e) {
+			logger.error("Failed to initialize TheSubscriber: " + e.getMessage());
+		}
 	}
 
 	public static void main(String[] args) {
@@ -46,6 +61,14 @@ public class Main extends JFrame {
 		main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		main.setVisible(true);
 		logger.info("Eye Tracker Simulator application started.");
+	}
 
+	@Override
+	public void dispose() {
+		super.dispose();
+		if (subscriber != null) {
+			subscriber.stopSubscriber();
+			logger.info("TheSubscriber stopped.");
+		}
 	}
 }

@@ -1,11 +1,14 @@
+package app.library;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+
 /**
- * The TrackArea class is responsible for drawing the face and eyes in the GUI.
+ * The app.library.TrackArea class is responsible for drawing the face and eyes in the GUI.
  *
  * @author Ashton
  * @author David H.
@@ -31,7 +34,7 @@ public class TrackArea extends JPanel implements Blackboard.Observer, PropertyCh
 		Border blackLine = BorderFactory.createLineBorder(Color.BLACK, 5);
 		setBorder(blackLine);
 
-		// Register as observer to the Blackboard
+		// Register as observer to the app.library.Blackboard
 		blackboard.addObserver(this);
 		this.drawingState = blackboard.getDrawingState();  // Initial state
 	}
@@ -99,7 +102,7 @@ public class TrackArea extends JPanel implements Blackboard.Observer, PropertyCh
 		}
 	}
 
-	// updates Blackboard
+	// updates app.library.Blackboard
 	@Override
 	public void update(String drawingState) {
 		this.drawingState = drawingState;
