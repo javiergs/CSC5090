@@ -36,12 +36,12 @@ public class RobotPanel extends JPanel {
 
 	public void setRunningStatus() {
 		dynamicStatusLabel.setText("Running");
-		dynamicStatusLabel.setForeground(Color.decode("#008000"));  // Green when running
+		dynamicStatusLabel.setForeground(Color.decode("#008000"));
 	}
 
 	public void setIdleStatus() {
 		dynamicStatusLabel.setText("Idle");
-		dynamicStatusLabel.setForeground(Color.RED);  // Red when idle
+		dynamicStatusLabel.setForeground(Color.RED);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class RobotPanel extends JPanel {
 
 		int[] currentAngles = controller.getCurrentAngles();
 		Point[] jointPositions = new Point[currentAngles.length + 1];
-		jointPositions[0] = new Point(x, y); // Initial starting joint
+		jointPositions[0] = new Point(x, y);
 
 		for (int i = 0; i < currentAngles.length; i++) {
 			g2d.setColor(colors[i]);

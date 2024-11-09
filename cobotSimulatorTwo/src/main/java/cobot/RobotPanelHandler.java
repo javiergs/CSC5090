@@ -11,15 +11,15 @@ public class RobotPanelHandler implements ActionListener, PropertyChangeListener
 
     final Blackboard blackboard;
     private final Timer simulationTimer;
-    private RobotAngles targetAngles;
+    private int[] targetAngles;
     private int phase = 0;
     private boolean simulate = false;
-    private final int[] currentAngles = new int[6]; // To track the current state of each angle
+    private final int[] currentAngles = new int[6];
 
     public RobotPanelHandler() {
         this.blackboard = Blackboard.getInstance();
         this.blackboard.addPropertyChangeListener(this);
-        simulationTimer = new Timer(20, this); // 50ms delay for smooth simulation
+        simulationTimer = new Timer(20, this);
     }
 
     public void startSimulation() {
@@ -38,7 +38,7 @@ public class RobotPanelHandler implements ActionListener, PropertyChangeListener
     }
 
     private void updateAngles() {
-        boolean reachedTarget = adjustAngleTowardsTarget(phase, targetAngles.angles()[phase]);
+        boolean reachedTarget = adjustAngleTowardsTarget(phase, targetAngles[phase]);
 
         if (reachedTarget) {
             phase++;
@@ -51,15 +51,13 @@ public class RobotPanelHandler implements ActionListener, PropertyChangeListener
             }
         }
 
-
-        // Update progress based on the current phase and angle movement within the phase
         int progress = (int) (((phase + getAngleProgress(phase)) / (double) currentAngles.length) * 100);
         blackboard.updateProgress(progress);
 
     }
 
     private double getAngleProgress(int index) {
-        int targetAngle = targetAngles.angles()[index];
+        int targetAngle = targetAngles[index];
         int currentAngle = currentAngles[index];
         int totalDelta = Math.abs(targetAngle - currentAngle);
 
@@ -83,10 +81,17 @@ public class RobotPanelHandler implements ActionListener, PropertyChangeListener
         if ("AnglesAdded".equals(evt.getPropertyName()) && evt.getNewValue() instanceof int[]) {
             int[] newAngles = (int[]) evt.getNewValue();
             if (newAngles.length == 6) {
-                targetAngles = new RobotAngles(newAngles);
+                setTargetAngles(newAngles);
                 startSimulation();
             }
         }
+    }
+
+    public void setTargetAngles(int[] angles) {
+        if (angles.length != 6) {
+            throw new IllegalArgumentException("Angles array must have exactly 6 elements.");
+        }
+        this.targetAngles = angles;
     }
 
     public int[] getCurrentAngles() {
@@ -102,22 +107,6 @@ public class RobotPanelHandler implements ActionListener, PropertyChangeListener
 
         updateAngles();
         int progress = (int) ((phase / (double) currentAngles.length) * 100);
-        blackboard.updateProgress(progress);  // Notify the progress bar
-    }
-
-    public static class RobotAngles {
-        private final int[] angles;
-
-        public RobotAngles(int[] angles) {
-            if (angles.length != 6) {
-                throw new IllegalArgumentException("Angles array must have exactly 6 elements.");
-            }
-            this.angles = angles;
-        }
-
-        public int[] angles() {
-            return angles;
-        }
+        blackboard.updateProgress(progress);
     }
 }
-
