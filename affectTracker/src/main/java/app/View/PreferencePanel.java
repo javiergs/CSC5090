@@ -1,9 +1,17 @@
 package app.View;
 
-import app.Model.Blackboard;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import app.Model.Blackboard;
 
 /**
  * The {@code PreferencePanel} class represents a configuration panel that allows users to modify

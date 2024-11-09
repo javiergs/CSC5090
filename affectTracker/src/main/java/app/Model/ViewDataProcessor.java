@@ -1,15 +1,15 @@
 package app.Model;
 
-import app.Data.Circle;
-import app.Data.ProcessedDataObject;
-
-import java.awt.*;
+import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Deque;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import app.Data.Circle;
+import app.Data.ProcessedDataObject;
 
 /**
  * The {@code ViewDataProcessor} is alerted of new processed data available in the {@link Blackboard},
@@ -56,7 +56,7 @@ public class ViewDataProcessor implements Runnable, PropertyChangeListener {
 	}
 	
 	private void handleProcessedData(ProcessedDataObject data) {
-		Deque<Circle> circleList = Blackboard.getInstance().getCircleList();
+      Deque<Circle> circleList = Blackboard.getInstance().getCircleDataDelegate().getCircleList();
 		Color circleColor = data.prominentEmotion().getColor();
 		Circle newCircle = new Circle(data.xCoord(), data.yCoord(), circleColor, Blackboard.getInstance().getCircleRadius());
 		boolean consolidated = false;
@@ -73,7 +73,7 @@ public class ViewDataProcessor implements Runnable, PropertyChangeListener {
 			}
 			circleList.addLast(newCircle); // Add the new circle
 		}
-		Blackboard.getInstance().setCircleList(circleList);
+      Blackboard.getInstance().getCircleDataDelegate().addToCircleList(newCircle);
 	}
 	
 	private boolean isWithinThreshold(Circle existing, Circle newCircle) {

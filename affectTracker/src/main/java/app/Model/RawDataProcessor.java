@@ -1,17 +1,16 @@
 package app.Model;
 
-import app.Data.Emotion;
-import app.Data.ProcessedDataObject;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.stream.Collectors;
+import app.Data.Emotion;
+import app.Data.ProcessedDataObject;
 
 /**
  * The {@code RawDataProcessor} class processes both eye-tracking and emotion data from queues.
@@ -59,8 +58,8 @@ public class RawDataProcessor implements Runnable, PropertyChangeListener {
 
 	private void doYourWork() throws InterruptedException {
 		// Poll with a timeout to prevent blocking indefinitely
-		String eyeTrackingData = Blackboard.getInstance().pollEyeTrackingQueue();
-		String emotionData = Blackboard.getInstance().pollEmotionQueue();
+      String eyeTrackingData = Blackboard.getInstance().getEyeTrackingDataDelegate().pollEyeTrackingQueue();
+      String emotionData = Blackboard.getInstance().getEmotionDataDelegate().pollEmotionQueue();
 		if (eyeTrackingData != null) {
 			LOGGER.info("ProcessingThread: Processing data pair: " + eyeTrackingData + ", " + emotionData);
 			// Process the pair of data
@@ -89,8 +88,8 @@ public class RawDataProcessor implements Runnable, PropertyChangeListener {
 					prominentEmotion,
 					emotionScores
 			);
-
-			Blackboard.getInstance().addToProcessedDataQueue(processedData);
+         // Add the processed data to the queue
+         Blackboard.getInstance().getProcessedDataDelegate().addToProcessedDataQueue(processedData);
 		}
 		// debugging client/server communication
 		else if (emotionData != null) {

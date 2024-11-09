@@ -1,13 +1,10 @@
 package app.Model;
 
 import java.beans.PropertyChangeSupport;
-import java.util.Deque;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import app.Data.Circle;
-import app.Data.ProcessedDataObject;
 import app.library.DataDestination;
 
 
@@ -34,11 +31,11 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
 	public static final String PROPERTY_NAME_PROCESSED_DATA = "processed data";
 
 	private boolean started = false;
+   private final Logger logger;
 	public static final String STARTED = "STARTED";
 	public static final String STOPPED = "STOPPED";
 
 	public static final String PROPERTY_NAME_VIEW_DATA = "view data";
-    private final Logger logger;
 	public static final String EYE_DATA_LABEL = "EYE";
 	public static final String EMOTION_DATA_LABEL = "EMOTION";
 	public static final String MQTTBROKER_ERROR = "MQTTE";
@@ -64,6 +61,21 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
 		return INSTANCE;
 	}
 
+   public ProcessedDataDelegate getProcessedDataDelegate() {
+      return processedDataDelegate;
+   }
+
+   public EyeTrackingDataDelegate getEyeTrackingDataDelegate() {
+      return eyeTrackingDataDelegate;
+   }
+   
+   public EmotionDataDelegate getEmotionDataDelegate() {
+      return emotionDataDelegate;
+   }
+
+   public CircleDataDelegate getCircleDataDelegate() {
+      return circleDataDelegate;
+   }
 	/**
 	 * parses prefix and calls the method to add the data to the appropriate data structure
 	 *
@@ -74,8 +86,8 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
 			String[] prefixAndData = dataWithPrefix.split(PREFIX_DELIMITER, 2);
 			try{
 				switch (prefixAndData[0]) {
-					case EYE_DATA_LABEL -> addToEyeTrackingQueue(prefixAndData[1]);
-					case EMOTION_DATA_LABEL -> addToEmotionQueue(prefixAndData[1]);
+					case EYE_DATA_LABEL -> eyeTrackingDataDelegate.addToEyeTrackingQueue(prefixAndData[1]);
+               case EMOTION_DATA_LABEL -> emotionDataDelegate.addToEmotionQueue(prefixAndData[1]);
 					default -> logger.warn("Data from unknown source with prefix \"" + prefixAndData[0]
 							+ "\" : " + prefixAndData[1]);
 				}
@@ -121,48 +133,6 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
 		return messageWithPrefix.split(PREFIX_DELIMITER).length == 2;
 	}
 	
-	public void addToEyeTrackingQueue(String data) throws InterruptedException {
-		//eyeTrackingQueue.put(data);
-      eyeTrackingDataDelegate.addToEyeTrackingQueue(data);
-	}
-	
-	public String pollEyeTrackingQueue() throws InterruptedException {
-		//return eyeTrackingQueue.poll(TIMEOUT_IN_MS, TimeUnit.MILLISECONDS);
-      return eyeTrackingDataDelegate.pollEyeTrackingQueue();
-	}
-	
-	public void addToEmotionQueue(String data) throws InterruptedException {
-		//emotionQueue.put(data);
-      emotionDataDelegate.addToEmotionQueue(data);
-	}
-	
-	public String pollEmotionQueue() throws InterruptedException {
-		//return emotionQueue.poll(TIMEOUT_IN_MS, TimeUnit.MILLISECONDS);
-      return emotionDataDelegate.pollEmotionQueue();
-	}
-	
-	public void addToProcessedDataQueue(ProcessedDataObject data) {
-		//processedDataQueue.add(data);
-      processedDataDelegate.addToProcessedDataQueue(data);
-		firePropertyChange(PROPERTY_NAME_PROCESSED_DATA, null, data);
-	}
-	
-	public ProcessedDataObject getFromProcessedDataObjectQueue() {
-		//return processedDataQueue.poll();
-      return processedDataDelegate.getFromProcessedDataQueue();
-	}
-	
-	public Deque<Circle> getCircleList() {
-      return circleDataDelegate.getCircleList();
-		//return circleList;
-	}
-	
-	public void setCircleList(Deque<Circle> circleList) {
-		//this.circleList = circleList;
-		//firePropertyChange(PROPERTY_NAME_VIEW_DATA, null, circleList);
-      circleDataDelegate.setCircleList(circleList);
-	}
-	
 	public String getFormattedConnectionSettings() {
 		return String.format(
 			"""
@@ -205,6 +175,10 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
 		this.emotionSocket_Port = emotionSocket_Port;
 	}
 
+   /* ----------------------------------------- */
+   /* Methods for CircleDataDelegate */
+   // delegates are package private, so we need to expose the methods to the view
+   // specifically for PreferencePanel
 	public int getMaxCircles() {
 		return circleDataDelegate.getMaxCircles();
 	}
@@ -224,6 +198,7 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
 	public int getCircleRadius() {
 		return circleDataDelegate.getCircleRadius();
 	}
+   /* ----------------------------------------- */
 
 	public void reportEyeThreadError(String ex_message) {
 		firePropertyChange(EYE_DATA_LABEL, null, ex_message);
