@@ -1,20 +1,23 @@
 package components;
 
-import components.ThePublisher;
-
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-
-
+/**
+ * This class is an encoder, it listens to the blackboard and encodes the data to be sent to the server.
+ *
+ * @author Samuel Fox Gar Kaplan
+ * @author Javier Gonzalez-Sanchez
+ * @author Luke Aitchison
+ * @author Ethan Outangoun
+ *
+ * @version 2.0
+ */
 
 public class Encoder implements PropertyChangeListener{
 
-	private static final Logger logger = LoggerFactory.getLogger(ThePublisher.class);
 	private Point point;
 	private String x;
 	private String y;
@@ -26,7 +29,6 @@ public class Encoder implements PropertyChangeListener{
 
 
 	public String getData() {
-		// System.out.println("Encoder: " + x + "," + y);
 		return this.x + ","  + this.y;
 	}
 

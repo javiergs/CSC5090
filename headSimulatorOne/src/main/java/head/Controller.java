@@ -5,6 +5,18 @@ import org.slf4j.LoggerFactory;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * This class handles the actions of the buttons in the GUI, starting and stopping the client
+ * Publishes data to the MQTT server and the server
+ *
+ * @author Samuel Fox Gar Kaplan
+ * @author Javier Gonzalez-Sanchez
+ * @author Luke Aitchison
+ * @author Ethan Outangoun
+ *
+ * @version 2.0
+ */
+
 
 public class Controller implements ActionListener {
 	

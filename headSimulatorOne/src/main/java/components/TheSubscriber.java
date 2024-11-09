@@ -8,63 +8,71 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import java.awt.Point;
 
-public class TheSubscriber implements Runnable {
+
+/**
+ * This class is a common implementation of a subscriber
+ *
+ * @author Samuel Fox Gar Kaplan
+ * @author Javier Gonzalez-Sanchez
+ * @author Luke Aitchison
+ * @author Ethan Outangoun
+ *
+ * @version 2.0
+ */
+
+
+public class TheSubscriber{
 	private static final Logger logger = LoggerFactory.getLogger(TheSubscriber.class);
 	private String ip;
 	private int port;
-	private boolean running = false;
-	
+	private boolean isConnected= false;
+	private BufferedReader in;
+
+
 	public TheSubscriber(String ip, int port) {
 		this.ip = ip;
 		this.port = port;
 	}
-	
-	@Override
-	public void run() {
 
+	public void connect(){
 		try {
 			Socket socket = new Socket(ip, port);
-			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			logger.info("TheSubscriber is running");
-			running = true;
-			while (running) {
-				String command = in.readLine();
-				if (command != null) {
-					parse(command);
-				}
-			}
-			logger.info("TheSubscriber is stopping");
-			socket.close();
-		} catch (IOException e) {
+			isConnected = true;
+		}
+		catch (IOException e) {
 			logger.error("I/O error in TheSubscriber: {}", e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error("Unexpected error in TheSubscriber: {}", e.getMessage(), e);
 		} finally {
-			running = false;
+			isConnected = false;
 		}
 	}
-	
-	public void stop() {
-		running = false;
-	}
-	
-	private void parse(String command) {
-		String[] tokens = command.split(",");
-		try {
-			int[] x_y_pos = new int[2];
-			for (int i = 0; i < 2; i++) {
-				x_y_pos[i] = Integer.parseInt(tokens[i]);
+
+	public String readData(){
+		if (!isConnected) {
+			throw new RuntimeException("Client not connected");
+		}
+
+		try{
+			String command = in.readLine();
+			if (command != null) {
+				return command;
 			}
-			head.Blackboard.getInstance().setPoint(new Point(x_y_pos[0], x_y_pos[1])); //update x y pos in black board
-		} catch (NumberFormatException e) {
-			logger.error("Error parsing command", e);
+		} catch (IOException e) {
+			logger.error("Error in Publisher", e);
+
 		}
+		return "";
 	}
-	
-	public boolean isRunning() {
-		return running;
+
+
+	public void disconnect() {
+		isConnected = false;
 	}
+
 	
+
 }

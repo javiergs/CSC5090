@@ -8,7 +8,20 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
 
+ * @author Samuel Fox Gar Kaplan
+ * @author Javier Gonzalez-Sanchez
+ * @author Luke Aitchison
+ * @author Ethan Outangoun
+ *
+ * @version 2.0
+ * 
+	This class is the common implementation of a publisher using a socket. 
+	It has methods for connecting/disconnecting to a port and publishing data to an output stream.
+	*/
+
+	
 public class ThePublisher{
 	
 	private static final Logger logger = LoggerFactory.getLogger(ThePublisher.class);
@@ -16,7 +29,7 @@ public class ThePublisher{
 	private ObjectOutputStream outputStream;
 	private boolean isConnected = false;
 
-	
+
 	public ThePublisher(int port) {
 		this.port = port;
 	}
@@ -27,11 +40,11 @@ public class ThePublisher{
 
 	public void connect() {
 		try {
-			ServerSocket serverSocket = new ServerSocket(port);
+			ServerSocket serverSocket = new ServerSocket(port); 
 			logger.info("Server is waiting for connections");
-			Socket clientSocket = serverSocket.accept();
+			Socket clientSocket = serverSocket.accept(); 
 			logger.info("Client connected");
-			outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+			outputStream = new ObjectOutputStream(clientSocket.getOutputStream()); //Create stream to specified port
 			isConnected = true;
 		} catch (IOException e) {
             throw new RuntimeException(e);
@@ -42,7 +55,6 @@ public class ThePublisher{
 		if (!isConnected) {
 			throw new RuntimeException("Client not connected");
 		}
-
 		try {
 			outputStream.writeObject(obj);
 			outputStream.flush();

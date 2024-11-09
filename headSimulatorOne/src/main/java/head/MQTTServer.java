@@ -5,6 +5,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import components.Encoder;
 
+/**
+ * This class is an MQTT Server that connects to a broker and publishes point data to it
+ *
+ * @author Samuel Fox Gar Kaplan
+ * @author Javier Gonzalez-Sanchez
+ * @author Luke Aitchison
+ * @author Ethan Outangoun
+ *
+ * @version 2.0
+ */
 
 public class MQTTServer implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(MQTTServer.class);
