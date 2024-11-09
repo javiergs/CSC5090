@@ -1,27 +1,26 @@
 package head;
 
-
 import components.MQTTPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import components.Encoder;
 
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
-public class MQTTServer implements Runnable, PropertyChangeListener {
+public class MQTTServer implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(MQTTServer.class);
     private final String broker;
     private final String clientId;
     private final String topic;
     private boolean isReady = false;
-    private Point point;
+    private Encoder encoder;
 
 
     public MQTTServer(String broker, String clientId, String topic) {
         this.broker = broker;
         this.clientId = clientId;
         this.topic = topic;
+        this.encoder = new Encoder();   
+        head.Blackboard.getInstance().addPropertyChangeListener(encoder);   
     }
 
     @Override
@@ -36,9 +35,10 @@ public class MQTTServer implements Runnable, PropertyChangeListener {
 
             while (isReady) {
                 try {
+                    String point = encoder.getData();
                     Thread.sleep(1000 / 30);
                     if (point == null) continue;
-                    mqttPublisher.publish(topic, point.toString());
+                    mqttPublisher.publish(topic, point);
 
                 } catch (Exception e) {
                     logger.error("Error in Server: {}", e.getMessage(), e);
@@ -48,13 +48,6 @@ public class MQTTServer implements Runnable, PropertyChangeListener {
             logger.error("Unexpected error in Server: {}", e.getMessage(), e);
         } finally {
             isReady = false;
-        }
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        if ("point".equals(evt.getPropertyName())) {
-            point = (Point) evt.getNewValue();
         }
     }
 }

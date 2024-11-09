@@ -1,39 +1,49 @@
 package components;
 
 import components.ThePublisher;
+
+import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.PrintWriter;
-import java.net.Socket;
 
 
-public class Encoder implements Runnable {
+
+public class Encoder implements PropertyChangeListener{
 
 	private static final Logger logger = LoggerFactory.getLogger(ThePublisher.class);
-	private Socket socket;
+	private Point point;
+	private String x;
+	private String y;
 
-	public Encoder(Socket socket) {
-		this.socket = socket;
+	public Encoder() {
+		this.x = "";
+		this.y = "";
 	}
 
+
+	public String getData() {
+		// System.out.println("Encoder: " + x + "," + y);
+		return this.x + ","  + this.y;
+	}
+
+	
 	@Override
-	public void run() {
-		int mouse[] = new int[2];
-		try {
-			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-			while (true) {
-				for (int i = 0; i < mouse.length; i++) {
-					mouse[i] = (int) (Math.random() * 400);
-				}
-				logger.info("Sending mousepos to client: {},{}",
-					mouse[0], mouse[1]);
-				out.println();
-				Thread.sleep(1000);
-			}
-		} catch (Exception ex) {
-			logger.error("Error in ServerHandler", ex);
-		}
-	}
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("point".equals(evt.getPropertyName())) {
+            point = (Point) evt.getNewValue();
+			setX(Integer.toString((int) point.getX()));
+			setY(Integer.toString((int) point.getY()));
+        }
+    }
 
+	private void setX(String x) {
+		this.x = x;
+	}
+	private void setY(String y) {
+		this.y = y;
+	}
 }

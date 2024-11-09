@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.awt.Point;
 
 public class TheSubscriber implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(TheSubscriber.class);
@@ -56,7 +57,7 @@ public class TheSubscriber implements Runnable {
 			for (int i = 0; i < 2; i++) {
 				x_y_pos[i] = Integer.parseInt(tokens[i]);
 			}
-			Blackboard.getInstance().setHead(x_y_pos); //update x y pos in black board
+			head.Blackboard.getInstance().setPoint(new Point(x_y_pos[0], x_y_pos[1])); //update x y pos in black board
 		} catch (NumberFormatException e) {
 			logger.error("Error parsing command", e);
 		}

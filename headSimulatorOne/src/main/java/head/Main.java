@@ -3,7 +3,6 @@ package head;
 import javax.swing.*;
 import java.awt.*;
 
-import components.ThePublisher;
 
 /**
  * This class creates the main window of the application

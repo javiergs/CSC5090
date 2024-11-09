@@ -28,13 +28,11 @@ public class Controller implements ActionListener {
 		mqttServer = new MQTTServer("tcp://test.mosquitto.org:1883", "TestPublisher", "test/topic");
 		Thread mqttServerThread = new Thread(mqttServer);
 		mqttServerThread.start();
-		Blackboard.getInstance().addPropertyChangeListener(mqttServer);
-
 		logger.info("Starting server");
 		server = new Server(8888);
 		Thread serverThread = new Thread(server);
 		serverThread.start();
-		Blackboard.getInstance().addPropertyChangeListener(server);
+
 
 		try {
 			Thread.sleep(1000);
