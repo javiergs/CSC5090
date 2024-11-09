@@ -3,42 +3,65 @@ package cobot.blackboard;
 import java.awt.*;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
+import cobot.encoder.CsvEncoder;
+import cobot.encoder.EncoderHelper;
 
 /**
  * Blackboard class to store shared data between classes.
  * The Blackboard class is a singleton, meaning that only one instance of it can exist.
  *
- * @author Jack Ortega,
- * @author Neeraja Beesetti,
- * @author Saanvi Dua
- * @author Javier Gonzalez-Sanchez
- * @version 2.0
+ * This version processes messages received from Subscriber and updates internal state accordingly.
+ *
+ * Author(s): Jack Ortega, Neeraja Beesetti, Saanvi Dua, Javier Gonzalez-Sanchez
+ * Version: 2.0
  */
 public class Blackboard extends PropertyChangeSupport {
-	
+
 	private static Blackboard instance;
-	
+
 	public static final int ARM_COUNT = 6;
 	public static final int ARM_LENGTH = 50;
 
 	private final ArmHelper armHelper;
 	private final OriginHelper originHelper;
-	
+	private final EncoderHelper encoder;
+
 	private Blackboard() {
 		super(new Object());
 		this.armHelper = ArmHelper.init(ARM_COUNT);
 		this.originHelper = OriginHelper.init();
+		this.encoder = new CsvEncoder(); // Use concrete implementation of EncoderHelper
 	}
-	
+
 	public static Blackboard getInstance() {
 		if (instance == null) instance = new Blackboard();
 		return instance;
 	}
-	
+
+	/**
+	 * Processes a message received from the Subscriber.
+	 * Parses the message to update the arm angles.
+	 *
+	 * @param message The message received from the Subscriber.
+	 */
+	public void processSubscriberMessage(String message) {
+		try {
+			int[] newArmAngles = encoder.parse(message); // Decode message to obtain new angles
+			updateArmAngles(newArmAngles);               // Update state with parsed angles
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void updateStatusLabel(String status) {
 		firePropertyChange("status", null, status);
 	}
 
+	/**
+	 * Updates the arm angles and notifies listeners.
+	 *
+	 * @param numbers The new set of arm angles.
+	 */
 	public void updateArmAngles(int[] numbers) {
 		armHelper.updateAngles(numbers);
 		firePropertyChange("armAngles", null, armHelper.getArmAngles());
@@ -71,6 +94,4 @@ public class Blackboard extends PropertyChangeSupport {
 	public Point getCenter() {
 		return originHelper.getCenter();
 	}
-
-	
 }
