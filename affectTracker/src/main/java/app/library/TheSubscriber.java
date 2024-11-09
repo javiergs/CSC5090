@@ -44,6 +44,11 @@ public class TheSubscriber implements Runnable{
 
     }
     public void stopSubscriber() {
+        try {
+            inputStream.close();
+        } catch (IOException e) {
+            log.error("Error closing stream - " + e.getMessage());
+        }
         running = false;
     }
 }

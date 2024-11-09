@@ -28,6 +28,7 @@ import app.Data.ProcessedDataObject;
  *
  * @author Andrew Estrada
  * @author Sean Sponsler
+ * @author Xiuyuan Qiu
  * @version 1.0
  */
 public class Blackboard extends PropertyChangeSupport implements DataDestination {
@@ -40,6 +41,10 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
 	private final BlockingQueue<String> emotionQueue;
 	private final Queue<ProcessedDataObject> processedDataQueue;
 	public static final String PROPERTY_NAME_PROCESSED_DATA = "processed data";
+
+	private boolean started = false;
+	public static final String STARTED = "STARTED";
+	public static final String STOPPED = "STOPPED";
 
 	public static final String PROPERTY_NAME_VIEW_DATA = "view data";
     private final Logger logger;
@@ -231,5 +236,13 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
 	public void reportMQTTBrokerError(String ex_message) {
 		firePropertyChange(MQTTBROKER_ERROR, null, ex_message);
 	}
-	
+
+	public void startedProcessing() {
+		firePropertyChange(STARTED, started, true);
+		started = true;
+	}
+	public void stoppedProcessing() {
+		firePropertyChange(STOPPED, started, false);
+		started = false;
+	}
 }

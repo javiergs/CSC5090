@@ -9,7 +9,6 @@ import test.EyeTrackingServer;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * The {@code Main} class serves as the entry point for the Eye Tracking & Emotion Hub application.
@@ -25,15 +24,14 @@ import java.util.ArrayList;
  *
  * @author Andrew Estrada
  * @author Sean Sponsler
+ * @author Xiuyuan Qiu
  */
 public class Main extends JFrame {
 	private static final String TESTING_FLAG = "-test";
-	private final ArrayList<CustomThread> threads;
 	private TheSubscriber eyeSubscriber = null;
 	private TheSubscriber emotionSubscriber = null;
 	
 	public Main() {
-		threads = new ArrayList<>();
 		setLayout(new BorderLayout());
 		JMenuBar menuBar = new JMenuBar();
 		JMenu actionsMenu = new JMenu("Actions");
@@ -57,15 +55,17 @@ public class Main extends JFrame {
 		Blackboard.getInstance().addPropertyChangeListener(Blackboard.EYE_DATA_LABEL, controller);
 		Blackboard.getInstance().addPropertyChangeListener(Blackboard.EMOTION_DATA_LABEL, controller);
 		Blackboard.getInstance().addPropertyChangeListener(Blackboard.PROPERTY_NAME_VIEW_DATA, drawPanel);
+
+		Thread dataProcessor = new Thread(new RawDataProcessor());
+		Thread dpDelegate = new Thread(new ViewDataProcessor());
+		dataProcessor.start();
+		dpDelegate.start();
 	}
 	
 	public void connectClients() {
 		int eyeTrackingPort = Blackboard.getInstance().getEyeTrackingSocket_Port();
 		int emotionPort = Blackboard.getInstance().getEmotionSocket_Port();
 		cleanUpThreads();
-
-		CustomThread dataProcessor = new RawDataProcessor();
-		ViewDataProcessor dpDelegate = new ViewDataProcessor();
 
 		try {
 			eyeSubscriber = new TheSubscriber(Blackboard.getInstance().getEyeTrackingSocket_Host(),
@@ -88,13 +88,6 @@ public class Main extends JFrame {
 			Thread emotionThread = new Thread(emotionSubscriber);
 			emotionThread.start();
 		}
-
-
-		threads.add(dataProcessor);
-		threads.add(dpDelegate);
-		for (CustomThread thread : threads) {
-			thread.start();
-		}
 	}
 	
 	public void cleanUpThreads() {
@@ -106,12 +99,6 @@ public class Main extends JFrame {
 			emotionSubscriber.stopSubscriber();
 			emotionSubscriber = null;
 		}
-		for (CustomThread thread : threads) {
-			if (thread != null) {
-				thread.stopThread();
-			}
-		}
-		threads.clear();
 	}
 	
 	private void startServerThreads() {
