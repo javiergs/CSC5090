@@ -24,6 +24,7 @@ import java.io.IOException;
  *
  * @author Andrew Estrada
  * @author Sean Sponsler
+ * @author Xiuyuan Qiu
  */
 public class Main extends JFrame {
 	private static final String TESTING_FLAG = "-test";
