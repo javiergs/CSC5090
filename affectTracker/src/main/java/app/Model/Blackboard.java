@@ -122,44 +122,35 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
 	}
 	
 	public void addToEyeTrackingQueue(String data) throws InterruptedException {
-		//eyeTrackingQueue.put(data);
       eyeTrackingDataDelegate.addToEyeTrackingQueue(data);
 	}
 	
 	public String pollEyeTrackingQueue() throws InterruptedException {
-		//return eyeTrackingQueue.poll(TIMEOUT_IN_MS, TimeUnit.MILLISECONDS);
       return eyeTrackingDataDelegate.pollEyeTrackingQueue();
 	}
 	
 	public void addToEmotionQueue(String data) throws InterruptedException {
-		//emotionQueue.put(data);
       emotionDataDelegate.addToEmotionQueue(data);
 	}
 	
 	public String pollEmotionQueue() throws InterruptedException {
-		//return emotionQueue.poll(TIMEOUT_IN_MS, TimeUnit.MILLISECONDS);
       return emotionDataDelegate.pollEmotionQueue();
 	}
 	
 	public void addToProcessedDataQueue(ProcessedDataObject data) {
-		//processedDataQueue.add(data);
       processedDataDelegate.addToProcessedDataQueue(data);
 		firePropertyChange(PROPERTY_NAME_PROCESSED_DATA, null, data);
 	}
 	
 	public ProcessedDataObject getFromProcessedDataObjectQueue() {
-		//return processedDataQueue.poll();
       return processedDataDelegate.getFromProcessedDataQueue();
 	}
 	
 	public Deque<Circle> getCircleList() {
       return circleDataDelegate.getCircleList();
-		//return circleList;
 	}
 	
 	public void setCircleList(Deque<Circle> circleList) {
-		//this.circleList = circleList;
-		//firePropertyChange(PROPERTY_NAME_VIEW_DATA, null, circleList);
       circleDataDelegate.setCircleList(circleList);
 	}
 	
