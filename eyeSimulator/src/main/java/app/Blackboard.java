@@ -1,5 +1,8 @@
 package app;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.awt.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -12,6 +15,8 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
     private int transmissionSpeed;
     private boolean tracking;
     private final PropertyChangeSupport propertyChangeSupport;
+
+    private static final Logger logger = LoggerFactory.getLogger(Blackboard.class);
 
     private Blackboard() {
         super(new Object());  // Initialize with a dummy object
@@ -40,6 +45,7 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
         if (tracking && clickPositions.size() < transmissionSpeed) {
             List<Point> oldValue = new ArrayList<>(clickPositions);
             clickPositions.add(click);
+            logger.info("click added");
             propertyChangeSupport.firePropertyChange("clickPositions", oldValue, clickPositions);
         }
     }
@@ -49,7 +55,9 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
     }
 
     public synchronized void clearClicks() {
+        List<Point> oldValue = new ArrayList<>(clickPositions);
         clickPositions.clear();
+        propertyChangeSupport.firePropertyChange("clickPositions", oldValue, clickPositions);
     }
 
     public synchronized void setTransmissionSpeed(int speed) {

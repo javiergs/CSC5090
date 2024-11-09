@@ -54,6 +54,7 @@ public class WorkArea extends JPanel implements MouseListener, PropertyChangeLis
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        logger.debug("Work Area detected property change on property {}", evt.getPropertyName());
         repaint();
     }
 }

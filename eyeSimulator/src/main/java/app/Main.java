@@ -21,6 +21,7 @@ public class Main extends JFrame implements ActionListener, PropertyChangeListen
     private Subscriber tcpSubscriber;
     private MQTTSubscriber mqttSubscriber;
     private Thread subscriberThread;
+    private Thread publisherThread;
 
     private JMenuItem startTCPMenuItem;
     private JMenuItem startMQTTMenuItem;
@@ -40,7 +41,8 @@ public class Main extends JFrame implements ActionListener, PropertyChangeListen
 
     public Main() {
         Blackboard.getInstance().addObserver(this);
-        mqttPublisher = new MQTTPublisher();
+//        mqttPublisher = new MQTTPublisher();
+        startMQTTPublisher();
         tcpPublisher = new Publisher("localhost", 5000);  // Replace with actual TCP server address
 
         JMenuBar menuBar = new JMenuBar();
@@ -160,6 +162,32 @@ public class Main extends JFrame implements ActionListener, PropertyChangeListen
         stopSubscriberMenuItem.setEnabled(false);
     }
 
+    private void startMQTTPublisher() {
+        stopMQTTPublisher();  // Ensure any previous subscriber is stopped
+
+        try {
+            mqttPublisher = new MQTTPublisher();
+            publisherThread = new Thread(mqttPublisher);
+            publisherThread.start();
+            logger.info("MQTT Publisher started.");
+        } catch (Exception e) {
+            logger.error("Failed to start MQTT Publisher", e);
+        }
+    }
+
+    private void stopMQTTPublisher() {
+        if (mqttPublisher != null) {
+            mqttPublisher.stopPublisher();
+            mqttPublisher = null;
+            logger.info("MQTT Publisher stopped.");
+        }
+
+        if (publisherThread != null) {
+            publisherThread.interrupt();
+            publisherThread = null;
+        }
+    }
+
     private void configureSettings() {
         try {
             String widthStr = JOptionPane.showInputDialog(this, "Enter width:", "Configure", JOptionPane.QUESTION_MESSAGE);
@@ -203,8 +231,9 @@ public class Main extends JFrame implements ActionListener, PropertyChangeListen
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        String message = "Clicks: " + Blackboard.getInstance().getClickPositions();
-        mqttPublisher.publish(message);  // Publishes using MQTT
-        tcpPublisher.publish(message);   // Publishes using TCP
+        logger.debug("Main detected property change on property {}", evt.getPropertyName());
+//        String message = "Clicks: " + Blackboard.getInstance().getClickPositions();
+//        mqttPublisher.publish(message);  // Publishes using MQTT
+//        tcpPublisher.publish(message);   // Publishes using TCP
     }
 }
