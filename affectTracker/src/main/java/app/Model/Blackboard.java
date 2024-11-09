@@ -2,19 +2,13 @@ package app.Model;
 
 import java.beans.PropertyChangeSupport;
 import java.util.Deque;
-import java.util.Queue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
-import app.library.DataDestination;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import app.Data.Circle;
 import app.Data.ProcessedDataObject;
+import app.library.DataDestination;
 
 
 /**
@@ -34,12 +28,9 @@ import app.Data.ProcessedDataObject;
 public class Blackboard extends PropertyChangeSupport implements DataDestination {
 	private String eyeTrackingSocket_Host = "localhost";  // default for testing
 	private int eyeTrackingSocket_Port = 6001;  // default for testing
-	private final BlockingQueue<String> eyeTrackingQueue;
 	private String emotionSocket_Host = "localhost"; // default for testing
 	private int emotionSocket_Port = 6000; // default for testing
    
-	private final BlockingQueue<String> emotionQueue;
-	private final Queue<ProcessedDataObject> processedDataQueue;
 	public static final String PROPERTY_NAME_PROCESSED_DATA = "processed data";
 
 	private boolean started = false;
@@ -48,24 +39,25 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
 
 	public static final String PROPERTY_NAME_VIEW_DATA = "view data";
     private final Logger logger;
-	private Deque<Circle> circleList;
-	private int maxCircles = 5;
-	private int thresholdRadius = 50;
-	private int circleRadius = 50;
 	public static final String EYE_DATA_LABEL = "EYE";
 	public static final String EMOTION_DATA_LABEL = "EMOTION";
 	public static final String MQTTBROKER_ERROR = "MQTTE";
-	private static final int TIMEOUT_IN_MS = 500;
+	public static final int TIMEOUT_IN_MS = 500;
 	private static final String PREFIX_DELIMITER = "~";
 	private static final Blackboard INSTANCE = new Blackboard();
+
+   private final ProcessedDataDelegate processedDataDelegate;
+   private final EyeTrackingDataDelegate eyeTrackingDataDelegate;
+   private final EmotionDataDelegate emotionDataDelegate;
+   private final CircleDataDelegate circleDataDelegate;
 	
 	private Blackboard() {
 		super(new Object());
-		eyeTrackingQueue = new LinkedBlockingQueue<>();
-		emotionQueue = new LinkedBlockingQueue<>();
-		processedDataQueue = new ConcurrentLinkedQueue<>();
-		circleList = new ConcurrentLinkedDeque<>();
-      	logger = LoggerFactory.getLogger(Blackboard.class);
+      logger = LoggerFactory.getLogger(Blackboard.class);
+      processedDataDelegate = new ProcessedDataDelegate();
+      circleDataDelegate = new CircleDataDelegate();
+      eyeTrackingDataDelegate = new EyeTrackingDataDelegate();
+      emotionDataDelegate = new EmotionDataDelegate();
 	}
 	
 	public static Blackboard getInstance() {
@@ -130,37 +122,45 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
 	}
 	
 	public void addToEyeTrackingQueue(String data) throws InterruptedException {
-		eyeTrackingQueue.put(data);
+		//eyeTrackingQueue.put(data);
+      eyeTrackingDataDelegate.addToEyeTrackingQueue(data);
 	}
 	
 	public String pollEyeTrackingQueue() throws InterruptedException {
-		return eyeTrackingQueue.poll(TIMEOUT_IN_MS, TimeUnit.MILLISECONDS);
+		//return eyeTrackingQueue.poll(TIMEOUT_IN_MS, TimeUnit.MILLISECONDS);
+      return eyeTrackingDataDelegate.pollEyeTrackingQueue();
 	}
 	
 	public void addToEmotionQueue(String data) throws InterruptedException {
-		emotionQueue.put(data);
+		//emotionQueue.put(data);
+      emotionDataDelegate.addToEmotionQueue(data);
 	}
 	
 	public String pollEmotionQueue() throws InterruptedException {
-		return emotionQueue.poll(TIMEOUT_IN_MS, TimeUnit.MILLISECONDS);
+		//return emotionQueue.poll(TIMEOUT_IN_MS, TimeUnit.MILLISECONDS);
+      return emotionDataDelegate.pollEmotionQueue();
 	}
 	
 	public void addToProcessedDataQueue(ProcessedDataObject data) {
-		processedDataQueue.add(data);
+		//processedDataQueue.add(data);
+      processedDataDelegate.addToProcessedDataQueue(data);
 		firePropertyChange(PROPERTY_NAME_PROCESSED_DATA, null, data);
 	}
 	
 	public ProcessedDataObject getFromProcessedDataObjectQueue() {
-		return processedDataQueue.poll();
+		//return processedDataQueue.poll();
+      return processedDataDelegate.getFromProcessedDataQueue();
 	}
 	
 	public Deque<Circle> getCircleList() {
-		return circleList;
+      return circleDataDelegate.getCircleList();
+		//return circleList;
 	}
 	
 	public void setCircleList(Deque<Circle> circleList) {
-		this.circleList = circleList;
-		firePropertyChange(PROPERTY_NAME_VIEW_DATA, null, circleList);
+		//this.circleList = circleList;
+		//firePropertyChange(PROPERTY_NAME_VIEW_DATA, null, circleList);
+      circleDataDelegate.setCircleList(circleList);
 	}
 	
 	public String getFormattedConnectionSettings() {
@@ -206,23 +206,23 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
 	}
 
 	public int getMaxCircles() {
-		return maxCircles;
+		return circleDataDelegate.getMaxCircles();
 	}
 	
 	public void setMaxCircles(int maxCircles) {
-		this.maxCircles = maxCircles;
+		circleDataDelegate.setMaxCircles(maxCircles);
 	}
 	
 	public int getThresholdRadius() {
-		return thresholdRadius;
+		return circleDataDelegate.getThresholdRadius();
 	}
 	
 	public void setThresholdRadius(int thresholdRadius) {
-		this.thresholdRadius = thresholdRadius;
+      circleDataDelegate.setThresholdRadius(thresholdRadius);
 	}
 
 	public int getCircleRadius() {
-		return circleRadius;
+		return circleDataDelegate.getCircleRadius();
 	}
 
 	public void reportEyeThreadError(String ex_message) {
