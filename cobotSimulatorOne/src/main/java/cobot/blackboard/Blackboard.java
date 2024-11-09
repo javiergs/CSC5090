@@ -2,6 +2,7 @@ package cobot.blackboard;
 
 import java.awt.*;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
 import java.util.List;
 import cobot.encoder.CsvEncoder;
 import cobot.encoder.EncoderHelper;
@@ -30,7 +31,7 @@ public class Blackboard extends PropertyChangeSupport {
 		super(new Object());
 		this.armHelper = ArmHelper.init(ARM_COUNT);
 		this.originHelper = OriginHelper.init();
-		this.encoder = new CsvEncoder(); // Use concrete implementation of EncoderHelper
+		this.encoder = new CsvEncoder(); // Use a concrete implementation of EncoderHelper
 	}
 
 	public static Blackboard getInstance() {
@@ -47,7 +48,7 @@ public class Blackboard extends PropertyChangeSupport {
 	public void processSubscriberMessage(String message) {
 		try {
 			int[] newArmAngles = encoder.parse(message); // Decode message to obtain new angles
-			updateArmAngles(newArmAngles);               // Update state with parsed angles
+			updateArmAngles(newArmAngles);               // Notify listeners of new target angles
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -60,11 +61,11 @@ public class Blackboard extends PropertyChangeSupport {
 	/**
 	 * Updates the arm angles and notifies listeners.
 	 *
-	 * @param numbers The new set of arm angles.
+	 * @param targetAngles The new set of arm angles.
 	 */
-	public void updateArmAngles(int[] numbers) {
-		armHelper.updateAngles(numbers);
-		firePropertyChange("armAngles", null, armHelper.getArmAngles());
+	private void updateArmAngles(int[] targetAngles) {
+		// Fire a property change event to notify listeners (like CobotPanel)
+		firePropertyChange("armAngles", null, targetAngles);
 	}
 
 	public void updateOrigin(int width, int height) {
@@ -75,6 +76,7 @@ public class Blackboard extends PropertyChangeSupport {
 	public int getArmCount() {
 		return ARM_COUNT;
 	}
+
 	public int getArmLength() {
 		return ARM_LENGTH;
 	}
