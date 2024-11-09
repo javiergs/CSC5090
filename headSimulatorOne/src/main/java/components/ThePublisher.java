@@ -30,8 +30,8 @@ public class ThePublisher implements Runnable{
 			logger.info("Server is Running");
 			while (running) {
 				Socket socket = serverSocket.accept();
-				Encoder publisherEncoder = new Encoder(socket);
-				new Thread(publisherEncoder).start();
+				Encoder PublisherEncoder = new Encoder(socket);
+				new Thread(PublisherEncoder).start();
 			}
 			logger.info("Server Stopped Running");
 		} catch (IOException e) {
