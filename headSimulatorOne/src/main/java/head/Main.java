@@ -3,6 +3,7 @@ package head;
 import javax.swing.*;
 import java.awt.*;
 
+
 /**
  * This class creates the main window of the application
  *
@@ -16,6 +17,7 @@ public class Main extends JFrame {
 	public Main() {
 		setJMenuBar(createMenuBar());
 		setLayout(new GridLayout(1, 1));
+
 		Canvas d = new Canvas();
 		add(d);
 	}
@@ -33,7 +35,7 @@ public class Main extends JFrame {
 		stop.addActionListener(controller);
 		return menuBar;
 	}
-	
+
 	public static void main(String[] args) {
 		Main main = new Main();
 		main.setTitle("Head Movement Simulator");

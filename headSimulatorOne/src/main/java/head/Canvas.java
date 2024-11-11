@@ -2,6 +2,9 @@ package head;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import javax.swing.*;
 
 /**
@@ -12,15 +15,19 @@ import javax.swing.*;
  *
  * @version 2.0
  */
-public class Canvas extends JPanel implements MouseMotionListener, ActionListener {
+public class Canvas extends JPanel implements MouseMotionListener, ActionListener, PropertyChangeListener {
 	
 	private Head head;
+	private int x;
+	private int y;
 	
 	public Canvas() {
 		head = new Head();
 		setBackground(Color.GRAY);
 		addMouseMotionListener(this);
 		Timer timer = new Timer(1000 / 30, this);
+		this.x = 0;
+		this.y = 0;
 		timer.start();
 	}
 	
@@ -43,6 +50,15 @@ public class Canvas extends JPanel implements MouseMotionListener, ActionListene
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		repaint();
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if ("point".equals(evt.getPropertyName())){
+			Point newP = (Point) evt.getNewValue();
+			this.x = newP.x;
+			this.y = newP.y;
+		}
 	}
 	
 }
