@@ -1,0 +1,4 @@
+.idea
+cobotSimulatorOne/src/main/resources/logback-secret.properties
+cobotSimulatorOne/target
+logs
