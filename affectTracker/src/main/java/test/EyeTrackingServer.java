@@ -24,7 +24,7 @@ public class EyeTrackingServer implements Runnable {
 		Random random = new Random();
 		try (ServerSocket ss = new ServerSocket(6001);
 				 Socket connection = ss.accept();
-				 DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());) {
+				 DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream())) {
 			logger.info("Eye Tracking Connection Made");
 			while (true) {
 				long startTime = System.currentTimeMillis();
@@ -38,7 +38,7 @@ public class EyeTrackingServer implements Runnable {
 			}
 			
 		} catch (Exception e) {
-			logger.error("Eye Tracking Sever: {}", e.getMessage());
+			logger.error("Eye Tracking Server: {}", e.getMessage());
 		}
 	}
  

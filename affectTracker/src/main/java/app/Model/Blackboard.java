@@ -1,13 +1,14 @@
 package app.Model;
 
-import app.Data.Circle;
-import app.Data.ProcessedDataObject;
-
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Deque;
-import java.util.Queue;
-import java.util.concurrent.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import app.Data.Circle;
+import app.Data.ProcessedDataObject;
+import app.library.DataDestination;
 
 
 /**
@@ -21,78 +22,136 @@ import java.util.concurrent.*;
  *
  * @author Andrew Estrada
  * @author Sean Sponsler
+ * @author Xiuyuan Qiu
  * @version 1.0
  */
-public class Blackboard
-	//Todo: add extends PropertyChangeSupport
-{
+public class Blackboard extends PropertyChangeSupport implements DataDestination {
 	private String eyeTrackingSocket_Host = "localhost";  // default for testing
 	private int eyeTrackingSocket_Port = 6001;  // default for testing
-	private final BlockingQueue<String> eyeTrackingQueue;
 	private String emotionSocket_Host = "localhost"; // default for testing
 	private int emotionSocket_Port = 6000; // default for testing
-	private final BlockingQueue<String> emotionQueue;
-	private final Queue<ProcessedDataObject> processedDataQueue;
+   
 	public static final String PROPERTY_NAME_PROCESSED_DATA = "processed data";
-	
-	// Todo: remove this variable
-	private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
-	
+
+	private boolean started = false;
+	public static final String STARTED = "STARTED";
+	public static final String STOPPED = "STOPPED";
+
 	public static final String PROPERTY_NAME_VIEW_DATA = "view data";
-	private Deque<Circle> circleList;
-	private int maxCircles = 5;
-	private int thresholdRadius = 50;
-	private int circleRadius = 50;
-	public static final int paddingFromTop = 150; // height of the top panel
-	public static final String PROPERTY_NAME_EYETHREAD_ERROR = "eye tracking thread error";
-	public static final String PROPERTY_NAME_EMOTIONTHREAD_ERROR = "eye emotion thread error";
-	private static final int TIMEOUT_IN_MS = 500;
+    private final Logger logger;
+	public static final String EYE_DATA_LABEL = "EYE";
+	public static final String EMOTION_DATA_LABEL = "EMOTION";
+	public static final String MQTTBROKER_ERROR = "MQTTE";
+	public static final int TIMEOUT_IN_MS = 500;
+	private static final String PREFIX_DELIMITER = "~";
 	private static final Blackboard INSTANCE = new Blackboard();
+
+   private final ProcessedDataDelegate processedDataDelegate;
+   private final EyeTrackingDataDelegate eyeTrackingDataDelegate;
+   private final EmotionDataDelegate emotionDataDelegate;
+   private final CircleDataDelegate circleDataDelegate;
 	
 	private Blackboard() {
-    // Todo: super(new Object(0));
-		eyeTrackingQueue = new LinkedBlockingQueue<>();
-		emotionQueue = new LinkedBlockingQueue<>();
-		processedDataQueue = new ConcurrentLinkedQueue<>();
-		circleList = new ConcurrentLinkedDeque<>();
+		super(new Object());
+      logger = LoggerFactory.getLogger(Blackboard.class);
+      processedDataDelegate = new ProcessedDataDelegate();
+      circleDataDelegate = new CircleDataDelegate();
+      eyeTrackingDataDelegate = new EyeTrackingDataDelegate();
+      emotionDataDelegate = new EmotionDataDelegate();
 	}
 	
 	public static Blackboard getInstance() {
 		return INSTANCE;
 	}
+
+	/**
+	 * parses prefix and calls the method to add the data to the appropriate data structure
+	 *
+	 * @param dataWithPrefix string of data with a prefix to denote the source
+	 */
+	public void addSubscriberData(String dataWithPrefix){
+		if (isValidMessage(dataWithPrefix)) {
+			String[] prefixAndData = dataWithPrefix.split(PREFIX_DELIMITER, 2);
+			try{
+				switch (prefixAndData[0]) {
+					case EYE_DATA_LABEL -> addToEyeTrackingQueue(prefixAndData[1]);
+					case EMOTION_DATA_LABEL -> addToEmotionQueue(prefixAndData[1]);
+					default -> logger.warn("Data from unknown source with prefix \"" + prefixAndData[0]
+							+ "\" : " + prefixAndData[1]);
+				}
+			} catch (InterruptedException e) {
+				logger.warn("Data with prefix \"" + prefixAndData[0] +
+						"\" was interrupted and was unable to added to the queue  : " + prefixAndData[1]);
+            }
+        } else {
+			logger.warn("Data with invalid format : " + dataWithPrefix);
+		}
+	}
+
+	/**
+	 * parses prefix and calls the appropriate method to alert listeners of the error
+	 *
+	 * @param messageWithPrefix string of data with a prefix to denote the source
+	 */
+	public void alertError(String messageWithPrefix){
+
+		if (isValidMessage(messageWithPrefix)) {
+			String[] prefixAndMessage = messageWithPrefix.split(PREFIX_DELIMITER, 2);
+
+			switch (prefixAndMessage[0]) {
+				case EYE_DATA_LABEL -> reportEyeThreadError(prefixAndMessage[1]);
+				case EMOTION_DATA_LABEL -> reportEmotionThreadError(prefixAndMessage[1]);
+				case MQTTBROKER_ERROR -> reportMQTTBrokerError(prefixAndMessage[1]);
+				default -> logger.warn("Alerted of error with unknown prefix \"" + prefixAndMessage[0]
+						+ "\" : " + prefixAndMessage[1]);
+			}
+
+		} else {
+			logger.warn("Alerted of error without prefix : " + messageWithPrefix);
+		}
+	}
+
+	/**
+	 * ensures the message has a prefix and a body separated by the prefix delimiter
+	 *
+	 * @param messageWithPrefix string received from subscriber
+	 * @return	true if message has prefix and body
+	 */
+	public boolean isValidMessage(String messageWithPrefix){
+		return messageWithPrefix.split(PREFIX_DELIMITER).length == 2;
+	}
 	
 	public void addToEyeTrackingQueue(String data) throws InterruptedException {
-		eyeTrackingQueue.put(data);
+      eyeTrackingDataDelegate.addToEyeTrackingQueue(data);
 	}
 	
 	public String pollEyeTrackingQueue() throws InterruptedException {
-		return eyeTrackingQueue.poll(TIMEOUT_IN_MS, TimeUnit.MILLISECONDS);
+      return eyeTrackingDataDelegate.pollEyeTrackingQueue();
 	}
 	
 	public void addToEmotionQueue(String data) throws InterruptedException {
-		emotionQueue.put(data);
+      emotionDataDelegate.addToEmotionQueue(data);
 	}
 	
 	public String pollEmotionQueue() throws InterruptedException {
-		return emotionQueue.poll(TIMEOUT_IN_MS, TimeUnit.MILLISECONDS);
+      return emotionDataDelegate.pollEmotionQueue();
 	}
 	
 	public void addToProcessedDataQueue(ProcessedDataObject data) {
-		processedDataQueue.add(data);
-		changeSupport.firePropertyChange(PROPERTY_NAME_PROCESSED_DATA, null, null);
+      processedDataDelegate.addToProcessedDataQueue(data);
+		firePropertyChange(PROPERTY_NAME_PROCESSED_DATA, null, data);
 	}
 	
 	public ProcessedDataObject getFromProcessedDataObjectQueue() {
-		return processedDataQueue.poll();
+      return processedDataDelegate.getFromProcessedDataQueue();
 	}
 	
 	public Deque<Circle> getCircleList() {
-		return circleList;
+      return circleDataDelegate.getCircleList();
 	}
 	
 	public void setCircleList(Deque<Circle> circleList) {
-		this.circleList = circleList;
-		changeSupport.firePropertyChange(PROPERTY_NAME_VIEW_DATA, null, null);
+      circleDataDelegate.setCircleList(circleList);
 	}
 	
 	public String getFormattedConnectionSettings() {
@@ -136,39 +195,45 @@ public class Blackboard
 	public void setEmotionSocket_Port(int emotionSocket_Port) {
 		this.emotionSocket_Port = emotionSocket_Port;
 	}
-	
-	//Todo: This looks suspicious. Why is this method here?
-	public void addChangeSupportListener(String propertyName, PropertyChangeListener pcl) {
-		changeSupport.addPropertyChangeListener(propertyName, pcl);
-	}
-	
+
 	public int getMaxCircles() {
-		return maxCircles;
+		return circleDataDelegate.getMaxCircles();
 	}
 	
 	public void setMaxCircles(int maxCircles) {
-		this.maxCircles = maxCircles;
+		circleDataDelegate.setMaxCircles(maxCircles);
 	}
 	
 	public int getThresholdRadius() {
-		return thresholdRadius;
+		return circleDataDelegate.getThresholdRadius();
 	}
 	
 	public void setThresholdRadius(int thresholdRadius) {
-		this.thresholdRadius = thresholdRadius;
+      circleDataDelegate.setThresholdRadius(thresholdRadius);
 	}
-	
-	//Todo: This looks suspicious. Why is this method here?
-	public void removePropertyChangeListener(String propertyName, PropertyChangeListener pcl) {
-		changeSupport.removePropertyChangeListener(propertyName, pcl);
+
+	public int getCircleRadius() {
+		return circleDataDelegate.getCircleRadius();
 	}
-	
+
 	public void reportEyeThreadError(String ex_message) {
-		changeSupport.firePropertyChange(PROPERTY_NAME_EYETHREAD_ERROR, null, ex_message);
+		firePropertyChange(EYE_DATA_LABEL, null, ex_message);
 	}
 	
 	public void reportEmotionThreadError(String ex_message) {
-		changeSupport.firePropertyChange(PROPERTY_NAME_EMOTIONTHREAD_ERROR, null, ex_message);
+		firePropertyChange(EMOTION_DATA_LABEL, null, ex_message);
 	}
-	
+
+	public void reportMQTTBrokerError(String ex_message) {
+		firePropertyChange(MQTTBROKER_ERROR, null, ex_message);
+	}
+
+	public void startedProcessing() {
+		firePropertyChange(STARTED, started, true);
+		started = true;
+	}
+	public void stoppedProcessing() {
+		firePropertyChange(STOPPED, started, false);
+		started = false;
+	}
 }

@@ -2,14 +2,13 @@ package app.View;
 
 import app.Controller.MainController;
 import app.Model.*;
+import app.library.TheSubscriber;
 import test.EmotionDataServer;
 import test.EyeTrackingServer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
+import java.io.IOException;
 
 /**
  * The {@code Main} class serves as the entry point for the Eye Tracking & Emotion Hub application.
@@ -25,14 +24,14 @@ import java.util.ArrayList;
  *
  * @author Andrew Estrada
  * @author Sean Sponsler
+ * @author Xiuyuan Qiu
  */
-public class Main extends JFrame implements PropertyChangeListener {
-	
+public class Main extends JFrame {
 	private static final String TESTING_FLAG = "-test";
-	private final ArrayList<CustomThread> threads;
+	private TheSubscriber eyeSubscriber = null;
+	private TheSubscriber emotionSubscriber = null;
 	
 	public Main() {
-		threads = new ArrayList<>();
 		setLayout(new BorderLayout());
 		JMenuBar menuBar = new JMenuBar();
 		JMenu actionsMenu = new JMenu("Actions");
@@ -53,38 +52,53 @@ public class Main extends JFrame implements PropertyChangeListener {
 		ColorKeyPanel colorKeyPanel = new ColorKeyPanel();
 		colorKeyPanel.setPreferredSize(new Dimension(200, 1000));
 		add(colorKeyPanel, BorderLayout.EAST);
-		Blackboard.getInstance().addChangeSupportListener(Blackboard.PROPERTY_NAME_EYETHREAD_ERROR, this);
-		Blackboard.getInstance().addChangeSupportListener(Blackboard.PROPERTY_NAME_EMOTIONTHREAD_ERROR, this);
+		Blackboard.getInstance().addPropertyChangeListener(Blackboard.EYE_DATA_LABEL, controller);
+		Blackboard.getInstance().addPropertyChangeListener(Blackboard.EMOTION_DATA_LABEL, controller);
+		Blackboard.getInstance().addPropertyChangeListener(Blackboard.PROPERTY_NAME_VIEW_DATA, drawPanel);
+
+		Thread dataProcessor = new Thread(new RawDataProcessor());
+		Thread dpDelegate = new Thread(new ViewDataProcessor());
+		dataProcessor.start();
+		dpDelegate.start();
 	}
 	
 	public void connectClients() {
 		int eyeTrackingPort = Blackboard.getInstance().getEyeTrackingSocket_Port();
 		int emotionPort = Blackboard.getInstance().getEmotionSocket_Port();
 		cleanUpThreads();
-		CustomThread eyeTrackingThread = new EyeTrackingClient(
-			Blackboard.getInstance().getEyeTrackingSocket_Host(),
-			eyeTrackingPort);
-		CustomThread emotionThread = new EmotionDataClient(
-			Blackboard.getInstance().getEmotionSocket_Host(),
-			emotionPort);
-		CustomThread dataProcessor = new RawDataProcessor();
-		ViewDataProcessor dpDelegate = new ViewDataProcessor();
-		threads.add(eyeTrackingThread);
-		threads.add(emotionThread);
-		threads.add(dataProcessor);
-		threads.add(dpDelegate);
-		for (CustomThread thread : threads) {
-			thread.start();
+
+		try {
+			eyeSubscriber = new TheSubscriber(Blackboard.getInstance().getEyeTrackingSocket_Host(),
+					eyeTrackingPort, Blackboard.EYE_DATA_LABEL, Blackboard.getInstance());
+		} catch (IOException e) {
+			Blackboard.getInstance().reportEyeThreadError(e.getMessage());
+			//do not continue if we don't have access to eye data
+			return;
+		}
+		try {
+			emotionSubscriber = new TheSubscriber(Blackboard.getInstance().getEmotionSocket_Host(),
+					emotionPort, Blackboard.EMOTION_DATA_LABEL, Blackboard.getInstance());
+		} catch (IOException e) {
+			Blackboard.getInstance().reportEmotionThreadError(e.getMessage());
+        }
+
+		Thread eyeThread = new Thread(eyeSubscriber);
+		eyeThread.start();
+		if (emotionSubscriber != null){
+			Thread emotionThread = new Thread(emotionSubscriber);
+			emotionThread.start();
 		}
 	}
 	
 	public void cleanUpThreads() {
-		for (CustomThread thread : threads) {
-			if (thread != null) {
-				thread.stopThread();
-			}
+		if (eyeSubscriber != null ){
+			eyeSubscriber.stopSubscriber();
+			eyeSubscriber = null;
 		}
-		threads.clear();
+		if (emotionSubscriber != null ){
+			emotionSubscriber.stopSubscriber();
+			emotionSubscriber = null;
+		}
 	}
 	
 	private void startServerThreads() {
@@ -94,30 +108,9 @@ public class Main extends JFrame implements PropertyChangeListener {
 		emotionServerThread.start();
 		eyeTrackingThread.start();
 	}
-	
-	public void createConnectionErrorPopUp(String main_message, String error_message) {
-		JOptionPane.showMessageDialog(this,
-			String.format("%s\n\n%s\nError: %s", main_message,
-				Blackboard.getInstance().getFormattedConnectionSettings(),
-				error_message));
-	}
-	
-	@Override
-	//Todo: Move this to the controller. Do not create threads until confirmed connection.
-	//Todo: Main is not recommended to be observer. Move this to the controller.
-	public void propertyChange(PropertyChangeEvent evt) {
-		switch (evt.getPropertyName()) {
-			case Blackboard.PROPERTY_NAME_EYETHREAD_ERROR -> {
-				cleanUpThreads();
-				createConnectionErrorPopUp("Unable to connect to Eye Tracking server. \n" +
-					"Please check that the server is running and the IP address is correct.", (String) evt.getNewValue());
-			}
-			case Blackboard.PROPERTY_NAME_EMOTIONTHREAD_ERROR ->
-				createConnectionErrorPopUp("Unable to connect to Emotion server. \n" +
-					"Application will run without emotion data.", (String) evt.getNewValue());
-		}
-	}
-	
+
+	//Todo: clean up threads, may not need CustomThread class at all
+
 	public static void main(String[] args) {
 		Main window = new Main();
 		window.setTitle ("Eye Tracking & Emotion Hub");
