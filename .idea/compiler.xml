@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="headSimulatorTwo" />
+        <module name="library" />
+        <module name="cobotSimulatorOne" />
+        <module name="EyeTrackingSimulator" />
+        <module name="headSimulatorOne" />
+        <module name="cobotSimulatorTwo" />
+        <module name="affectTracker" />
+        <module name="508Asgn2" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="affectSimulator" target="20" />
+      <module name="eyeSimulator" target="20" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
