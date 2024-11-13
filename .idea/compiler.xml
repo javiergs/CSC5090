@@ -9,12 +9,15 @@
         <module name="affectSimulator" />
         <module name="eyeSimulator" />
         <module name="library" />
+        <module name="headSimulatorTwo" />
         <module name="cobotSimulatorOne" />
-        <module name="src" />
         <module name="headSimulatorOne" />
         <module name="cobotSimulatorTwo" />
         <module name="affectTracker" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="src" target="20" />
+    </bytecodeTargetLevel>
   </component>
 </project>

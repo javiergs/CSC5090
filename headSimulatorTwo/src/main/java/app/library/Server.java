@@ -70,36 +70,4 @@ public class Server implements Runnable {
 		return running;
 	}
  
-	private class MousePositionWebSocketServer extends WebSocketServer {
-		
-		public MousePositionWebSocketServer(InetSocketAddress address) {
-			super(address);
-		}
-		
-		@Override
-		public void onOpen(WebSocket conn, ClientHandshake handshake) {
-			System.out.println("New WebSocket connection opened from " + conn.getRemoteSocketAddress());
-		}
-		
-		@Override
-		public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-			System.out.println("WebSocket connection closed: " + reason);
-		}
-		
-		@Override
-		public void onMessage(WebSocket conn, String message) {
-			System.out.println("Received message: " + message);
-		}
-		
-		@Override
-		public void onError(WebSocket conn, Exception ex) {
-			ex.printStackTrace();
-		}
-		
-		@Override
-		public void onStart() {
-			System.out.println("WebSocket server started successfully.");
-		}
-	}
- 
 }
