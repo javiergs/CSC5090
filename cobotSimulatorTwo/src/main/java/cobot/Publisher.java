@@ -9,6 +9,16 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Random;
 
+/**
+ * The Publisher class generates and sends random angles to a connected client. It listens for
+ * a client connection on a specified port and continuously sends a set of six random angles every
+ * 30 seconds until the client disconnects.
+ *
+ * @author Reza Mousakhani
+ * @author Damian Dhesi
+ * @author Shiv Panchal
+ * @version 2.0
+ */
 public class Publisher implements Runnable {
     private static final Logger LOGGER =
             LoggerFactory.getLogger(Publisher.class);
@@ -17,10 +27,19 @@ public class Publisher implements Runnable {
     //Wait time can be adjusted as necessary, just to stop from spamming client
     private final static int WAIT_TIME = 30000;
 
+    /**
+     * Constructs a new Publisher with the specified port.
+     *
+     * @param port the port number to listen for client connections
+     */
     public Publisher(int port) {
         this.PORT = port;
     }
 
+    /**
+     * Runs the Publisher, accepting client connections, generating random angles, and sending them
+     * to the connected client. Waits for a new client if the current one disconnects.
+     */
     @Override
     public void run() {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {

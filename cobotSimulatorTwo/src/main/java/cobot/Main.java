@@ -15,7 +15,18 @@ import java.awt.*;
 public class Main extends JFrame {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 	public static final int PORT = 12345;
-	
+
+	/**
+	 * The Main class is the entry point for the Cobot Simulator application. It creates the main
+	 * GUI frame consisting of a simulation panel for robot arms, a progress bar, and a menu bar with
+	 * options to start and stop both the client and simulation. Extends JFrame to display the GUI window.
+	 *
+	 * @author Reza Mousakhani
+	 * @author Damian Dhesi
+	 * @author Shiv Panchal
+	 * @author Javier Gonzalez-Sanchez
+	 * @version 2.0
+	 */
 	public Main() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
@@ -35,7 +46,12 @@ public class Main extends JFrame {
 		Thread publisherThread = new Thread(publisher);
 		publisherThread.start();
 	}
-	
+
+	/**
+	 * Creates and sets up the menu bar with items for controlling the client and simulation.
+	 * Adds "File" and "Simulation" menus with actions for starting, stopping, pausing,
+	 * and resuming the simulation and client connection.
+	 */
 	private void createMenuBar(RobotPanelHandler handler) {
 		Controller controller = new Controller(handler);
 		JMenuBar menuBar = new JMenuBar();
@@ -66,7 +82,12 @@ public class Main extends JFrame {
 		menuBar.add(simulationMenu);
 		setJMenuBar(menuBar);
 	}
-	
+
+	/**
+	 * Main method to launch the Cobot Simulator application. Sets up and displays the main frame.
+	 *
+	 * @param args command-line arguments (not used)
+	 */
 	public static void main(String[] args) {
 		Main frame = new Main();
 		frame.setTitle("Cobot Simulator");
