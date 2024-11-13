@@ -12,11 +12,15 @@ import java.awt.event.ActionListener;
  */
 public class Controller implements ActionListener {
 	
-	private static final Logger logger = LoggerFactory.getLogger(Controller.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Controller.class);
 	private Subscriber subscriber = null;
-	private RobotPanelHandler robotPanelHandler;
-	
-	@Override
+	private final RobotPanelHandler ROBOT_PANEL_HANDLER;
+
+    public Controller(RobotPanelHandler robotPanelHandler) {
+        this.ROBOT_PANEL_HANDLER = robotPanelHandler;
+    }
+
+    @Override
 	public void actionPerformed(ActionEvent e) {
 		switch (e.getActionCommand()) {
 			case "Start client":
@@ -34,16 +38,13 @@ public class Controller implements ActionListener {
 			case "Stop simulation":
 				stopSimulation();
 				break;
-			case "Pause", "Resume":
-				//Somewhat redundant with start and stop simulation
-				break;
             default:
-				logger.error("Unexpected action event: " + e.getActionCommand());
+				LOGGER.error("Unexpected action event: " + e.getActionCommand());
 		}
 	}
 	
 	private void startClient() {
-		logger.info("Starting subscriber");
+		LOGGER.info("Starting subscriber");
 		subscriber = new Subscriber("localhost", Main.PORT);
 		Thread subscriberThread = new Thread(subscriber);
 		subscriberThread.start();
@@ -51,7 +52,7 @@ public class Controller implements ActionListener {
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			logger.error("Error in thread sleep: {}", e.getMessage(), e);
+			LOGGER.error("Error in thread sleep: {}", e.getMessage(), e);
 		}
 		if (!subscriber.isRunning()) {
 			JOptionPane.showMessageDialog(null, "Could not connect to server", "Error", JOptionPane.ERROR_MESSAGE);
@@ -62,19 +63,19 @@ public class Controller implements ActionListener {
 	
 	private void pauseClient() {
 		if (subscriber.isRunning()) {
-			logger.info("Stopping subscriber");
+			LOGGER.info("Stopping subscriber");
 			subscriber.stop();
 		}
 	}
 
 	private void startSimulation() {
-		logger.info("Starting simulation");
-		robotPanelHandler.startSimulation();
+		LOGGER.info("Starting simulation");
+		ROBOT_PANEL_HANDLER.startSimulation();
 	}
 
 	private void stopSimulation() {
-		logger.info("Stopping simulation");
-		robotPanelHandler.stopSimulation();
+		LOGGER.info("Stopping simulation");
+		ROBOT_PANEL_HANDLER.stopSimulation();
 	}
 
 }

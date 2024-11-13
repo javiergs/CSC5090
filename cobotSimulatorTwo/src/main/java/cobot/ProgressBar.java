@@ -7,15 +7,15 @@ import java.beans.PropertyChangeListener;
 
 public class ProgressBar extends JPanel implements PropertyChangeListener {
 
-    private JProgressBar progressBar;
+    private final JProgressBar PROGRESS_BAR;
 
     public ProgressBar() {
-        progressBar = new JProgressBar(0, 100);
-        progressBar.setValue(0);
-        progressBar.setStringPainted(true);
+        PROGRESS_BAR = new JProgressBar(0, 100);
+        PROGRESS_BAR.setValue(0);
+        PROGRESS_BAR.setStringPainted(true);
 
         this.setLayout(new BorderLayout());
-        this.add(progressBar, BorderLayout.CENTER);
+        this.add(PROGRESS_BAR, BorderLayout.CENTER);
 
         Blackboard.getInstance().addPropertyChangeListener(this);
     }
@@ -29,6 +29,6 @@ public class ProgressBar extends JPanel implements PropertyChangeListener {
     }
 
     public void setProgress(int progress) {
-        progressBar.setValue(progress);
+        PROGRESS_BAR.setValue(progress);
     }
 }

@@ -5,26 +5,25 @@ import java.awt.*;
 
 public class RobotPanel extends JPanel {
 
-	private final JLabel staticStatusLabel;
-	private final JLabel dynamicStatusLabel;
-	private final RobotPanelHandler controller;
+    private final JLabel DYNAMIC_STATUS_LABEL;
+	private final RobotPanelHandler CONTROLLER;
 
 	public RobotPanel(RobotPanelHandler controller) {
-		this.controller = controller;
+		this.CONTROLLER = controller;
 
-		staticStatusLabel = new JLabel("Status: ");
+        JLabel staticStatusLabel = new JLabel("Status: ");
 		staticStatusLabel.setFont(new Font("Arial", Font.BOLD, 20));
 		staticStatusLabel.setForeground(Color.BLACK);
 
-		dynamicStatusLabel = new JLabel("Idle");
-		dynamicStatusLabel.setFont(new Font("Arial", Font.BOLD, 20));
-		dynamicStatusLabel.setForeground(Color.RED);
+		DYNAMIC_STATUS_LABEL = new JLabel("Idle");
+		DYNAMIC_STATUS_LABEL.setFont(new Font("Arial", Font.BOLD, 20));
+		DYNAMIC_STATUS_LABEL.setForeground(Color.RED);
 
 		setLayout(new FlowLayout(FlowLayout.CENTER));
 		add(staticStatusLabel);
-		add(dynamicStatusLabel);
+		add(DYNAMIC_STATUS_LABEL);
 
-		controller.blackboard.addPropertyChangeListener(evt -> {
+		Blackboard.getInstance().addPropertyChangeListener(evt -> {
 			if ("ProgressUpdated".equals(evt.getPropertyName())) {
 				setRunningStatus();
 			} else if ("AnglesAdded".equals(evt.getPropertyName())) {
@@ -35,13 +34,13 @@ public class RobotPanel extends JPanel {
 	}
 
 	public void setRunningStatus() {
-		dynamicStatusLabel.setText("Running");
-		dynamicStatusLabel.setForeground(Color.decode("#008000"));
+		DYNAMIC_STATUS_LABEL.setText("Running");
+		DYNAMIC_STATUS_LABEL.setForeground(Color.decode("#008000"));
 	}
 
 	public void setIdleStatus() {
-		dynamicStatusLabel.setText("Idle");
-		dynamicStatusLabel.setForeground(Color.RED);
+		DYNAMIC_STATUS_LABEL.setText("Idle");
+		DYNAMIC_STATUS_LABEL.setForeground(Color.RED);
 	}
 
 	@Override
@@ -60,7 +59,7 @@ public class RobotPanel extends JPanel {
 		Color[] colors = {Color.decode("#6667ab"), Color.decode("#f18aad"), Color.decode("#ea6759"),
 				Color.decode("#f88f58"), Color.decode("#f3c65f"), Color.decode("#8bc28c")};
 
-		int[] currentAngles = controller.getCurrentAngles();
+		int[] currentAngles = CONTROLLER.getCurrentAngles();
 		Point[] jointPositions = new Point[currentAngles.length + 1];
 		jointPositions[0] = new Point(x, y);
 

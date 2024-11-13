@@ -5,14 +5,16 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
+//TODO: get library dependency to work, code in slides doesn't work:
+// import javiergs.TheBlackboard;
 
 /**
  * The GUI consists of a simulation panel where the robot arms are drawn, and a button panel
  * with buttons to start and stop the simulation.
  */
 public class Main extends JFrame {
-	private static final Logger logger = LoggerFactory.getLogger(Main.class);
-	public static int PORT = 12345;
+	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+	public static final int PORT = 12345;
 	
 	public Main() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -23,19 +25,19 @@ public class Main extends JFrame {
 		Blackboard.getInstance().addPropertyChangeListener(simulationPanel);
 
 		ProgressBar progressBar = new ProgressBar();
-		createMenuBar();
+		createMenuBar(simulationPanel);
 
 		add(robotPanel, BorderLayout.CENTER);
 		add(progressBar, BorderLayout.SOUTH);
 
-		logger.info("Starting publisher");
+		LOGGER.info("Starting publisher");
 		Publisher publisher = new Publisher(PORT);
 		Thread publisherThread = new Thread(publisher);
 		publisherThread.start();
 	}
 	
-	private void createMenuBar() {
-		Controller controller = new Controller();
+	private void createMenuBar(RobotPanelHandler handler) {
+		Controller controller = new Controller(handler);
 		JMenuBar menuBar = new JMenuBar();
 		JMenu fileMenu = new JMenu("File");
 		JMenu simulationMenu = new JMenu("Simulation");
