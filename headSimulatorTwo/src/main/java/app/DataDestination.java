@@ -1,4 +1,4 @@
-package app.library;
+package app;
 
 /**
  * The `DataDestination` interface defines methods for handling data and error messages

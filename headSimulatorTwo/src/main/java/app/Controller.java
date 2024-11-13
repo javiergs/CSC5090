@@ -1,4 +1,4 @@
-package app.library;
+package app;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 public class Controller implements MouseMotionListener, ActionListener {
 
 	private TrackArea trackArea;
-	private Server server;
+	private Publisher server;
 	private JComboBox<String> menu;
 	private boolean init_connected = false;
 	private static final Logger logger = LoggerFactory.getLogger(Controller.class);
@@ -33,7 +33,7 @@ public class Controller implements MouseMotionListener, ActionListener {
 	 * @param server The `Server` that manages the WebSocket connection.
 	 * @param menu The dropdown menu for controlling the server (Start/Stop).
 	 */
-	public Controller(TrackArea trackArea, Server server, JComboBox<String> menu) {
+	public Controller(TrackArea trackArea, Publisher server, JComboBox<String> menu) {
 		this.trackArea = trackArea;
 		this.server = server;
 		this.menu = menu;

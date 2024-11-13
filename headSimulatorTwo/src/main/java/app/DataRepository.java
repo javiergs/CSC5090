@@ -1,4 +1,4 @@
-package app.library;
+package app;
 
 import java.beans.PropertyChangeSupport;
 import org.slf4j.Logger;

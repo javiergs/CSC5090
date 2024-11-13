@@ -1,4 +1,4 @@
-package app.library;
+package app;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Main extends JFrame {
 
-	private Server server;
+	private Publisher server;
 	private TheSubscriber subscriber;
 	private static final Logger logger = LoggerFactory.getLogger(Main.class);
 	private String subscriberType;
@@ -31,7 +31,7 @@ public class Main extends JFrame {
 	 * Constructs the main application window and initializes components.
 	 */
 	public Main() {
-		server = new Server();
+		server = new Publisher();
 		setLayout(new BorderLayout());
 
 		JPanel dropdownPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));

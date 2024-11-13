@@ -1,4 +1,4 @@
-package app.library;
+package app;
 
 import java.util.Map;
 import org.eclipse.paho.client.mqttv3.*;

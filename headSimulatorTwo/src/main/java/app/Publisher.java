@@ -1,9 +1,8 @@
-package app.library;
+package app;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.InetSocketAddress;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -16,20 +15,19 @@ import java.util.concurrent.CountDownLatch;
  * @author Anthony C.
  * @version 1.0
  */
-public class Server implements Runnable {
+public class Publisher implements Runnable {
 
 	private Thread serverThread;
 	private volatile boolean running = false;
-	private MousePositionWebSocketServer webSocketServer;
+//	private MousePositionWebSocketServer webSocketServer;
 	private CountDownLatch latch = new CountDownLatch(1);
-	private static final Logger logger = LoggerFactory.getLogger(Server.class);
+	private static final Logger logger = LoggerFactory.getLogger(Publisher.class);
 
 	/**
 	 * Initializes and starts the WebSocket server.
 	 */
 	public void run() {
-		webSocketServer = new MousePositionWebSocketServer(new InetSocketAddress(8887));
-		webSocketServer.start();
+
 		latch.countDown();
 		logger.info("WebSocket server started on port 8887");
 		while (running) {
@@ -40,14 +38,7 @@ public class Server implements Runnable {
 				running = false;
 			}
 		}
-		if (webSocketServer != null) {
-			try {
-				webSocketServer.stop();
-				logger.info("WebSocket server stopped.");
-			} catch (Exception e) {
-				logger.error("Error stopping WebSocket server", e);
-			}
-		}
+
 	}
 
 	/**

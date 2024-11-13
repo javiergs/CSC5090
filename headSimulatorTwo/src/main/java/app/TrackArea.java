@@ -1,4 +1,4 @@
-package app.library;
+package app;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -31,7 +31,7 @@ public class TrackArea extends JPanel implements Blackboard.Observer {
 	 * @param menu The dropdown menu for controlling the simulation.
 	 * @param blackboard The `Blackboard` object for displaying status information.
 	 */
-	public TrackArea(Server server, JComboBox<String> menu, Blackboard blackboard) {
+	public TrackArea(Publisher server, JComboBox<String> menu, Blackboard blackboard) {
 		setSize(800, 500);
 		setVisible(true);
 		setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));

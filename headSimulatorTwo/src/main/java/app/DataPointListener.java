@@ -1,4 +1,4 @@
-package app.library;
+package app;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
