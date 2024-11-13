@@ -7,6 +7,17 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+/**
+ * A publisher that connects to a TCP server and sends click position data
+ * from the Blackboard.
+ *
+ * @version 1.2
+ * @authors
+ * Monish Suresh
+ * Christine Widden
+ * Luca Ornstil
+ */
+
 public class Publisher implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(Publisher.class);
     private final String host;
