@@ -25,6 +25,16 @@ public class TheSubscriber implements Runnable{
     private final DataDestination dataDestination;
     private static final String PREFIX_DELIMITER = "~";
     private boolean running = true;
+
+    /**
+     * Constructs a `TheSubscriber`.
+     *
+     * @param ip_host The IP address of the server.
+     * @param ip_port The port number of the server.
+     * @param dataPrefix The prefix to be added to the received data.
+     * @param destination The `DataDestination` where data will be sent.
+     * @throws IOException If an error occurs during socket creation or connection.
+     */
     public TheSubscriber(String ip_host, int ip_port, String dataPrefix, DataDestination destination) throws IOException {
         this.dataPrefix = dataPrefix + PREFIX_DELIMITER;
         this.dataDestination = destination;
@@ -37,6 +47,9 @@ public class TheSubscriber implements Runnable{
         }
     }
 
+    /**
+     * Continuously receives data from the server and forwards it to the `DataDestination`.
+     */
     @Override
     public void run() {
         try {
@@ -53,6 +66,10 @@ public class TheSubscriber implements Runnable{
         }
 
     }
+
+    /**
+     * Stops the subscriber and closes the input stream.
+     */
     public void stopSubscriber() {
         try {
             inputStream.close();

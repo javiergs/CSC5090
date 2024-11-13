@@ -1,7 +1,5 @@
 package app.library;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,25 +18,52 @@ public class Blackboard {
     private List<Observer> observers = new ArrayList<>();
     private String drawingState = "default";
 
+    /**
+     * The `Observer` interface defines the method that observers must implement
+     * to receive updates from the `Blackboard`.
+     */
     public interface Observer {
+        /**
+         * Called to notify the observer about a change in the drawing state.
+         *
+         * @param drawingState The new drawing state.
+         */
         void update(String drawingState);
     }
 
+    /**
+     * Adds an observer to the list of observers.
+     *
+     * @param observer The observer to add.
+     */
     public void addObserver(Observer observer) {
         observers.add(observer);
     }
 
+    /**
+     * Notifies all registered observers about a change in the drawing state.
+     */
     private void notifyObservers() {
         for (Observer observer : observers) {
             observer.update(drawingState);
         }
     }
 
+    /**
+     * Sets the new drawing state and notifies observers about the change.
+     *
+     * @param newDrawingState The new drawing state.
+     */
     public void setDrawingState(String newDrawingState) {
         this.drawingState = newDrawingState;
         notifyObservers();
     }
 
+    /**
+     * Returns the current drawing state.
+     *
+     * @return The current drawing state.
+     */
     public String getDrawingState() {
         return drawingState;
     }

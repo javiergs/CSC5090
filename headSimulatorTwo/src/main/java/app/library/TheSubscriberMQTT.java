@@ -28,6 +28,15 @@ public class TheSubscriberMQTT implements Runnable, MqttCallback {
     private static final String PREFIX_DELIMITER = "~";
     private boolean running = true;
 
+    /**
+     * Constructs a `TheSubscriberMQTT` object.
+     *
+     * @param broker The address of the MQTT broker.
+     * @param clientID The unique ID of the MQTT client.
+     * @param topicAndPrefixPairs A map of topics to subscribe to and their corresponding prefixes.
+     * @param destination The `DataDestination` where received messages will be sent.
+     * @throws MqttException If an error occurs during connection or subscription.
+     */
     public TheSubscriberMQTT(String broker, String clientID, Map<String, String> topicAndPrefixPairs, DataDestination destination) throws MqttException {
         this.topicAndPrefixPairs = topicAndPrefixPairs;
         this.dataDestination = destination;
@@ -46,6 +55,9 @@ public class TheSubscriberMQTT implements Runnable, MqttCallback {
         }
     }
 
+    /**
+     * Keeps the subscriber thread alive and idle while waiting for incoming messages.
+     */
     @Override
     public void run() {
         try {
@@ -62,24 +74,43 @@ public class TheSubscriberMQTT implements Runnable, MqttCallback {
         }
     }
 
+    /**
+     * Called when the connection to the MQTT broker is lost.
+     *
+     * @param throwable The exception that caused the connection loss.
+     */
     @Override
     public void connectionLost(Throwable throwable) {
         log.warn("Connection lost: " + throwable.getMessage());
     }
 
+    /**
+     * Called when a message arrives at a subscribed topic.
+     *
+     * @param topic The topic the message was received on.
+     * @param mqttMessage The received message.
+     */
     @Override
-    public void messageArrived(String s, MqttMessage mqttMessage) {
-        dataDestination.addSubscriberData(topicAndPrefixPairs.get(s) +
+    public void messageArrived(String topic, MqttMessage mqttMessage) {
+        dataDestination.addSubscriberData(topicAndPrefixPairs.get(topic) +
                 PREFIX_DELIMITER + mqttMessage);
-        log.debug("Message Arrived. Topic: " + s +
+        log.debug("Message Arrived. Topic: " + topic +
                 " Message: " + new String(mqttMessage.getPayload()));
     }
 
+    /**
+     * Called when a message delivery is complete.
+     *
+     * @param iMqttDeliveryToken The delivery token associated with the delivered message.
+     */
     @Override
     public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-
+        // Not used in this implementation
     }
 
+    /**
+     * Stops the MQTT subscriber.
+     */
     public void stopSubscriber() {
         running = false;
     }

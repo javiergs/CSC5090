@@ -17,13 +17,16 @@ import java.util.concurrent.CountDownLatch;
  * @version 1.0
  */
 public class Server implements Runnable {
-	
+
 	private Thread serverThread;
 	private volatile boolean running = false;
 	private MousePositionWebSocketServer webSocketServer;
 	private CountDownLatch latch = new CountDownLatch(1);
 	private static final Logger logger = LoggerFactory.getLogger(Server.class);
 
+	/**
+	 * Initializes and starts the WebSocket server.
+	 */
 	public void run() {
 		webSocketServer = new MousePositionWebSocketServer(new InetSocketAddress(8887));
 		webSocketServer.start();
@@ -47,6 +50,9 @@ public class Server implements Runnable {
 		}
 	}
 
+	/**
+	 * Starts the server thread.
+	 */
 	public void start() {
 		if (serverThread == null || !serverThread.isAlive()) {
 			running = true;
@@ -56,6 +62,9 @@ public class Server implements Runnable {
 		}
 	}
 
+	/**
+	 * Stops the server thread.
+	 */
 	public void stop() {
 		if (serverThread != null && serverThread.isAlive()) {
 			running = false;
@@ -63,9 +72,14 @@ public class Server implements Runnable {
 			logger.info("app.library.Server thread stopping...");
 		}
 	}
- 
+
+	/**
+	 * Checks if the server is currently running.
+	 *
+	 * @return `true` if the server is running, `false` otherwise.
+	 */
 	public boolean isRunning() {
 		return running;
 	}
- 
+
 }

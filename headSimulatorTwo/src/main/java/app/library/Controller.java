@@ -19,20 +19,32 @@ import org.slf4j.LoggerFactory;
  * @version 1.0
  */
 public class Controller implements MouseMotionListener, ActionListener {
-	
+
 	private TrackArea trackArea;
 	private Server server;
 	private JComboBox<String> menu;
 	private boolean init_connected = false;
 	private static final Logger logger = LoggerFactory.getLogger(Controller.class);
-	
+
+	/**
+	 * Constructs a `Controller`.
+	 *
+	 * @param trackArea The `TrackArea` where eye movements are visualized.
+	 * @param server The `Server` that manages the WebSocket connection.
+	 * @param menu The dropdown menu for controlling the server (Start/Stop).
+	 */
 	public Controller(TrackArea trackArea, Server server, JComboBox<String> menu) {
 		this.trackArea = trackArea;
 		this.server = server;
 		this.menu = menu;
-		DataRepository.getInstance().addPropertyChangeListener(trackArea);
+		DataRepository.getInstance().addPropertyChangeListener(new DataPointListener(trackArea));
 	}
 
+	/**
+	 * Updates the eye position and sends data to the `DataRepository` when the mouse is moved.
+	 *
+	 * @param e The mouse movement event.
+	 */
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		if (server.isRunning()) {
@@ -40,16 +52,25 @@ public class Controller implements MouseMotionListener, ActionListener {
 			int y = e.getY();
 			trackArea.moveEyes(x, y);
 			int[] newPoint = {x, y};
-			DataRepository.getInstance().addPoint(newPoint); // Assuming addPoint triggers the property change
+			DataRepository.getInstance().addPoint(newPoint);
 			logger.info("Mouse moved to: ({}, {})", x, y);
 		}
 	}
 
-
+	/**
+	 *  Handles mouse drag events (currently not used).
+	 *
+	 * @param e The mouse drag event.
+	 */
 	@Override
 	public void mouseDragged(MouseEvent e) {
 	}
 
+	/**
+	 * Handles actions from the dropdown menu (e.g., starting or stopping the server).
+	 *
+	 * @param e The action event.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String selectedAction = (String) menu.getSelectedItem();
