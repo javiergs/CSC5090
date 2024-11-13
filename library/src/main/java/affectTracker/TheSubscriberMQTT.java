@@ -5,6 +5,16 @@ import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Attempts to connect to a caller defined MQTT broker, with a caller defined ClientID.
+ * A {@code Map<String, String} holds pairs of topics to subscribe to and the corresponding prefix
+ * that should be used when sending the data to its destination for parsing.
+ * The connection is attempted within the constructor so that the connection is sure to exist before it is
+ *  * run as a thread.
+ * <p>
+ * When running within a Thread, TheSubscriberMQTT simply waits for 'mail' from the broker
+ * and processes it by adding the prefix to the message and sending it to its destination.
+ */
 public class TheSubscriberMQTT implements Runnable, MqttCallback {
 
     private final Logger log = LoggerFactory.getLogger(TheSubscriberMQTT.class.getName());
