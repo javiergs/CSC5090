@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Subscriber that connects to an MQTT broker, receives messages, and forwards
  * them to a DataDestination.
- *
+ * 
  * @version 1.2
  * @authors
  * Monish Suresh
