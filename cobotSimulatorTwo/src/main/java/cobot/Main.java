@@ -13,6 +13,11 @@ import java.awt.*;
 /**
  * The GUI consists of a simulation panel where the robot arms are drawn, and a button panel
  * with buttons to start and stop the simulation.
+ * @author Reza Mousakhani
+ * @author Damian Dhesi
+ * @author Shiv Panchal
+ * @author Javier Gonzalez-Sanchez
+ * @version 2.0
  */
 public class Main extends JFrame {
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
