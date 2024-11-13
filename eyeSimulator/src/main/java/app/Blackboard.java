@@ -9,6 +9,17 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Singleton class representing a central storage for click positions and tracking status.
+ * Manages observers and notifies them of property changes.
+ *
+ * @version 1.2
+ * @authors
+ * Monish Suresh
+ * Christine Widden
+ * Luca Ornstil
+ */
+
 public class Blackboard extends PropertyChangeSupport implements DataDestination {
     private static Blackboard instance;
     private final List<Point> clickPositions;
