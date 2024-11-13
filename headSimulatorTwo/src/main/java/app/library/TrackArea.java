@@ -8,7 +8,11 @@ import java.beans.PropertyChangeListener;
 
 
 /**
- * The app.library.TrackArea class is responsible for drawing the face and eyes in the GUI.
+ /**
+ * The `TrackArea` class is a visual component that displays a face with eyes that
+ * track the mouse cursor. It receives eye tracking data from a `DataRepository` and
+ * visualizes it by moving the pupils within the eyes. It also interacts with a
+ * `Blackboard` object to display status information.
  *
  * @author Ashton
  * @author David H.

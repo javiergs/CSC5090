@@ -1,8 +1,5 @@
 package app.library;
 
-import org.java_websocket.WebSocket;
-import org.java_websocket.handshake.ClientHandshake;
-import org.java_websocket.server.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,8 +7,9 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * app.library.Server class to handle WebSocket connections and messages.
- * Authors as listed in your README.md file.
+ * The `Server` class manages a WebSocket server that handles incoming connections
+ * from clients. It provides methods for starting and stopping the server and allows
+ * other components to check the server's running status.
  *
  * @author Ashton
  * @author David H.

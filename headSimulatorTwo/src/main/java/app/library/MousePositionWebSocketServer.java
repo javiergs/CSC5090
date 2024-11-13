@@ -6,6 +6,18 @@ import org.java_websocket.server.WebSocketServer;
 
 import java.net.InetSocketAddress;
 
+/**
+ * The `MousePositionWebSocketServer` class extends the `WebSocketServer` class to
+ * handle WebSocket connections for transmitting mouse position data. It provides
+ * methods for managing connection events, such as opening, closing, and receiving
+ * messages.
+ *
+ * @author Ashton
+ * @author David H.
+ * @author Anthony C.
+ * @version 1.0
+ */
+
 public class MousePositionWebSocketServer extends WebSocketServer {
 
     public MousePositionWebSocketServer(InetSocketAddress address) {

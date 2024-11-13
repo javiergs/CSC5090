@@ -6,8 +6,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-// Mosquito needs to be installed on machine for localhost MQTT to be enabled.
-// WIll use public broker in the meantime tcp://broker.hivemq.com:1883
+/**
+ * The `TheSubscriberMQTT` class implements an MQTT subscriber that connects to an MQTT
+ * broker, subscribes to specified topics, and receives messages. It then forwards these
+ * messages to a `DataDestination` for processing, adding a prefix to identify the
+ * source of the data.
+ *
+ * @author Ashton
+ * @author David H.
+ * @author Anthony C.
+ * @version 1.0
+ */
 
 public class TheSubscriberMQTT implements Runnable, MqttCallback {
 

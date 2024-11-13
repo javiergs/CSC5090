@@ -7,6 +7,16 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+/**
+ * The `TheSubscriber` class establishes a TCP connection to a server and continuously
+ * receives data, which it then forwards to a `DataDestination` for processing. It
+ * prepends a predefined prefix to the received data to identify its source.
+ *
+ * @author Ashton
+ * @author David H.
+ * @author Anthony C.
+ * @version 1.0
+ */
 public class TheSubscriber implements Runnable{
 
     private final Logger log = LoggerFactory.getLogger(TheSubscriber.class.getName());

@@ -11,8 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * app.library.Main class is responsible for controlling the eye tracking simulation.
- * Authors as listed in your README.md file.
+ * The `Main` class is the entry point of the eye tracking simulation application. It sets up
+ * the main window, initializes key components (server, subscriber, UI elements), and manages
+ * their interaction.
  *
  * @author Ashton
  * @author David H.

@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * app.library.Blackboard class used as a centralized observer/observable manager. Maintains list of observers that update when changes
- * are made to app.library.TrackArea. Follows Observer/Observable pattern.
+ * The `Blackboard` class acts as a central communication hub for managing and
+ * notifying observers about changes in the drawing state of the `TrackArea`.
+ * It follows the Observer pattern, allowing components like the `TrackArea` to
+ * register as observers and receive updates when the drawing state changes.
  *
  * @author Ashton
  * @author David H.

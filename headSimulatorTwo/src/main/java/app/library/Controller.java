@@ -9,8 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * app.library.Controller class is responsible for controlling the eye tracking simulation.
- * Authors as listed in your README.md file.
+ * The `Controller` class manages the eye tracking simulation by responding to mouse
+ * movements and user actions from a dropdown menu. It updates the eye position in the
+ * `TrackArea` and sends data to the `Server` for processing.
  *
  * @author Ashton
  * @author David H.

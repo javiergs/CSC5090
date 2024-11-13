@@ -5,8 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The app.library.DataRepository class is responsible for storing the last 10 points and notifying observers when a new point is added.
- * Authors as listed in your README.md file.
+ * The `DataRepository` class acts as a central hub for storing and managing eye tracking data.
+* It maintains a history of the last 10 eye positions and notifies any registered observers (like
+* the `TrackArea`) whenever a new data point is added. This allows for real-time updates of the
+* visualization.
  *
  * @author Ashton
  * @author David H.
