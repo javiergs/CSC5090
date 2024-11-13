@@ -14,7 +14,7 @@ public class Blackboard extends PropertyChangeSupport {
 		super(new Object());
 		point = new Point(0, 0);
 	}
-	
+
 	public static Blackboard getInstance() {
 		if (instance == null) {
 			instance = new Blackboard();
@@ -33,6 +33,6 @@ public class Blackboard extends PropertyChangeSupport {
 	
 	public void updateStatusLabel(String disconnected) {
 		this.statusLabel = disconnected;
-		firePropertyChange("statusLabel", null, disconnected);
+		firePropertyChange("statusLabel", statusLabel, disconnected);
 	}
 }

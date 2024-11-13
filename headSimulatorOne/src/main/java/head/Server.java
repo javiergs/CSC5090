@@ -1,48 +1,51 @@
 package head;
 
+import components.ThePublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import components.Encoder;
 
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
+/**
+ * This class is a Server that connects to a port and publishes point data to it	
+ *
+ * @author Samuel Fox Gar Kaplan
+ * @author Javier Gonzalez-Sanchez
+ * @author Luke Aitchison
+ * @author Ethan Outangoun
+ *
+ * @version 2.0
+ */
 
-public class Server implements Runnable, PropertyChangeListener {
+public class Server implements Runnable{
 	
 	private static final Logger logger = LoggerFactory.getLogger(Server.class);
-	private Point point;
 	private boolean isReady = false;
 	private int port;
+	private Encoder encoder; 
 	
 	public Server(int port) {
 		this.port = port;
+		this.encoder = new Encoder();
+		head.Blackboard.getInstance().addPropertyChangeListener(encoder);
 	}
 	
 	@Override
 	public void run() {
 		try {
-			ServerSocket serverSocket = new ServerSocket(port);
-			logger.info("Server is waiting for connections");
-			Socket clientSocket = serverSocket.accept();
-			logger.info("Client connected");
-			ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+			ThePublisher publisher = new ThePublisher(port);
+			publisher.connect();
 			isReady = true;
 			while (isReady) {
 				try {
+					// get data from encoder which gets it form black board and then "formats" it 
+					String point = encoder.getData();
 					Thread.sleep(1000 / 30);
 					if (point == null)  continue;
-					outputStream.writeObject(point);
-					outputStream.flush();
+					publisher.publish(point);
 				} catch (Exception e) {
 					logger.error("Error in Server: {}", e.getMessage(), e);
 				}
 			}
-		} catch (IOException e) {
-			logger.error("I/O error in Server: {}", e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error("Unexpected error in Server: {}", e.getMessage(), e);
 		} finally {
@@ -58,11 +61,5 @@ public class Server implements Runnable, PropertyChangeListener {
 		return isReady;
 	}
 	
-	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-		if ("point".equals(evt.getPropertyName())) {
-			point = (Point) evt.getNewValue();
-		}
-	}
 	
 }

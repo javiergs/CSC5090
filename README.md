@@ -37,7 +37,7 @@ The dashboard displays the affective states and eye gaze of the user in real-tim
 - [ ] :two: **Implement a Common Subscriber**  
    - Ensure the subscriber class works across all components.
 
-- [ ] :three: **Create a Blackboard with Delegates**  
+- [ ] :three: **Create a app.library.Blackboard with Delegates**  
    - Implement a set of blackboards following the singleton pattern for shared communication.
 
 - [ ] :four: **Implement Standard Robot with Animation**  
@@ -47,7 +47,7 @@ The dashboard displays the affective states and eye gaze of the user in real-tim
    - Ensure all panels observe the blackboard, displaying a default drawing and updating whenever an event is fired.
 
 - [ ] :six: **Add Menus to Applications**  
-   - Include a menu in all applications with options to start/stop sending or receiving data, i.e., all Main are "similar"
+   - Include a menu in all applications with options to start/stop sending or receiving data, i.e., all app.library.Main are "similar"
 
 - [ ] :seven: **Code Review**  
    - Ensure all classes adhere to the Single Responsibility Principle (SRP). Make recomendations

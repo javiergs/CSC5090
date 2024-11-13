@@ -1,8 +1,7 @@
 package app.Data;
 
-import app.Model.Blackboard;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
 
 /**
  * The {@code Circle} class represents a circle with a specified center (x, y), color, and radius.
@@ -39,12 +38,10 @@ public class Circle {
 	}
 	
 	public void drawCircle(Graphics g) {
-		if (xCoord - radius >= Blackboard.paddingFromTop) {
-			g.setColor(color);
-			g.fillOval(xCoord - radius, yCoord - radius, 2 * radius, 2 * radius);
-			g.setColor(Color.BLACK);
-			g.drawOval(xCoord - radius, yCoord - radius, 2 * radius, 2 * radius);
-		}
+      g.setColor(color);
+      g.fillOval(xCoord - radius, yCoord - radius, 2 * radius, 2 * radius);
+      g.setColor(Color.BLACK);
+      g.drawOval(xCoord - radius, yCoord - radius, 2 * radius, 2 * radius);
 	}
 	
 }

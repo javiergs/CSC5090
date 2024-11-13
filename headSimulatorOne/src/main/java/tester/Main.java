@@ -27,8 +27,8 @@ public class Main {
 			ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
 			System.out.println("Connected to the server");
 			while (true) {
-				Point p = (Point) inputStream.readObject();
-				System.out.println("Mouse x: " + p.x + ", Mouse y: " + p.y);
+				String p = (String) inputStream.readObject();
+				System.out.println(p);
 			}
 		} catch (IOException e) {
 			logger.error("I/O error: {}", e.getMessage(), e);
