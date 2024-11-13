@@ -1,4 +1,4 @@
-package app.library;
+package affectTracker;
 
 public interface DataDestination {
     public void addSubscriberData(String dataWithPrefix);
