@@ -16,7 +16,7 @@ import test.MQTTSubscriber;
 /**
  * Main application class for the Eye Tracking Simulator GUI.
  * Initializes the UI and starts/stops tracking and subscriber services.
- *
+ * 
  * @version 1.2
  * @authors
  * Monish Suresh
