@@ -12,8 +12,10 @@ import javax.swing.*;
  *
  * @author Samuel Fox Gar Kaplan
  * @author Javier Gonzalez-Sanchez
+ * @author Luke Aitchison
+ * @author Ethan Outangoun
  *
- * @version 2.0
+ * @version 3.0
  */
 public class Canvas extends JPanel implements MouseMotionListener, ActionListener, PropertyChangeListener {
 	

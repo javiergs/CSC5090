@@ -1,9 +1,8 @@
 package head;
 
-import components.MQTTPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import components.Encoder;
+import library.MQTTPublisher;
 
 /**
  * This class is an MQTT Server that connects to a broker and publishes point data to it
@@ -49,7 +48,6 @@ public class MQTTServer implements Runnable {
                     Thread.sleep(1000 / 30);
                     if (point == null) continue;
                     mqttPublisher.publish(topic, point);
-
                 } catch (Exception e) {
                     logger.error("Error in Server: {}", e.getMessage(), e);
                 }

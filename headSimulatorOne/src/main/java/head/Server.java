@@ -1,9 +1,8 @@
 package head;
 
-import components.ThePublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import components.Encoder;
+
 
 /**
  * This class is a Server that connects to a port and publishes point data to it	
@@ -13,7 +12,7 @@ import components.Encoder;
  * @author Luke Aitchison
  * @author Ethan Outangoun
  *
- * @version 2.0
+ * @version 3.0
  */
 
 public class Server implements Runnable{

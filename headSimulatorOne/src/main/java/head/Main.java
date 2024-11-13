@@ -9,8 +9,10 @@ import java.awt.*;
  *
  * @author Samuel Fox Gar Kaplan
  * @author Javier Gonzalez-Sanchez
+ * @author Ethan Outangoun
+ * @author Luke Aitchison
  *
- * @version 2.0
+ * @version 3.0
  */
 public class Main extends JFrame {
 	
