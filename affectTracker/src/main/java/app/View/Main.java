@@ -116,8 +116,6 @@ public class Main extends JFrame {
 		eyeTrackingThread.start();
 	}
 
-	//Todo: clean up threads, may not need CustomThread class at all
-
 	public static void main(String[] args) {
 		Main window = new Main();
 		window.setTitle ("Eye Tracking & Emotion Hub");

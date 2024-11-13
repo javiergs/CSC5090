@@ -1,12 +1,14 @@
 package app.Model;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Deque;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import affectTracker.DataDestination;
+import affectTracker.TheSubscriber;
 import app.Data.Circle;
 import app.Data.ProcessedDataObject;
 
@@ -25,7 +27,7 @@ import app.Data.ProcessedDataObject;
  * @author Xiuyuan Qiu
  * @version 1.0
  */
-public class Blackboard extends PropertyChangeSupport implements DataDestination {
+public class Blackboard extends PropertyChangeSupport implements PropertyChangeListener {
 	private String eyeTrackingSocket_Host = "localhost";  // default for testing
 	private int eyeTrackingSocket_Port = 6001;  // default for testing
 	private String emotionSocket_Host = "localhost"; // default for testing
@@ -62,6 +64,18 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
 	
 	public static Blackboard getInstance() {
 		return INSTANCE;
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		switch (evt.getPropertyName()){
+			case TheSubscriber.CLIENT_PROPERTY_LABEL -> {
+				addSubscriberData((String) evt.getNewValue());
+			}
+			case TheSubscriber.REPORT_ERROR_LABEL -> {
+				alertError((String) evt.getNewValue());
+			}
+		}
 	}
 
 	/**
