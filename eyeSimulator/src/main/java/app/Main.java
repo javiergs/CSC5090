@@ -13,6 +13,17 @@ import java.util.Map;
 import test.Subscriber;
 import test.MQTTSubscriber;
 
+/**
+ * Main application class for the Eye Tracking Simulator GUI.
+ * Initializes the UI and starts/stops tracking and subscriber services.
+ *
+ * @version 1.2
+ * @authors
+ * Monish Suresh
+ * Christine Widden
+ * Luca Ornstil
+ */
+
 public class Main extends JFrame implements ActionListener, PropertyChangeListener {
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
