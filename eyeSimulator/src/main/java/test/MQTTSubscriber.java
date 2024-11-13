@@ -5,6 +5,17 @@ import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Subscriber that connects to an MQTT broker, receives messages, and forwards
+ * them to a DataDestination.
+ *
+ * @version 1.2
+ * @authors
+ * Monish Suresh
+ * Christine Widden
+ * Luca Ornstil
+ */
+
 public class MQTTSubscriber implements Runnable, MqttCallback {
     private static final Logger logger = LoggerFactory.getLogger(MQTTSubscriber.class);
     private static final String BROKER_URL = "tcp://test.mosquitto.org:1883";
