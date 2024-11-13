@@ -27,10 +27,8 @@ public class ProgressBar extends JPanel implements PropertyChangeListener {
         progressBar.setValue(0);
         progressBar.setStringPainted(true);
 
-
         this.setLayout(new BorderLayout());
         this.add(progressBar, BorderLayout.CENTER);
-
 
         Blackboard.getInstance().addPropertyChangeListener(this);
     }
