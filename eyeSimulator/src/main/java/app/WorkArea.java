@@ -11,6 +11,17 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
+/**
+ * JPanel that displays click positions on the UI and handles mouse clicks
+ * for tracking positions.
+ *
+ * @version 1.2
+ * @authors
+ * Monish Suresh
+ * Christine Widden
+ * Luca Ornstil
+ */
+
 public class WorkArea extends JPanel implements MouseListener, PropertyChangeListener {
 
     private static final Logger logger = LoggerFactory.getLogger(WorkArea.class);
