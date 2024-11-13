@@ -5,10 +5,23 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * The ProgressBar class represents a progress bar component that listens to property change events from a
+ * blackboard and updates its progress based on the received values.
+ *
+ * @author Reza Mousakhani
+ * @author Damian Dhesi
+ * @author Shiv Panchal
+ * @version 2.0
+ */
 public class ProgressBar extends JPanel implements PropertyChangeListener {
 
     private JProgressBar progressBar;
 
+    /**
+     * Constructs a new ProgressBar. Initializes the JProgressBar component, sets up its display
+     * properties, and adds it to the panel. Also registers this ProgressBar as a listener to the Blackboard.
+     */
     public ProgressBar() {
         progressBar = new JProgressBar(0, 100);
         progressBar.setValue(0);
@@ -20,6 +33,12 @@ public class ProgressBar extends JPanel implements PropertyChangeListener {
         Blackboard.getInstance().addPropertyChangeListener(this);
     }
 
+    /**
+     * Called when a property change event is received. Updates the progress bar if the event's property
+     * name is "ProgressUpdated".
+     *
+     * @param evt the property change event containing the new progress value
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("ProgressUpdated".equals(evt.getPropertyName())) {
@@ -28,6 +47,11 @@ public class ProgressBar extends JPanel implements PropertyChangeListener {
         }
     }
 
+    /**
+     * Sets the progress value of the progress bar.
+     *
+     * @param progress the new progress value to be displayed, ranging from 0 to 100
+     */
     public void setProgress(int progress) {
         progressBar.setValue(progress);
     }
