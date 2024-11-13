@@ -1,4 +1,4 @@
-package cobot;
+package CobotSimulatorTwo;
 
 import CobotSimulatorTwo.Blackboard;
 

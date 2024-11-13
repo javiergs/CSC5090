@@ -1,6 +1,7 @@
 package cobot;
 
 import CobotSimulatorTwo.Subscriber;
+import CobotSimulatorTwo.RobotPanelHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

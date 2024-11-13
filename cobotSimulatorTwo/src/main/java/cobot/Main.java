@@ -2,6 +2,8 @@ package cobot;
 
 import CobotSimulatorTwo.Publisher;
 import CobotSimulatorTwo.Blackboard;
+import CobotSimulatorTwo.RobotPanel;
+import CobotSimulatorTwo.RobotPanelHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

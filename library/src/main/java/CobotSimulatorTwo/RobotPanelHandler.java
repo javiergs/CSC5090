@@ -1,6 +1,4 @@
-package cobot;
-
-import CobotSimulatorTwo.Blackboard;
+package CobotSimulatorTwo;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
