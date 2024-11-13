@@ -16,56 +16,55 @@ import java.util.Objects;
  */
 public class Blackboard extends PropertyChangeSupport {
 
-    private static Blackboard blackboard;
-    private int[] anglesArray;
+	private static Blackboard blackboard = null;
+	private final int[] ANGLES_ARRAY;
 
-    /**
-     * Private constructor to initialize the Blackboard with default values for angles.
-     *
-     * @param o an initial object (unused, here to satisfy superclass requirements)
-     */
-    Blackboard(Object o) {
-        super(new Object());
-        anglesArray = new int[]{0, 0, 0, 0, 0, 0};
-    }
+	/**
+	 * Private constructor to initialize the Blackboard with default values for angles.
+	 */
+	private Blackboard() {
+		super(new Object());
+		ANGLES_ARRAY = new int[6];
+	}
 
-    /**
-     * Retrieves the singleton instance of the Blackboard. If no instance exists, a new one is created.
-     *
-     * @return the singleton instance of Blackboard
-     */
-    public static Blackboard getInstance() {
-        if (Objects.isNull(blackboard)) {
-            blackboard = new Blackboard(new Object());
-        }
-        return blackboard;
-    }
+	/**
+	 * Retrieves the singleton instance of the Blackboard. If no instance exists, a new one is created.
+	 *
+	 * @return the singleton instance of Blackboard
+	 */
+	public static Blackboard getInstance () {
+		if (Objects.isNull(blackboard)) {
+			blackboard = new Blackboard();
+		}
+		return blackboard;
+	}
 
-    /**
-     * Updates the angles stored in the blackboard and notifies listeners of the change.
-     *
-     * @param angles an array of integers representing the new angles for the robot
-     */
-    public void setAngles(int[] angles) {
-        anglesArray = angles;
-        firePropertyChange("AnglesAdded", null, anglesArray);
-    }
+	/**
+	 * Updates the angles stored in the blackboard and notifies listeners of the change.
+	 *
+	 * @param angles an array of integers representing the new angles for the robot
+	 */
+	public void setAngles(int[] angles) {
+		//Ensure that there are always 6 angles
+      	for (int i = 0; i < ANGLES_ARRAY.length; i++) {
+			  if (i < angles.length) {
+				  ANGLES_ARRAY[i] = angles[i];
+			  } else {
+				  ANGLES_ARRAY[i] = 0;
+			  }
+		}
 
-    /**
-     * Retrieves the current array of angles stored in the blackboard.
-     *
-     * @return an array of integers representing the angles of the robot
-     */
-    public int[] getAngles() {
-        return anglesArray;
-    }
+      	firePropertyChange("AnglesAdded", null, ANGLES_ARRAY);
+	}
 
-    /**
-     * Updates the progress of a task or process and notifies listeners of the change.
-     *
-     * @param progress an integer representing the current progress percentage (0-100)
-     */
-    public void updateProgress(int progress) {
-        firePropertyChange("ProgressUpdated", null, progress);
-    }
+	/**
+	 * Updates the progress of a task or process and notifies listeners of the change.
+	 *
+	 * @param progress an integer representing the current progress percentage (0-100)
+	 */
+	public void updateProgress(int progress) {
+		firePropertyChange("ProgressUpdated", null, progress);
+	}
+
 }
+

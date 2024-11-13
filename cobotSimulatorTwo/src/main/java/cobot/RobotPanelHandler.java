@@ -17,21 +17,22 @@ import java.beans.PropertyChangeListener;
  * @version 2.0
  */
 public class RobotPanelHandler implements ActionListener, PropertyChangeListener {
-    final Blackboard blackboard;
-    private final Timer simulationTimer;
+
+    private final Blackboard BLACKBOARD;
+    private final Timer SIMULATION_TIMER;
     private int[] targetAngles;
     private int phase = 0;
     private boolean simulate = false;
-    private final int[] currentAngles = new int[6];
+    private final int[] CURRENT_ANGLES = new int[6];
 
     /**
      * Constructs a new RobotPanelHandler instance that initializes the blackboard,
      * adds this handler as a property change listener, and sets up the simulation timer.
      */
     public RobotPanelHandler() {
-        this.blackboard = Blackboard.getInstance();
-        this.blackboard.addPropertyChangeListener(this);
-        simulationTimer = new Timer(20, this);
+        this.BLACKBOARD = Blackboard.getInstance();
+        this.BLACKBOARD.addPropertyChangeListener(this);
+        SIMULATION_TIMER = new Timer(20, this);
     }
 
     /**
@@ -42,7 +43,7 @@ public class RobotPanelHandler implements ActionListener, PropertyChangeListener
         if (targetAngles != null) {
             simulate = true;
             phase = 0;
-            simulationTimer.start();
+            SIMULATION_TIMER.start();
         }
     }
 
@@ -51,8 +52,8 @@ public class RobotPanelHandler implements ActionListener, PropertyChangeListener
      * and the simulation flag is set to false.
      */
     public void stopSimulation() {
-        if (simulationTimer.isRunning()) {
-            simulationTimer.stop();
+        if (SIMULATION_TIMER.isRunning()) {
+            SIMULATION_TIMER.stop();
         }
         simulate = false;
     }
@@ -64,18 +65,21 @@ public class RobotPanelHandler implements ActionListener, PropertyChangeListener
      */
     private void updateAngles() {
         boolean reachedTarget = adjustAngleTowardsTarget(phase, targetAngles[phase]);
+
         if (reachedTarget) {
             phase++;
-            if (phase >= currentAngles.length) {
+            if (phase >= CURRENT_ANGLES.length) {
                 phase = 0;
                 stopSimulation();
-                blackboard.updateProgress(100);
+                BLACKBOARD.updateProgress(100);
                 JOptionPane.showMessageDialog(null, "All angles have been simulated!");
                 return;
             }
         }
-        int progress = (int) (((phase + getAngleProgress(phase)) / (double) currentAngles.length) * 100);
-        blackboard.updateProgress(progress);
+
+        int progress = (int) (((phase + getAngleProgress(phase)) / (double) CURRENT_ANGLES.length) * 100);
+        BLACKBOARD.updateProgress(progress);
+
     }
 
     /**
@@ -86,8 +90,9 @@ public class RobotPanelHandler implements ActionListener, PropertyChangeListener
      */
     private double getAngleProgress(int index) {
         int targetAngle = targetAngles[index];
-        int currentAngle = currentAngles[index];
+        int currentAngle = CURRENT_ANGLES[index];
         int totalDelta = Math.abs(targetAngle - currentAngle);
+
         return totalDelta == 0 ? 1 : (1 - (double) Math.abs(currentAngle - targetAngle) / totalDelta);
     }
 
@@ -100,13 +105,14 @@ public class RobotPanelHandler implements ActionListener, PropertyChangeListener
      * @return true if the target angle is reached, false otherwise
      */
     private boolean adjustAngleTowardsTarget(int index, int targetAngle) {
-        int currentAngle = currentAngles[index];
+        int currentAngle = CURRENT_ANGLES[index];
         int step = 1;
+
         if (Math.abs(currentAngle - targetAngle) <= step) {
-            currentAngles[index] = targetAngle;
+            CURRENT_ANGLES[index] = targetAngle;
             return true;
         }
-        currentAngles[index] += (currentAngle < targetAngle) ? step : -step;
+        CURRENT_ANGLES[index] += (currentAngle < targetAngle) ? step : -step;
         return false;
     }
 
@@ -147,7 +153,7 @@ public class RobotPanelHandler implements ActionListener, PropertyChangeListener
      * @return an array containing the current angles of the robot arm's joints
      */
     public int[] getCurrentAngles() {
-        return currentAngles;
+        return CURRENT_ANGLES;
     }
 
     /**
@@ -159,12 +165,12 @@ public class RobotPanelHandler implements ActionListener, PropertyChangeListener
     @Override
     public void actionPerformed(ActionEvent e) {
         if (!simulate) {
-            simulationTimer.stop();
+            SIMULATION_TIMER.stop();
             return;
         }
 
         updateAngles();
-        int progress = (int) ((phase / (double) currentAngles.length) * 100);
-        blackboard.updateProgress(progress);
+        int progress = (int) ((phase / (double) CURRENT_ANGLES.length) * 100);
+        BLACKBOARD.updateProgress(progress);
     }
 }
