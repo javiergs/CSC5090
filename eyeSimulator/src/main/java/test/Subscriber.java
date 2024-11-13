@@ -8,6 +8,17 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+/**
+ * Subscriber that connects to a TCP server, receives messages, and forwards
+ * them to a DataDestination.
+ *
+ * @version 1.2
+ * @authors
+ * Monish Suresh
+ * Christine Widden
+ * Luca Ornstil
+ */
+
 public class Subscriber implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(Subscriber.class);
     private final String host;
