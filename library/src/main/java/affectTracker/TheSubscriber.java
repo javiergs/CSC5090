@@ -7,6 +7,18 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+/**
+ * Attempts to connect to a caller defined IP address host and port.
+ * The connection is attempted within the constructor so that the connection is sure to exist before it is
+ * run as a thread.
+ * <p>
+ * A caller defined prefix will be added to the data received from the server for parsing
+ * when sending the data to its destination.
+ *
+ * <p>
+ * When running within a Thread, TheSubscriber is reading in data from the server, attaching the prefix
+ * and sending it to its destination.
+ */
 public class TheSubscriber implements Runnable{
 
     private final Logger log = LoggerFactory.getLogger(TheSubscriber.class.getName());
