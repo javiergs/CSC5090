@@ -1,7 +1,7 @@
-package com.company.ui;
+package app.ui;
 
-import com.company.Blackboard;
-import com.company.Main;
+import app.Blackboard;
+import app.Main;
 
 import javax.swing.*;
 import java.awt.*;
