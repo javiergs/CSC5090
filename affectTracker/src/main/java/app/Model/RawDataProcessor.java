@@ -33,7 +33,7 @@ public class RawDataProcessor implements Runnable, PropertyChangeListener {
 	
 	public static final String THREAD_NAME = "DataProcessor";
 	private static final Logger LOGGER = LoggerFactory.getLogger(RawDataProcessor.class);
-	private boolean running = true;
+	private boolean running = false;
 	
 	public RawDataProcessor() {
 		Blackboard.getInstance().addPropertyChangeListener(Blackboard.STOPPED,  this);

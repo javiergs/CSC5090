@@ -3,6 +3,8 @@ package affectTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -19,20 +21,23 @@ import java.net.Socket;
  * When running within a Thread, TheSubscriber is reading in data from the server, attaching the prefix
  * and sending it to its destination.
  */
-public class TheSubscriber implements Runnable{
+public class TheSubscriber extends PropertyChangeSupport implements Runnable{
 
     private final Logger log = LoggerFactory.getLogger(TheSubscriber.class.getName());
     private final DataInputStream inputStream;
-    private final String dataPrefix;
-    private final DataDestination dataDestination;
+    private final String dataPrefixWithDelim;
+    public static final String CLIENT_PROPERTY_LABEL = "addClientData";
+    public static final String REPORT_ERROR_LABEL = "reportSubscriberError";
     private static final String PREFIX_DELIMITER = "~";
     private boolean running = true;
-    public TheSubscriber(String ip_host, int ip_port, String dataPrefix, DataDestination destination) throws IOException {
-        this.dataPrefix = dataPrefix + PREFIX_DELIMITER;
-        this.dataDestination = destination;
+    public TheSubscriber(String ip_host, int ip_port, String dataPrefix, PropertyChangeListener listener) throws IOException {
+        super(new Object());
+        this.dataPrefixWithDelim = dataPrefix + PREFIX_DELIMITER;
         try {
             Socket socket = new Socket(ip_host, ip_port);
             inputStream = new DataInputStream(socket.getInputStream());
+            this.addPropertyChangeListener(CLIENT_PROPERTY_LABEL, listener);
+            this.addPropertyChangeListener(REPORT_ERROR_LABEL, listener);
         } catch (IOException e) {
             log.warn("Unable to connect to sever --" + e.getMessage());
             throw e;
@@ -45,18 +50,21 @@ public class TheSubscriber implements Runnable{
             while (running) {
                 long startTime = System.currentTimeMillis();
                 String str = inputStream.readUTF();
-                dataDestination.addSubscriberData( dataPrefix + str);
+                firePropertyChange(CLIENT_PROPERTY_LABEL, null , dataPrefixWithDelim + str );
                 long endTime = System.currentTimeMillis();
                 log.info("Received data: " + str + " in " + (endTime - startTime) + "ms");
             }
         } catch (IOException ex) {
-            dataDestination.alertError(dataPrefix + ex.getMessage());
+            if (running) {
+                firePropertyChange(REPORT_ERROR_LABEL, null, dataPrefixWithDelim + ex.getMessage());
+            }
             log.warn("Error with server connection - " + ex.getMessage());
         }
 
     }
     public void stopSubscriber() {
         try {
+            log.debug("Stopping the Subscriber");
             inputStream.close();
         } catch (IOException e) {
             log.error("Error closing stream - " + e.getMessage());
