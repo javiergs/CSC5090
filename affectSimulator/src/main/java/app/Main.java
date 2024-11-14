@@ -54,7 +54,7 @@ public class Main extends JFrame {
         sliderListener.setUseMQTT(true);
         Blackboard.getInstance().setRunning(true);
 
-        MQTTPublisher mqttPublisher = MQTTPublisher.getInstance(Blackboard.getInstance());  // 获取单例实例
+        MQTTPublisher mqttPublisher = MQTTPublisher.getInstance(Blackboard.getInstance());  
         MQTTSubscriber mqttSubscriber = new MQTTSubscriber(sliderListener);
 
         mqttPublisherThread = new Thread(mqttPublisher);
