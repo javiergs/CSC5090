@@ -29,7 +29,7 @@ public class SliderPanel extends JPanel {
         setBorder(new EmptyBorder(20, 20, 20, 20));
 
         sliders = names.stream()
-                .map(this::createSliderWithLabel)  // 使用辅助方法创建带标签的滑块
+                .map(this::createSliderWithLabel)  
                 .collect(Collectors.toList());
     }
 
@@ -52,7 +52,7 @@ public class SliderPanel extends JPanel {
         slider.setPaintLabels(true);
 
         slider.addChangeListener(e -> {
-            if (!slider.getValueIsAdjusting()) { // 仅在滑动停止时更新
+            if (!slider.getValueIsAdjusting()) { 
                 sliderListener.setSliderValue(name, slider.getValue());
             }
         });
