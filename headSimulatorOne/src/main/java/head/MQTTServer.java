@@ -2,7 +2,8 @@ package head;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import library.MQTTPublisher;
+
+import headSimulatorOneLibrary.ThePublisherMQTT;
 
 /**
  * This class is an MQTT Server that connects to a broker and publishes point data to it
@@ -35,7 +36,7 @@ public class MQTTServer implements Runnable {
     @Override
     public void run() {
         try {
-            MQTTPublisher mqttPublisher = new MQTTPublisher(broker, clientId);
+            ThePublisherMQTT mqttPublisher = new ThePublisherMQTT(broker, clientId);
             mqttPublisher.connect();
 
             if (mqttPublisher.isConnected()) {

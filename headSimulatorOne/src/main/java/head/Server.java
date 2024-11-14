@@ -3,6 +3,7 @@ package head;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import headSimulatorOneLibrary.ThePublisher;
 
 /**
  * This class is a Server that connects to a port and publishes point data to it	
