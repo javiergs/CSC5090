@@ -3,6 +3,8 @@ package app;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * The `TrackArea` class is a visual component that displays a face with eyes that
@@ -15,7 +17,7 @@ import java.awt.*;
  * @author Anthony C.
  * @version 1.0
  */
-public class TrackArea extends JPanel implements Blackboard.Observer {
+public class TrackArea extends JPanel implements PropertyChangeListener {
 
 	private int leftX = 315;
 	private int leftY = 215;
@@ -40,7 +42,9 @@ public class TrackArea extends JPanel implements Blackboard.Observer {
 		addMouseMotionListener(c);
 		Border blackLine = BorderFactory.createLineBorder(Color.BLACK, 5);
 		setBorder(blackLine);
-		blackboard.addObserver(this);
+
+		// Register as a listener for property changes from the Blackboard
+		blackboard.addPropertyChangeListener(this);
 		this.drawingState = blackboard.getDrawingState();
 
 		DataRepository.getInstance().addPropertyChangeListener(new DataPointListener(this));
@@ -121,18 +125,6 @@ public class TrackArea extends JPanel implements Blackboard.Observer {
 		g.drawString("Drawing State: " + drawingState, 50, 70);
 	}
 
-
-	/**
-	 * Updates the drawing state from the `Blackboard`.
-	 *
-	 * @param drawingState The new drawing state.
-	 */
-	@Override
-	public void update(String drawingState) {
-		this.drawingState = drawingState;
-		repaint();
-	}
-
 	/**
 	 * Updates the latest point coordinates when a new point is received.
 	 *
@@ -143,5 +135,18 @@ public class TrackArea extends JPanel implements Blackboard.Observer {
 		latestX = x;
 		latestY = y;
 		repaint();
+	}
+
+	/**
+	 * Handles property change events from the `Blackboard`.
+	 *
+	 * @param evt The `PropertyChangeEvent` containing the property name and new value.
+	 */
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if ("drawingState".equals(evt.getPropertyName())) {
+			this.drawingState = (String) evt.getNewValue();
+			repaint();
+		}
 	}
 }

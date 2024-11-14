@@ -40,14 +40,13 @@ public class Main extends JFrame {
 		dropdownPanel.add(dropdownMenu);
 		add(dropdownPanel, BorderLayout.NORTH);
 
-		Blackboard blackboard = new Blackboard();
-		TrackArea area = new TrackArea(server, dropdownMenu, blackboard);
+		TrackArea area = new TrackArea(server, dropdownMenu, Blackboard.getInstance());
 		add(area, BorderLayout.CENTER);
 
 		Controller c = new Controller(area, server, dropdownMenu);
 		dropdownMenu.addActionListener(c);
 
-		blackboard.setDrawingState("Updated TrackArea");
+		Blackboard.getInstance().setDrawingState("Updated TrackArea");
 
 		DataRepository destination = DataRepository.getInstance();
 
