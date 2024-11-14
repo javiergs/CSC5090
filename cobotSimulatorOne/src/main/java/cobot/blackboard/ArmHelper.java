@@ -34,19 +34,8 @@ class ArmHelper {
         return new ArmHelper(count);
     }
 
-    void updateAngles(int[] numbers) {
-        armAngles.clear();
-        for (int num : numbers) {
-            armAngles.add((double) num);
-        }
-    }
-
     List<Double> getArmAngles() {
         return armAngles;
-    }
-
-    List<Double> getTargetAngles() {
-        return targetAngles;
     }
 
     List<Color> getColors() {

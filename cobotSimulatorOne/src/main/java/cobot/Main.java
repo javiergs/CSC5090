@@ -5,7 +5,6 @@ import cobot.blackboard.Blackboard;
 import javax.swing.*;
 import java.awt.*;
 
-
 /**
  * Main class to start the application.
  * This class is responsible for starting a subscriber and setting up a GUI
@@ -17,9 +16,6 @@ import java.awt.*;
  * @version 2.0
  */
 public class Main extends JFrame {
-	private Subscriber subscriber;
-	private Thread subscriberThread;
-	private MQTTSubscriber mqttSubscriber;
 
 	public Main() {
 		setLayout(new BorderLayout());
@@ -32,7 +28,7 @@ public class Main extends JFrame {
 		ComponentController componentController = new ComponentController();
 		addComponentListener(componentController);
 
-		MenuController menuController = new MenuController();  // Pass main frame reference
+		MenuController menuController = new MenuController();
 		setJMenuBar(createMenuBar(menuController));
 
 		StatusBarPanel statusBarPanel = new StatusBarPanel("Not started");
@@ -47,27 +43,22 @@ public class Main extends JFrame {
 	private JMenuBar createMenuBar(MenuController menuController) {
 		JMenu fileMenu = new JMenu("Options");
 
-		// Start client item
 		JMenuItem connectItem = new JMenuItem("Start client");
 		connectItem.addActionListener(menuController);
 		fileMenu.add(connectItem);
 
-		// Start MQTT client item
 		JMenuItem mqttConnectItem = new JMenuItem("Start MQTT client");
 		mqttConnectItem.addActionListener(menuController);
 		fileMenu.add(mqttConnectItem);
 
-		// Stop client item
 		JMenuItem pauseItem = new JMenuItem("Stop client");
 		pauseItem.addActionListener(menuController);
 		fileMenu.add(pauseItem);
 
-		// Exit item
 		JMenuItem exitItem = new JMenuItem("Exit");
 		exitItem.addActionListener(menuController);
 		fileMenu.add(exitItem);
 
-		// Create and return the menu bar
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(fileMenu);
 		return menuBar;

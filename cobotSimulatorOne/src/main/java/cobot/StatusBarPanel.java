@@ -18,7 +18,6 @@ public class StatusBarPanel extends JPanel implements PropertyChangeListener {
 	private JLabel statusLabel;
 	
 	public StatusBarPanel(String status) {
-		// height panel to 22
 		setPreferredSize(new Dimension(getWidth(), 22));
 		setLayout(new GridLayout(1, 1));
 		setBorder(BorderFactory.createLineBorder(Color.GRAY));

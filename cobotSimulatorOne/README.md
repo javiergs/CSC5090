@@ -3,6 +3,13 @@
 Authors: Neeraja Beesetti, Jack Ortega, Saanvi Dua
 
 ### Build the Project
+In root (CSC5090):
+- Run to make sure library (javiergs:library:jar:1.0-SNAPSHOT) is generated
+```bash
+mvn clean install
+```
+
+In cobotSimulatorOne:
 ```bash
 mvn clean package
 ```

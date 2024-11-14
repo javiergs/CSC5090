@@ -1,7 +1,8 @@
 package cobot;
 
 import cobot.blackboard.Blackboard;
-import cobot.encoder.CsvEncoder;
+import cobotSimulatorOneLibrary.MQTTSubscriber;
+import cobotSimulatorOneLibrary.Subscriber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,8 +73,8 @@ public class MenuController implements ActionListener {
 	private void startMQTTClient() {
 		if (mqttSubscriber == null) {
 			logger.info("Starting MQTT subscriber");
-			String brokerUrl = "tcp://test.mosquitto.org:1883";  // Mosquitto public broker URL
-			String topic = "cobot/commands";  // Replace with actual MQTT topic
+			String brokerUrl = "tcp://test.mosquitto.org:1883";
+			String topic = "cobot/commands";
 			mqttSubscriber = new MQTTSubscriber(brokerUrl, topic, Blackboard.getInstance()::processSubscriberMessage);
 			mqttSubscriber.start();
 			JOptionPane.showMessageDialog(null, "Connected to MQTT server", "Success", JOptionPane.INFORMATION_MESSAGE);

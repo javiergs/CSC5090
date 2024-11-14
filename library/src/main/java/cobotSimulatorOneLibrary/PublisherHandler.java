@@ -1,14 +1,12 @@
-package tester;
+package cobotSimulatorOneLibrary;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * Handles each connection from the Publisher, sending pre-encoded data.

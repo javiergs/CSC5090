@@ -1,6 +1,8 @@
 package tester;
 
 import cobot.encoder.CsvEncoder;
+import cobotSimulatorOneLibrary.MQTTPublisher;
+import cobotSimulatorOneLibrary.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,10 +19,9 @@ public class Main {
 	private static final int ANGLES_TRANSMIT_DELAY_SECONDS = 2;
 
 	public static void main(String[] args) {
-		int port = 12345; // Example port
+		int port = 12345;
 		String brokerUrl = "tcp://test.mosquitto.org:1883";
 		String mqttTopic = "cobot/commands";
-
 
 		Publisher publisher = new Publisher(port);
 		CsvEncoder encoder = new CsvEncoder();

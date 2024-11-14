@@ -1,11 +1,10 @@
-package cobot;
+package cobotSimulatorOneLibrary;
 
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * MQTTSubscriber subscribes to an MQTT topic and sends received messages to a specified consumer.

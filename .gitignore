@@ -1,4 +1,15 @@
 .idea
+
+logs
+paho*
+
 cobotSimulatorOne/src/main/resources/logback-secret.properties
 cobotSimulatorOne/target
-logs
+
+affectSimulator/target
+affectTracker/target
+cobotSimulatorTwo/target
+eyeSimulator/target
+headSimulatorOne/target
+headSimulatorTwo/target
+library/target
