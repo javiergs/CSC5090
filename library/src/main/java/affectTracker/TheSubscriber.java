@@ -55,7 +55,9 @@ public class TheSubscriber extends PropertyChangeSupport implements Runnable{
                 log.info("Received data: " + str + " in " + (endTime - startTime) + "ms");
             }
         } catch (IOException ex) {
-            firePropertyChange(REPORT_ERROR_LABEL, null, dataPrefixWithDelim + ex.getMessage());
+            if (running) {
+                firePropertyChange(REPORT_ERROR_LABEL, null, dataPrefixWithDelim + ex.getMessage());
+            }
             log.warn("Error with server connection - " + ex.getMessage());
         }
 
