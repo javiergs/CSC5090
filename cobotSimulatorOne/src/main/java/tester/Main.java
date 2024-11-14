@@ -4,6 +4,14 @@ import cobot.encoder.CsvEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Starts the server to publish data to subscribers
+ * @author Jack Ortega
+ * @author Neeraja Beesetti
+ * @author Saanvi Dua
+ * @author Javier Gonzalez-Sanchez
+ * @version 2.0
+ */
 public class Main {
 	private static final Logger logger = LoggerFactory.getLogger(Main.class);
 	private static final int ANGLES_TRANSMIT_DELAY_SECONDS = 2;
