@@ -23,10 +23,9 @@ import test.MQTTSubscriber;
  * Initializes the UI and starts/stops tracking and subscriber services.
  * 
  * @version 1.2
- * @authors
- * Monish Suresh
- * Christine Widden
- * Luca Ornstil
+ * @author Monish Suresh
+ * @author Christine Widden
+ * @author Luca Ornstil
  */
 
 public class Main extends JFrame implements ActionListener, PropertyChangeListener {
@@ -39,12 +38,12 @@ public class Main extends JFrame implements ActionListener, PropertyChangeListen
     private Thread subscriberThread;
     private Thread publisherThread;
 
-    private JMenuItem startTCPMenuItem;
-    private JMenuItem startMQTTMenuItem;
-    private JMenuItem stopSubscriberMenuItem;
-    private JMenuItem configureMenuItem;
-    private JMenuItem startTrackingMenuItem;
-    private JMenuItem stopTrackingMenuItem;
+    private final JMenuItem startTCPMenuItem;
+    private final JMenuItem startMQTTMenuItem;
+    private final JMenuItem stopSubscriberMenuItem;
+    private final JMenuItem configureMenuItem;
+    private final JMenuItem startTrackingMenuItem;
+    private final JMenuItem stopTrackingMenuItem;
 
     public static void main(String[] args) {
         Main main = new Main();
@@ -57,7 +56,6 @@ public class Main extends JFrame implements ActionListener, PropertyChangeListen
 
     public Main() {
         Blackboard.getInstance().addObserver(this);
-//        mqttPublisher = new MQTTPublisher();
         startMQTTPublisher();
         tcpPublisher = new Publisher("localhost", 5000);  // Replace with actual TCP server address
 
@@ -248,8 +246,5 @@ public class Main extends JFrame implements ActionListener, PropertyChangeListen
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         logger.debug("Main detected property change on property {}", evt.getPropertyName());
-//        String message = "Clicks: " + Blackboard.getInstance().getClickPositions();
-//        mqttPublisher.publish(message);  // Publishes using MQTT
-//        tcpPublisher.publish(message);   // Publishes using TCP
     }
 }

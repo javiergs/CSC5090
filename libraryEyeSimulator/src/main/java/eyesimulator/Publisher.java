@@ -12,10 +12,9 @@ import java.net.Socket;
  * from the Blackboard.
  *
  * @version 1.2
- * @authors
- * Monish Suresh
- * Christine Widden
- * Luca Ornstil
+ * @author Monish Suresh
+ * @author Christine Widden
+ * @author Luca Ornstil
  */
 
 public class Publisher implements Runnable {

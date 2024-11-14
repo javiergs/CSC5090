@@ -12,10 +12,9 @@ import java.util.ArrayList;
  * from the Blackboard.
  *
  * @version 1.2
- * @authors
- * Monish Suresh
- * Christine Widden
- * Luca Ornstil
+ * @author Monish Suresh
+ * @author Christine Widden
+ * @author Luca Ornstil
  */
 
 public class MQTTPublisher implements Runnable {
@@ -58,6 +57,10 @@ public class MQTTPublisher implements Runnable {
         logger.info("MQTTPublisher stopped.");
     }
 
+    /**
+     * Sets the MQTTPublisher to enter an infinite loop of attempting to transmit new click positions every second.
+     * Loop exits on InterruptedException.
+     */
     @Override
     public void run() {
         try {

@@ -16,10 +16,9 @@ import java.util.ArrayList;
  * for tracking positions.
  *
  * @version 1.2
- * @authors
- * Monish Suresh
- * Christine Widden
- * Luca Ornstil
+ * @author Monish Suresh
+ * @author Christine Widden
+ * @author Luca Ornstil
  */
 
 public class WorkArea extends JPanel implements MouseListener, PropertyChangeListener {

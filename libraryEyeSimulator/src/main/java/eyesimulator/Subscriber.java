@@ -13,10 +13,9 @@ import java.net.Socket;
  * them to a DataDestination.
  *
  * @version 1.2
- * @authors
- * Monish Suresh
- * Christine Widden
- * Luca Ornstil
+ * @author Monish Suresh
+ * @author Christine Widden
+ * @author Luca Ornstil
  */
 
 public class Subscriber implements Runnable {
