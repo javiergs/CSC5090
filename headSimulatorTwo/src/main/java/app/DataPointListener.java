@@ -5,7 +5,7 @@ import java.beans.PropertyChangeListener;
 
 /**
  * The `DataPointListener` class listens for property change events from the
- * `DataRepository` and updates the `TrackArea` with the latest data point.
+ * `Blackboard` and updates the `TrackArea` with the latest data point.
  */
 public class DataPointListener implements PropertyChangeListener {
 

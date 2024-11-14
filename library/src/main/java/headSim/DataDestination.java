@@ -1,4 +1,4 @@
-package app;
+package headSim;
 
 /**
  * The `DataDestination` interface defines methods for handling data and error messages

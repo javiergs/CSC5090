@@ -6,6 +6,10 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import headSim.Publisher;
+import headSim.Blackboard;
+
+
 /**
  * The `TrackArea` class is a visual component that displays a face with eyes that
  * track the mouse cursor. It receives eye tracking data and visualizes it by
@@ -33,12 +37,12 @@ public class TrackArea extends JPanel implements PropertyChangeListener {
 	 * @param menu The dropdown menu for controlling the simulation.
 	 * @param blackboard The `Blackboard` object for displaying status information.
 	 */
-	public TrackArea(Publisher server, JComboBox<String> menu, Blackboard blackboard) {
+	public TrackArea(Publisher server, JComboBox<String> menu, ScreenController blackboard) {
 		setSize(800, 500);
 		setVisible(true);
 		setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 
-		Controller c = new Controller(this, server, menu);
+		EyeController c = new EyeController(this, server, menu);
 		addMouseMotionListener(c);
 		Border blackLine = BorderFactory.createLineBorder(Color.BLACK, 5);
 		setBorder(blackLine);
@@ -47,7 +51,7 @@ public class TrackArea extends JPanel implements PropertyChangeListener {
 		blackboard.addPropertyChangeListener(this);
 		this.drawingState = blackboard.getDrawingState();
 
-		DataRepository.getInstance().addPropertyChangeListener(new DataPointListener(this));
+		Blackboard.getInstance().addPropertyChangeListener(new DataPointListener(this));
 	}
 
 	/**

@@ -6,9 +6,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import headSim.Blackboard;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import headSim.Publisher;
+import headSim.TheSubscriber;
+import headSim.TheSubscriberMQTT;
 
 /**
  * The `Main` class is the entry point of the eye tracking simulation application. It sets up
@@ -40,15 +45,15 @@ public class Main extends JFrame {
 		dropdownPanel.add(dropdownMenu);
 		add(dropdownPanel, BorderLayout.NORTH);
 
-		TrackArea area = new TrackArea(server, dropdownMenu, Blackboard.getInstance());
+		TrackArea area = new TrackArea(server, dropdownMenu, ScreenController.getInstance());
 		add(area, BorderLayout.CENTER);
 
-		Controller c = new Controller(area, server, dropdownMenu);
+		EyeController c = new EyeController(area, server, dropdownMenu);
 		dropdownMenu.addActionListener(c);
 
-		Blackboard.getInstance().setDrawingState("Updated TrackArea");
+		ScreenController.getInstance().setDrawingState("Updated TrackArea");
 
-		DataRepository destination = DataRepository.getInstance();
+		Blackboard destination = Blackboard.getInstance();
 
 		// Default for now
 		subscriberType = "tcp";
@@ -60,7 +65,7 @@ public class Main extends JFrame {
 				String ipHost = "127.0.0.1"; // Example IP, replace with actual if needed
 				int port = 9090;             // Example port, replace with actual if needed
 				String dataPrefix = "PointData";
-				subscriber = new TheSubscriber(ipHost, port, dataPrefix, DataRepository.getInstance());
+				subscriber = new TheSubscriber(ipHost, port, dataPrefix, Blackboard.getInstance());
 				new Thread(subscriber).start();
 				logger.info("TheSubscriber initialized and started.");
 			} catch (IOException e) {

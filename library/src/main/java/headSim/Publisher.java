@@ -1,4 +1,4 @@
-package app;
+package headSim;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,6 @@ public class Publisher implements Runnable {
 
 	private Thread serverThread;
 	private volatile boolean running = false;
-//	private MousePositionWebSocketServer webSocketServer;
 	private CountDownLatch latch = new CountDownLatch(1);
 	private static final Logger logger = LoggerFactory.getLogger(Publisher.class);
 

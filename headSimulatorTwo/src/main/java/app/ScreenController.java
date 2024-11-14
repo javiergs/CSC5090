@@ -13,12 +13,12 @@ import java.beans.PropertyChangeSupport;
  * @author Anthony C.
  * @version 1.0
  */
-public class Blackboard {
-    private static final Blackboard instance = new Blackboard();
+public class ScreenController {
+    private static final ScreenController instance = new ScreenController();
     private final PropertyChangeSupport support;
     private String drawingState = "default";
 
-    private Blackboard() {
+    private ScreenController() {
         support = new PropertyChangeSupport(this);
     }
 
@@ -27,7 +27,7 @@ public class Blackboard {
      *
      * @return The `Blackboard` instance.
      */
-    public static Blackboard getInstance() {
+    public static ScreenController getInstance() {
         return instance;
     }
 

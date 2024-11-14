@@ -1,15 +1,21 @@
 package app;
 
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+
+import headSim.Blackboard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import headSim.Publisher; // In all honesty, I'm not sure why this worked.
+
+
 /**
- * The `Controller` class manages the eye tracking simulation by responding to mouse
+ * The `EyeController` class manages the eye tracking simulation by responding to mouse
  * movements and user actions from a dropdown menu. It updates the eye position in the
  * `TrackArea` and sends data to the `Server` for processing.
  *
@@ -18,30 +24,30 @@ import org.slf4j.LoggerFactory;
  * @author Anthony C.
  * @version 1.0
  */
-public class Controller implements MouseMotionListener, ActionListener {
+public class EyeController implements MouseMotionListener, ActionListener {
 
 	private TrackArea trackArea;
 	private Publisher server;
 	private JComboBox<String> menu;
 	private boolean init_connected = false;
-	private static final Logger logger = LoggerFactory.getLogger(Controller.class);
+	private static final Logger logger = LoggerFactory.getLogger(EyeController.class);
 
 	/**
-	 * Constructs a `Controller`.
+	 * Constructs a `EyeController`.
 	 *
 	 * @param trackArea The `TrackArea` where eye movements are visualized.
 	 * @param server The `Server` that manages the WebSocket connection.
 	 * @param menu The dropdown menu for controlling the server (Start/Stop).
 	 */
-	public Controller(TrackArea trackArea, Publisher server, JComboBox<String> menu) {
+	public EyeController(TrackArea trackArea, Publisher server, JComboBox<String> menu) {
 		this.trackArea = trackArea;
 		this.server = server;
 		this.menu = menu;
-		DataRepository.getInstance().addPropertyChangeListener(new DataPointListener(trackArea));
+		Blackboard.getInstance().addPropertyChangeListener(new DataPointListener(trackArea));
 	}
 
 	/**
-	 * Updates the eye position and sends data to the `DataRepository` when the mouse is moved.
+	 * Updates the eye position and sends data to the `Blackboard` when the mouse is moved.
 	 *
 	 * @param e The mouse movement event.
 	 */
@@ -52,7 +58,7 @@ public class Controller implements MouseMotionListener, ActionListener {
 			int y = e.getY();
 			trackArea.moveEyes(x, y);
 			int[] newPoint = {x, y};
-			DataRepository.getInstance().addPoint(newPoint);
+			Blackboard.getInstance().addPoint(newPoint);
 			logger.info("Mouse moved to: ({}, {})", x, y);
 		}
 	}
