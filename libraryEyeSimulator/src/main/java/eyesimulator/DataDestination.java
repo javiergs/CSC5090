@@ -1,4 +1,4 @@
-package app;
+package eyesimulator;
 
 /**
  * Interface defining methods for a data destination that receives

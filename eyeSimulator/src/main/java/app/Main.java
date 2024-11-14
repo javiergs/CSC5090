@@ -3,6 +3,8 @@ package app;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,7 +12,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
-import test.Subscriber;
+
+import eyesimulator.Publisher;
+import eyesimulator.Subscriber;
+
 import test.MQTTSubscriber;
 
 /**

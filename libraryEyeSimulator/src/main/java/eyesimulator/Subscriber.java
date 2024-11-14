@@ -1,6 +1,6 @@
-package test;
+package eyesimulator;
 
-import app.DataDestination;
+import eyesimulator.DataDestination;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

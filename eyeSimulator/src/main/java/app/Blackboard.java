@@ -9,6 +9,8 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
+import eyesimulator.DataDestination;
+
 /**
  * Singleton class representing a central storage for click positions and tracking status.
  * Manages observers and notifies them of property changes.

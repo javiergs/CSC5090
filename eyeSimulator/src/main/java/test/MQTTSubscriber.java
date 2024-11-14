@@ -1,6 +1,6 @@
 package test;
 
-import app.DataDestination;
+import eyesimulator.DataDestination;
 import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
