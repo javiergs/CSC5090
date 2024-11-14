@@ -10,11 +10,12 @@ import cobot.encoder.EncoderHelper;
 /**
  * Blackboard class to store shared data between classes.
  * The Blackboard class is a singleton, meaning that only one instance of it can exist.
- *
  * This version processes messages received from Subscriber and updates internal state accordingly.
- *
- * Author(s): Jack Ortega, Neeraja Beesetti, Saanvi Dua, Javier Gonzalez-Sanchez
- * Version: 2.0
+ * @author Jack Ortega
+ * @author Neeraja Beesetti
+ * @author Saanvi Dua
+ * @author Javier Gonzalez-Sanchez
+ * @version 2.0
  */
 public class Blackboard extends PropertyChangeSupport {
 

@@ -9,8 +9,14 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.function.Consumer;
 
+
 /**
  * Client class to connect to the server and receive commands.
+ * @author Jack Ortega
+ * @author Neeraja Beesetti
+ * @author Saanvi Dua
+ * @author Javier Gonzalez-Sanchez
+ * @version 2.0
  */
 public class Subscriber implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(Subscriber.class);

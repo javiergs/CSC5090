@@ -11,11 +11,14 @@ import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 /**
- * CobotPanel class to draw the robot arm and animate it.
- *
- * Author(s): Jack Ortega, Neeraja Beesetti, Saanvi Dua, Javier Gonzalez-Sanchez
- * Version: 2.0
+ * CobotPanel class is used to draw the robot arm and animate it.
+ * @author Jack Ortega
+ * @author Neeraja Beesetti
+ * @author Saanvi Dua
+ * @author Javier Gonzalez-Sanchez
+ * @version 2.0
  */
 public class CobotPanel extends JPanel implements PropertyChangeListener {
 

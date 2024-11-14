@@ -6,8 +6,14 @@ import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * MQTTSubscriber subscribes to an MQTT topic and sends received messages to a specified consumer.
+ * @author Jack Ortega
+ * @author Neeraja Beesetti
+ * @author Saanvi Dua
+ * @author Javier Gonzalez-Sanchez
+ * @version 2.0
  */
 public class MQTTSubscriber {
     private static final Logger logger = LoggerFactory.getLogger(MQTTSubscriber.class);

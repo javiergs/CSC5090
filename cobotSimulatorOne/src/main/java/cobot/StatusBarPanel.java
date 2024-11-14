@@ -7,10 +7,11 @@ import java.beans.PropertyChangeListener;
 
 /**
  * StatusBarPanel class to display status messages.
- *
+ * @author Jack Ortega
+ * @author Neeraja Beesetti
+ * @author Saanvi Dua
  * @author Javier Gonzalez-Sanchez
- *
- * @version 1.0
+ * @version 2.0
  */
 public class StatusBarPanel extends JPanel implements PropertyChangeListener {
 	
