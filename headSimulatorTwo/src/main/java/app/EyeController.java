@@ -11,7 +11,7 @@ import headSim.Blackboard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import headSim.Publisher; // In all honesty, I'm not sure why this worked.
+import headSim.Publisher;
 
 
 /**
