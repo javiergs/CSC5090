@@ -9,8 +9,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * Handles each connection from the Publisher, sending pre-encoded data.
+ * @author Jack Ortega
+ * @author Neeraja Beesetti
+ * @author Saanvi Dua
+ * @author Javier Gonzalez-Sanchez
+ * @version 2.0
  */
 public class PublisherHandler implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(PublisherHandler.class);

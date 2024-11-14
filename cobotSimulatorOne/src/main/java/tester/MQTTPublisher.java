@@ -4,8 +4,14 @@ import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * MQTTPublisher publishes messages to an MQTT topic.
+ * @author Jack Ortega
+ * @author Neeraja Beesetti
+ * @author Saanvi Dua
+ * @author Javier Gonzalez-Sanchez
+ * @version 2.0
  */
 public class MQTTPublisher {
     private static final Logger logger = LoggerFactory.getLogger(MQTTPublisher.class);

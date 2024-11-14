@@ -8,8 +8,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * Server class that listens for incoming connections and creates a new PublisherHandler thread for each connection.
+ * @author Jack Ortega
+ * @author Neeraja Beesetti
+ * @author Saanvi Dua
+ * @author Javier Gonzalez-Sanchez
+ * @version 2.0
  */
 public class Publisher implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(Publisher.class);
