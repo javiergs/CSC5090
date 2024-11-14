@@ -28,10 +28,9 @@ public class CobotPanel extends JPanel implements PropertyChangeListener {
 	private static final double TRANSITION_SPEED = 0.05; // 5% of the way per step
 
 	private final Queue<int[]> animationQueue = new LinkedList<>(); // Queue for incoming commands
-	private Timer animationTimer; // Timer for smooth animations
+	private Timer animationTimer;
 
 	public CobotPanel() {
-		// Initialize and start the animation timer
 		animationTimer = new Timer();
 		animationTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override

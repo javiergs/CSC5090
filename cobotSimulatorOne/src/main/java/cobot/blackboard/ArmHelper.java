@@ -17,7 +17,6 @@ class ArmHelper {
     private List<Double> targetAngles;
     private List<Color> colors;
 
-    // private constructor to restrict instantiation
     private ArmHelper(int count) {
         armAngles = new ArrayList<>();
         targetAngles = new ArrayList<>();

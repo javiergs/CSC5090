@@ -24,26 +24,21 @@ public class Main extends JFrame {
 	public Main() {
 		setLayout(new BorderLayout());
 
-		// Set the window size
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int squareSize = (2 * screenSize.height) / 3;
 		setSize(squareSize, squareSize);
 		setLocationRelativeTo(null);
 
-		// Initialize and add ComponentController
 		ComponentController componentController = new ComponentController();
 		addComponentListener(componentController);
 
-		// Set up the menu bar with menuController
 		MenuController menuController = new MenuController();  // Pass main frame reference
 		setJMenuBar(createMenuBar(menuController));
 
-		// Add a status bar panel
 		StatusBarPanel statusBarPanel = new StatusBarPanel("Not started");
 		add(statusBarPanel, BorderLayout.SOUTH);
 		Blackboard.getInstance().addPropertyChangeListener(statusBarPanel);
 
-		// Add the work area panel for the cobot
 		CobotPanel cobotPanel = new CobotPanel();
 		add(cobotPanel);
 		Blackboard.getInstance().addPropertyChangeListener(cobotPanel);

@@ -43,7 +43,6 @@ public class Blackboard extends PropertyChangeSupport {
 	/**
 	 * Processes a message received from the Subscriber.
 	 * Parses the message to update the arm angles.
-	 *
 	 * @param message The message received from the Subscriber.
 	 */
 	public void processSubscriberMessage(String message) {
