@@ -1,6 +1,7 @@
-package app;
+package affectSimulator;
 
 import org.eclipse.paho.client.mqttv3.*;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,10 +12,12 @@ public class MQTTPublisher implements Runnable {
     private static final String TOPIC = "project/topic";
     private static MQTTPublisher instance;
     private MqttClient client;
+    private final MQTTCommunicatorInterface publisherInterface;
 
-    private MQTTPublisher() {
+    private MQTTPublisher(MQTTCommunicatorInterface publisherInterface) {
+        this.publisherInterface = publisherInterface;
         try {
-            client = new MqttClient(BROKER_URL, CLIENT_ID);
+            client = new MqttClient(BROKER_URL, CLIENT_ID, new MemoryPersistence());
             MqttConnectOptions options = new MqttConnectOptions();
             options.setAutomaticReconnect(true);
             options.setCleanSession(true);
@@ -25,15 +28,15 @@ public class MQTTPublisher implements Runnable {
         }
     }
 
-    public static synchronized MQTTPublisher getInstance() {
+    public static synchronized MQTTPublisher getInstance(MQTTCommunicatorInterface publisherInterface) {
         if (instance == null) {
-            instance = new MQTTPublisher();
+            instance = new MQTTPublisher(publisherInterface);
         }
         return instance;
     }
 
     public void publish(String message) {
-        if (!Blackboard.getInstance().isRunning()) {
+        if (!publisherInterface.isRunning()) {
             return;
         }
 
@@ -49,7 +52,7 @@ public class MQTTPublisher implements Runnable {
 
     @Override
     public void run() {
-        while (Blackboard.getInstance().isRunning()) {
+        while (publisherInterface.isRunning()) {
             publish("Periodic message from MQTTPublisher");
             try {
                 Thread.sleep(5000);

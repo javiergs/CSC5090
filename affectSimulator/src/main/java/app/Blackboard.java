@@ -1,8 +1,11 @@
 package app;
 
+import affectSimulator.PublisherInterface;
+import affectSimulator.MQTTCommunicatorInterface;
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class Blackboard extends PropertyChangeSupport {
+public class Blackboard extends PropertyChangeSupport implements PublisherInterface, MQTTCommunicatorInterface, PropertyChangeListener {
     private static Blackboard instance;
     private boolean isRunning;
     private int sliderValue;
@@ -33,7 +36,20 @@ public class Blackboard extends PropertyChangeSupport {
         firePropertyChange("isRunning", oldRunning, isRunning);
     }
 
+    @Override
     public boolean isRunning() {
         return isRunning;
+    }
+
+    @Override
+    public void setSliderValueExternally(String sliderName, int newValue) {
+        // Implement as needed or leave empty if Blackboard does not need to use it directly
+    }
+
+    @Override
+    public void propertyChange(java.beans.PropertyChangeEvent evt) {
+        if ("someProperty".equals(evt.getPropertyName())) {
+            // 处理 Subscriber 的变化通知
+        }
     }
 }

@@ -1,4 +1,4 @@
-package app;
+package affectSimulator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,12 +10,14 @@ public class Publisher implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(Publisher.class);
     private final String host;
     private final int port;
+    private final PublisherInterface publisherInterface;
     private DataOutputStream outputStream;
     private Socket socket;
 
-    public Publisher(String host, int port) {
+    public Publisher(String host, int port, PublisherInterface publisherInterface) {
         this.host = host;
         this.port = port;
+        this.publisherInterface = publisherInterface;
         connect();
     }
 
@@ -43,7 +45,7 @@ public class Publisher implements Runnable {
 
     @Override
     public void run() {
-        while (Blackboard.getInstance().isRunning()) {
+        while (publisherInterface.isRunning()) {
             publish("Periodic message from Publisher"); // 示例消息
             try {
                 Thread.sleep(5000); // 间隔发布

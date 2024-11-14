@@ -1,11 +1,23 @@
 package app;
 
+import affectSimulator.MQTTPublisher;
 import app.ui.CustomMenu;
 import app.ui.SliderPanel;
-import test.Subscriber;
-import test.MQTTSubscriber;
+import affectSimulator.Publisher;
+import affectSimulator.Subscriber;
+import affectSimulator.MQTTSubscriber;
 import javax.swing.*;
 import java.awt.*;
+
+/**
+ * Main class that initializes and runs the Affect Recognition Simulator application.
+ * It creates a GUI with controls to start and stop MQTT and TCP transmissions, and manages
+ * the communication threads for both protocols.
+ *
+ * @author Yayun Tan
+ * @author Zexu Wei
+ * @version 1.0
+ */
 
 public class Main extends JFrame {
     private SliderListener sliderListener;
@@ -42,7 +54,7 @@ public class Main extends JFrame {
         sliderListener.setUseMQTT(true);
         Blackboard.getInstance().setRunning(true);
 
-        MQTTPublisher mqttPublisher = MQTTPublisher.getInstance();
+        MQTTPublisher mqttPublisher = MQTTPublisher.getInstance(Blackboard.getInstance());  // 获取单例实例
         MQTTSubscriber mqttSubscriber = new MQTTSubscriber(sliderListener);
 
         mqttPublisherThread = new Thread(mqttPublisher);
@@ -55,7 +67,7 @@ public class Main extends JFrame {
     public void startTCPTransmission() {
         stopTCPTransmission();
 
-        tcpPublisher = new Publisher("localhost", 5000);
+        tcpPublisher = new Publisher("localhost", 5000, Blackboard.getInstance());
         tcpSubscriber = new Subscriber(5000);
         sliderListener.setPublisher(tcpPublisher);
         sliderListener.setUseMQTT(false);

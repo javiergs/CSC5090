@@ -1,5 +1,4 @@
-package test;
-import app.SliderListener;
+package affectSimulator;
 
 import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
@@ -11,10 +10,10 @@ public class MQTTSubscriber implements MqttCallback, Runnable {
     private static final String TOPIC = "project/topic";
     private static final String CLIENT_ID = "ProjectSubscriber";
     private MqttClient client;
-    private final SliderListener sliderListener;
+    private final MQTTCommunicatorInterface communicatorInterface;
 
-    public MQTTSubscriber(SliderListener sliderListener) {
-        this.sliderListener = sliderListener;
+    public MQTTSubscriber(MQTTCommunicatorInterface communicatorInterface) {
+        this.communicatorInterface = communicatorInterface;
     }
 
     @Override
@@ -45,7 +44,7 @@ public class MQTTSubscriber implements MqttCallback, Runnable {
         if (parts.length == 2) {
             String sliderName = parts[0];
             int newValue = Integer.parseInt(parts[1]);
-            sliderListener.setSliderValueExternally(sliderName, newValue);
+            communicatorInterface.setSliderValueExternally(sliderName, newValue);
         }
     }
 

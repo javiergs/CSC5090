@@ -8,6 +8,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 import app.SliderListener;
 
+/**
+ * SliderPanel class that creates a panel with labeled sliders for different parameters.
+ * Each slider's value can be adjusted and is monitored by a SliderListener.
+ *
+ * @author Yayun Tan
+ * @author Zexu Wei
+ * @version 1.0
+ */
+
 public class SliderPanel extends JPanel {
     private List<JSlider> sliders;
     private SliderListener sliderListener;

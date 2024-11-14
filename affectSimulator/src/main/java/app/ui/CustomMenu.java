@@ -6,6 +6,14 @@ import app.Main;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * CustomMenu class that creates a menu with options to start and stop MQTT or TCP transmission.
+ * The menu allows the user to control the transmission type and stop transmission when needed.
+ *
+ * @author Yayun Tan
+ * @version 1.0
+ */
+
 public class CustomMenu extends JMenu {
     public CustomMenu(String text, Main mainFrame) {
         super(text);

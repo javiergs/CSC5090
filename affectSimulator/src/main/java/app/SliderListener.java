@@ -1,20 +1,24 @@
 package app;
 
+import affectSimulator.MQTTPublisher;
+import affectSimulator.Publisher;
+import affectSimulator.MQTTCommunicatorInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class SliderListener implements PropertyChangeListener {
+public class SliderListener implements PropertyChangeListener, MQTTCommunicatorInterface {
     private static final Logger logger = LoggerFactory.getLogger(SliderListener.class);
-    private boolean isExternalUpdate = false; // avoid loop
+    private boolean isExternalUpdate = false;
     private boolean useMQTT = true;
-
     private Publisher tcpPublisher;
+    private MQTTPublisher mqttPublisher;  // 添加 MQTTPublisher 实例
 
     public SliderListener() {
         Blackboard.getInstance().addPropertyChangeListener(this);
+        this.mqttPublisher = MQTTPublisher.getInstance(this); // 使用 getInstance() 获取单例实例
     }
 
     public void setPublisher(Publisher tcpPublisher) {
@@ -32,7 +36,7 @@ public class SliderListener implements PropertyChangeListener {
                 String message = sliderName + " updated to: " + newValue;
 
                 if (useMQTT) {
-                    MQTTPublisher.getInstance().publish(message);
+                    mqttPublisher.publish(message);  // 使用 mqttPublisher 实例发布消息
                     logger.info("Published via MQTT: {}", message);
                 } else if (tcpPublisher != null) {
                     tcpPublisher.publish(message);
@@ -44,13 +48,19 @@ public class SliderListener implements PropertyChangeListener {
         isExternalUpdate = false;
     }
 
-    public void setUseMQTT(boolean useMQTT) {
-        this.useMQTT = useMQTT;
+    @Override
+    public void setSliderValueExternally(String sliderName, int newValue) {
+        isExternalUpdate = true;
+        setSliderValue(sliderName, newValue);
     }
 
-    public void setSliderValueExternally(String sliderName, int newValue) {
-        isExternalUpdate = true; // 设置为外部更新
-        setSliderValue(sliderName, newValue);
+    @Override
+    public boolean isRunning() {
+        return Blackboard.getInstance().isRunning();
+    }
+
+    public void setUseMQTT(boolean useMQTT) {
+        this.useMQTT = useMQTT;
     }
 
     @Override
@@ -66,7 +76,7 @@ public class SliderListener implements PropertyChangeListener {
                 String message = sliderName + " Slider Value: " + newValue;
 
                 if (useMQTT) {
-                    MQTTPublisher.getInstance().publish(message);
+                    mqttPublisher.publish(message);  // 使用 mqttPublisher 实例发布消息
                     logger.info("Published via MQTT: {}", message);
                 } else if (tcpPublisher != null) {
                     tcpPublisher.publish(message);
