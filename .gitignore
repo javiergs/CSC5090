@@ -1,8 +1,0 @@
-.idea
-
-logs
-paho*
-
-cobotSimulatorOne/src/main/resources/logback-secret.properties
-cobotSimulatorOne/target
-library/target
