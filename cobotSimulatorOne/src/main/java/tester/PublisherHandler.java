@@ -26,11 +26,11 @@ public class PublisherHandler implements Runnable {
 
 	public PublisherHandler(Socket socket) {
 		this.socket = socket;
-		this.messageQueue = new LinkedBlockingQueue<>(); // Queue for handling messages
+		this.messageQueue = new LinkedBlockingQueue<>();
 	}
 
 	public void sendEncodedMessage(String encodedMessage) {
-		messageQueue.offer(encodedMessage); // Add message to queue
+		messageQueue.offer(encodedMessage);
 	}
 
 	@Override
