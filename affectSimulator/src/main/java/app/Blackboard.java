@@ -5,6 +5,17 @@ import affectSimulator.MQTTCommunicatorInterface;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+/**
+ * Blackboard class to manage shared data and coordinate communication between
+ * classes in the application. This class is designed as a singleton, ensuring
+ * only one instance exists across the application.
+ * The Blackboard class implements interfaces for both Publisher and MQTT
+ * communication, allowing it to act as a central hub for handling application
+ * state and inter-component data transfer.
+ *
+ * Author: Yayun Tan
+ * Version: 2.0
+ */
 public class Blackboard extends PropertyChangeSupport implements PublisherInterface, MQTTCommunicatorInterface, PropertyChangeListener {
     private static Blackboard instance;
     private boolean isRunning;
@@ -43,13 +54,11 @@ public class Blackboard extends PropertyChangeSupport implements PublisherInterf
 
     @Override
     public void setSliderValueExternally(String sliderName, int newValue) {
-        // Implement as needed or leave empty if Blackboard does not need to use it directly
     }
 
     @Override
     public void propertyChange(java.beans.PropertyChangeEvent evt) {
         if ("someProperty".equals(evt.getPropertyName())) {
-            // 处理 Subscriber 的变化通知
         }
     }
 }

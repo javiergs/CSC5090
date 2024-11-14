@@ -46,9 +46,9 @@ public class Publisher implements Runnable {
     @Override
     public void run() {
         while (publisherInterface.isRunning()) {
-            publish("Periodic message from Publisher"); // 示例消息
+            publish("Periodic message from Publisher");
             try {
-                Thread.sleep(5000); // 间隔发布
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

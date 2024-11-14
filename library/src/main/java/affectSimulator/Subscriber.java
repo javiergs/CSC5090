@@ -41,7 +41,7 @@ public class Subscriber extends PropertyChangeSupport implements Runnable {
                     while (running) {
                         String message = inputStream.readUTF();
                         logger.debug("Received message: {}", message);
-                        firePropertyChange("someProperty", null, message); // 通知监听器
+                        firePropertyChange("someProperty", null, message);
                     }
                 } catch (IOException e) {
                     if (running) {

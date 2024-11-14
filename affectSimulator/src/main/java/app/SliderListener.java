@@ -9,16 +9,25 @@ import org.slf4j.LoggerFactory;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * SliderListener class manages slider value updates and publishes changes
+ * via MQTT or TCP based on configuration. It listens to Blackboard for
+ * property changes and distinguishes between internal and external updates.
+ *
+ * Author: Yayun Tan
+ * Version: 1.0
+ */
+
 public class SliderListener implements PropertyChangeListener, MQTTCommunicatorInterface {
     private static final Logger logger = LoggerFactory.getLogger(SliderListener.class);
     private boolean isExternalUpdate = false;
     private boolean useMQTT = true;
     private Publisher tcpPublisher;
-    private MQTTPublisher mqttPublisher;  // 添加 MQTTPublisher 实例
+    private MQTTPublisher mqttPublisher;
 
     public SliderListener() {
         Blackboard.getInstance().addPropertyChangeListener(this);
-        this.mqttPublisher = MQTTPublisher.getInstance(this); // 使用 getInstance() 获取单例实例
+        this.mqttPublisher = MQTTPublisher.getInstance(this);
     }
 
     public void setPublisher(Publisher tcpPublisher) {
@@ -36,7 +45,7 @@ public class SliderListener implements PropertyChangeListener, MQTTCommunicatorI
                 String message = sliderName + " updated to: " + newValue;
 
                 if (useMQTT) {
-                    mqttPublisher.publish(message);  // 使用 mqttPublisher 实例发布消息
+                    mqttPublisher.publish(message);
                     logger.info("Published via MQTT: {}", message);
                 } else if (tcpPublisher != null) {
                     tcpPublisher.publish(message);
@@ -76,7 +85,7 @@ public class SliderListener implements PropertyChangeListener, MQTTCommunicatorI
                 String message = sliderName + " Slider Value: " + newValue;
 
                 if (useMQTT) {
-                    mqttPublisher.publish(message);  // 使用 mqttPublisher 实例发布消息
+                    mqttPublisher.publish(message);
                     logger.info("Published via MQTT: {}", message);
                 } else if (tcpPublisher != null) {
                     tcpPublisher.publish(message);
