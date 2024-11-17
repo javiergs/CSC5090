@@ -3,6 +3,18 @@ package head;
 import java.awt.*;
 import java.beans.PropertyChangeSupport;
 
+/**
+ * This class is a blackboard, it stores useful data for the program and fires 
+ * property changes when this data is updates
+ *
+ * @author Samuel Fox Gar Kaplan
+ * @author Javier Gonzalez-Sanchez
+ * @author Luke Aitchison
+ * @author Ethan Outangoun
+ *
+ * @version 3.0
+ */
+
 public class Blackboard extends PropertyChangeSupport {
 	
 	private static Blackboard instance;

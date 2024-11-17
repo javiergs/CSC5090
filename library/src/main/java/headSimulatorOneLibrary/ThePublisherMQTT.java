@@ -1,10 +1,12 @@
-package components;
+package headSimulatorOneLibrary;
 import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
-
+ * This class is the common implementaion of the MQTT Pubisher 
+ * It has implementaions for connecting, confirming connection, disconecting, and publishing data to a subscriber all using an MQTT Client
+ * 
  * @author Samuel Fox Gar Kaplan
  * @author Javier Gonzalez-Sanchez
  * @author Luke Aitchison
@@ -12,21 +14,19 @@ import org.slf4j.LoggerFactory;
  *
  * @version 2.0
  * 
- * This class is the common implementaion of the MQTT Pubisher 
- * It has implementaions for connecting, confirming connection, disconecting, and publishing data to a subscriber all using an MQTT Client
  */
 
 
 
-public class MQTTPublisher{
+public class ThePublisherMQTT{
 
     private final String BROKER;
     private final String CLIENT_ID;
     private MqttClient client;
-    private static final Logger logger = LoggerFactory.getLogger(MQTTPublisher.class);
+    private static final Logger logger = LoggerFactory.getLogger(ThePublisherMQTT.class);
 
 
-    public MQTTPublisher(String broker, String clientId){
+    public ThePublisherMQTT(String broker, String clientId){
 
         this.BROKER = broker;
         this.CLIENT_ID = clientId;

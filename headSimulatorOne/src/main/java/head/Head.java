@@ -6,8 +6,11 @@ import java.awt.*;
  * Head class that draws the head, eyes, and mouth of the character.
  *
  * @author Samuel Fox Gar Kaplan
+ * @author Luke Aitchison
+ * @author Ethan Outangoun
  * @author Javier Gonzalez-Sanchez
- * @version 2.0
+ * 
+ * @version 3.0
  */
 public class Head {
 	

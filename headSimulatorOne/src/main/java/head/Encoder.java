@@ -1,4 +1,4 @@
-package components;
+package head;
 
 import java.awt.*;
 import java.beans.PropertyChangeEvent;

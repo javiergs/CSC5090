@@ -1,5 +1,4 @@
-package components;
-
+package headSimulatorOneLibrary;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -8,21 +7,22 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
 
+/**
+ * This class is the common implementation of a publisher using a socket. 
+ * It has methods for connecting/disconnecting to a port and publishing data to an output stream.
+ *
  * @author Samuel Fox Gar Kaplan
  * @author Javier Gonzalez-Sanchez
  * @author Luke Aitchison
  * @author Ethan Outangoun
  *
- * @version 2.0
- * 
-	This class is the common implementation of a publisher using a socket. 
-	It has methods for connecting/disconnecting to a port and publishing data to an output stream.
-	*/
+ * @version 3.0
+ */
+	
 
 	
-public class ThePublisher{
+public class ThePublisher {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ThePublisher.class);
 	private int port;

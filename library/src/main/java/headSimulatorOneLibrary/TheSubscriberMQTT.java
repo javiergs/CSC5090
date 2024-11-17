@@ -1,27 +1,25 @@
-package components;
-
+package headSimulatorOneLibrary;
 import org.eclipse.paho.client.mqttv3.*;
 /**
-
+ * This class is the common implementaion of the MQTT Subscriber 
+ * 
+ * It has implemnetation for establishing connections and reciving data all using an MQTT Client 
  * @author Samuel Fox Gar Kaplan
  * @author Javier Gonzalez-Sanchez
  * @author Luke Aitchison
  * @author Ethan Outangoun
  *
  * @version 2.0
- * 
- * This class is the common implementaion of the MQTT Subscriber  
- * It has implemnetation for establishing connections and reciving data all using an MQTT Client
  */
 
 
 
 
-public class MQTTSubscriber implements MqttCallback{
+public class TheSubscriberMQTT implements MqttCallback{
     String broker;
     String clientId;
 
-    public MQTTSubscriber(String broker, String clientId) {
+    public TheSubscriberMQTT(String broker, String clientId) {
         this.broker = broker;
         this.clientId = clientId;
     }
@@ -29,7 +27,7 @@ public class MQTTSubscriber implements MqttCallback{
     public void subscribe(String topic) {
         try {
             MqttClient client = new MqttClient(broker, clientId);
-            client.setCallback(new MQTTSubscriber(this.broker, this.clientId));
+            client.setCallback(new TheSubscriberMQTT(this.broker, this.clientId));
             client.connect();
             System.out.println("Connected to broker: " + broker);
             client.subscribe(topic);

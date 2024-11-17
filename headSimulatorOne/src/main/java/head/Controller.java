@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
  * @author Luke Aitchison
  * @author Ethan Outangoun
  *
- * @version 2.0
+ * @version 3.0
  */
 
 
@@ -40,6 +40,7 @@ public class Controller implements ActionListener {
 		mqttServer = new MQTTServer("tcp://test.mosquitto.org:1883", "TestPublisher", "test/topic");
 		Thread mqttServerThread = new Thread(mqttServer);
 		mqttServerThread.start();
+		
 		logger.info("Starting server");
 		server = new Server(8888);
 		Thread serverThread = new Thread(server);
