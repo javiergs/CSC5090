@@ -11,6 +11,7 @@ import javax.swing.*;
  *
  * @author Andrew Estrada
  * @author Sean Sponsler
+ * @author Xiuyuan Qiu
  * @version 1.0
  */
 public class ColorKeyPanel extends JPanel {
