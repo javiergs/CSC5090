@@ -4,13 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.Color;
 import java.util.Random;
-
+/**
+ * Manage angles and colors of robot arm for visualization.
+ * @author Jack Ortega
+ * @author Neeraja Beesetti
+ * @author Saanvi Dua
+ * @author Javier Gonzalez-Sanchez
+ * @version 2.0
+ */
 class ArmHelper {
     private List<Double> armAngles;
     private List<Double> targetAngles;
     private List<Color> colors;
 
-    // private constructor to restrict instantiation
     private ArmHelper(int count) {
         armAngles = new ArrayList<>();
         targetAngles = new ArrayList<>();
@@ -28,19 +34,8 @@ class ArmHelper {
         return new ArmHelper(count);
     }
 
-    void updateAngles(int[] numbers) {
-        armAngles.clear();
-        for (int num : numbers) {
-            armAngles.add((double) num);
-        }
-    }
-
     List<Double> getArmAngles() {
         return armAngles;
-    }
-
-    List<Double> getTargetAngles() {
-        return targetAngles;
     }
 
     List<Color> getColors() {

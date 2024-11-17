@@ -1,12 +1,22 @@
-package test;
+package eyesimulator;
 
-import app.DataDestination;
+import eyesimulator.DataDestination;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
+
+/**
+ * Subscriber that connects to a TCP server, receives messages, and forwards
+ * them to a DataDestination.
+ *
+ * @version 1.2
+ * @author Monish Suresh
+ * @author Christine Widden
+ * @author Luca Ornstil
+ */
 
 public class Subscriber implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(Subscriber.class);

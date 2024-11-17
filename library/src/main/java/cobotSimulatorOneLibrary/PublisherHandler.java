@@ -1,7 +1,6 @@
-package tester;
+package cobotSimulatorOneLibrary;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
@@ -11,6 +10,11 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Handles each connection from the Publisher, sending pre-encoded data.
+ * @author Jack Ortega
+ * @author Neeraja Beesetti
+ * @author Saanvi Dua
+ * @author Javier Gonzalez-Sanchez
+ * @version 2.0
  */
 public class PublisherHandler implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(PublisherHandler.class);
@@ -20,11 +24,11 @@ public class PublisherHandler implements Runnable {
 
 	public PublisherHandler(Socket socket) {
 		this.socket = socket;
-		this.messageQueue = new LinkedBlockingQueue<>(); // Queue for handling messages
+		this.messageQueue = new LinkedBlockingQueue<>();
 	}
 
 	public void sendEncodedMessage(String encodedMessage) {
-		messageQueue.offer(encodedMessage); // Add message to queue
+		messageQueue.offer(encodedMessage);
 	}
 
 	@Override

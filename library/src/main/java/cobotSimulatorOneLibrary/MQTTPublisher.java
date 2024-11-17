@@ -1,4 +1,4 @@
-package tester;
+package cobotSimulatorOneLibrary;
 
 import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
@@ -6,6 +6,11 @@ import org.slf4j.LoggerFactory;
 
 /**
  * MQTTPublisher publishes messages to an MQTT topic.
+ * @author Jack Ortega
+ * @author Neeraja Beesetti
+ * @author Saanvi Dua
+ * @author Javier Gonzalez-Sanchez
+ * @version 2.0
  */
 public class MQTTPublisher {
     private static final Logger logger = LoggerFactory.getLogger(MQTTPublisher.class);
@@ -30,18 +35,6 @@ public class MQTTPublisher {
             logger.info("MQTTPublisher connected to broker and ready to publish on topic: {}", topic);
         } catch (MqttException e) {
             logger.error("Error starting MQTTPublisher", e);
-        }
-    }
-
-    public void stop() {
-        try {
-            if (client != null && client.isConnected()) {
-                client.disconnect();
-                client.close();
-                logger.info("MQTTPublisher disconnected from broker");
-            }
-        } catch (MqttException e) {
-            logger.error("Error stopping MQTTPublisher", e);
         }
     }
 
