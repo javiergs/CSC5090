@@ -9,6 +9,18 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
+import eyesimulator.DataDestination;
+
+/**
+ * Singleton class representing a central storage for click positions and tracking status.
+ * Manages observers and notifies them of property changes.
+ *
+ * @version 1.2
+ * @author Monish Suresh
+ * @author Christine Widden
+ * @author Luca Ornstil
+ */
+
 public class Blackboard extends PropertyChangeSupport implements DataDestination {
     private static Blackboard instance;
     private final List<Point> clickPositions;
@@ -41,6 +53,10 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
         this.propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
+    /**
+     * Adds a click position to the list of currently tracked clicks, and fires a property change
+     * @param click the Point that was clicked.
+     */
     public synchronized void addClick(Point click) {
         if (tracking && clickPositions.size() < transmissionSpeed) {
             List<Point> oldValue = new ArrayList<>(clickPositions);
@@ -54,16 +70,25 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
         return new ArrayList<>(clickPositions);
     }
 
+    /**
+     * Clears the list of tracked click positions, and fires a property change.
+     */
     public synchronized void clearClicks() {
         List<Point> oldValue = new ArrayList<>(clickPositions);
         clickPositions.clear();
         propertyChangeSupport.firePropertyChange("clickPositions", oldValue, clickPositions);
     }
 
+    /**
+     * @param speed the maximum number of clicks that can be transmitted per second.
+     */
     public synchronized void setTransmissionSpeed(int speed) {
         this.transmissionSpeed = speed;
     }
 
+    /**
+     * @return whether the blackboard is permitted to update with new clicks.
+     */
     public synchronized boolean isTracking() {
         return tracking;
     }
@@ -81,6 +106,7 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
     }
 
     // Implementation of DataDestination methods
+
     @Override
     public void addSubscriberData(String dataWithPrefix) {
         // Process the incoming data and update the Blackboard as needed
