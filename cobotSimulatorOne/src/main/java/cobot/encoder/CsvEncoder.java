@@ -4,6 +4,14 @@ import cobot.blackboard.Blackboard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Handles parsing and encoding angles commands using String in form of comma separated values
+ * @author Jack Ortega
+ * @author Neeraja Beesetti
+ * @author Saanvi Dua
+ * @author Javier Gonzalez-Sanchez
+ * @version 2.0
+ */
 public class CsvEncoder implements EncoderHelper {
     private static final Logger logger = LoggerFactory.getLogger(CsvEncoder.class);
 

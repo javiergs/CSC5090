@@ -9,7 +9,6 @@ import java.awt.event.ComponentListener;
 
 /**
  * ComponentController class that listens for component events, especially resize.
- *
  * @author Jack Ortega,
  * @author Neeraja Beesetti,
  * @author Saanvi Dua

@@ -7,17 +7,17 @@ import java.beans.PropertyChangeListener;
 
 /**
  * StatusBarPanel class to display status messages.
- *
+ * @author Jack Ortega
+ * @author Neeraja Beesetti
+ * @author Saanvi Dua
  * @author Javier Gonzalez-Sanchez
- *
- * @version 1.0
+ * @version 2.0
  */
 public class StatusBarPanel extends JPanel implements PropertyChangeListener {
 	
 	private JLabel statusLabel;
 	
 	public StatusBarPanel(String status) {
-		// height panel to 22
 		setPreferredSize(new Dimension(getWidth(), 22));
 		setLayout(new GridLayout(1, 1));
 		setBorder(BorderFactory.createLineBorder(Color.GRAY));
