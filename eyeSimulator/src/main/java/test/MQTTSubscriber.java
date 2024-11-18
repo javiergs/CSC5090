@@ -1,9 +1,19 @@
 package test;
 
-import app.DataDestination;
+import eyesimulator.DataDestination;
 import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+/**
+ * Subscriber that connects to an MQTT broker, receives messages, and forwards
+ * them to a DataDestination.
+ * 
+ * @version 1.2
+ * @author Monish Suresh
+ * @author Christine Widden
+ * @author Luca Ornstil
+ */
 
 public class MQTTSubscriber implements Runnable, MqttCallback {
     private static final Logger logger = LoggerFactory.getLogger(MQTTSubscriber.class);

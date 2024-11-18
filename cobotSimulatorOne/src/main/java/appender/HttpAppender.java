@@ -10,6 +10,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Sends log messages to an external HTTP endpoint, allowing centralized logging
+ * @author Jack Ortega
+ * @author Neeraja Beesetti
+ * @author Saanvi Dua
+ * @author Javier Gonzalez-Sanchez
+ * @version 2.0
+ */
 public class HttpAppender extends AppenderBase<ILoggingEvent> {
     private String url;
     private String bearerToken;

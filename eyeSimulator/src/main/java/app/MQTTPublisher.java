@@ -7,6 +7,16 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * A publisher that connects to an MQTT broker and publishes click positions
+ * from the Blackboard.
+ *
+ * @version 1.2
+ * @author Monish Suresh
+ * @author Christine Widden
+ * @author Luca Ornstil
+ */
+
 public class MQTTPublisher implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(MQTTPublisher.class);
     private static final String BROKER_URL = "tcp://test.mosquitto.org:1883";
@@ -47,6 +57,10 @@ public class MQTTPublisher implements Runnable {
         logger.info("MQTTPublisher stopped.");
     }
 
+    /**
+     * Sets the MQTTPublisher to enter an infinite loop of attempting to transmit new click positions every second.
+     * Loop exits on InterruptedException.
+     */
     @Override
     public void run() {
         try {

@@ -1,11 +1,18 @@
 package cobot.encoder;
 
 import cobot.blackboard.Blackboard;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Handles parsing and encoding of angles commands in form of JSON objects
+ * @author Jack Ortega
+ * @author Neeraja Beesetti
+ * @author Saanvi Dua
+ * @author Javier Gonzalez-Sanchez
+ * @version 2.0
+ */
 public class JsonEncoder implements EncoderHelper {
     private static final Logger logger = LoggerFactory.getLogger(JsonEncoder.class);
 

@@ -12,10 +12,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * CobotPanel class to draw the robot arm and animate it.
- *
- * Author(s): Jack Ortega, Neeraja Beesetti, Saanvi Dua, Javier Gonzalez-Sanchez
- * Version: 2.0
+ * CobotPanel class is used to draw the robot arm and animate it.
+ * @author Jack Ortega
+ * @author Neeraja Beesetti
+ * @author Saanvi Dua
+ * @author Javier Gonzalez-Sanchez
+ * @version 2.0
  */
 public class CobotPanel extends JPanel implements PropertyChangeListener {
 
@@ -24,11 +26,10 @@ public class CobotPanel extends JPanel implements PropertyChangeListener {
 	private static final int ANIMATION_STEP_DELAY = 30;
 	private static final double TRANSITION_SPEED = 0.05; // 5% of the way per step
 
-	private final Queue<int[]> animationQueue = new LinkedList<>(); // Queue for incoming commands
-	private Timer animationTimer; // Timer for smooth animations
+	private final Queue<int[]> animationCommandQueue = new LinkedList<>();
+	private Timer animationTimer;
 
 	public CobotPanel() {
-		// Initialize and start the animation timer
 		animationTimer = new Timer();
 		animationTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
@@ -88,22 +89,17 @@ public class CobotPanel extends JPanel implements PropertyChangeListener {
 		g2d.fillOval(point.x - JOINT_RADIUS / 2, point.y - JOINT_RADIUS / 2, JOINT_RADIUS, JOINT_RADIUS);
 	}
 
-	/**
-	 * Queues a new target angle set for animation.
-	 *
-	 * @param targetAngles The target angles to be queued.
-	 */
 	private void queueArmAngles(int[] targetAngles) {
-		animationQueue.offer(targetAngles); // Add command to the queue
+		animationCommandQueue.offer(targetAngles);
 	}
 
 	/**
 	 * Updates the arm angles gradually toward the next target in the queue.
 	 */
 	private void updateArmAngles() {
-		if (animationQueue.isEmpty()) return;
+		if (animationCommandQueue.isEmpty()) return;
 
-		int[] targetAngles = animationQueue.peek();
+		int[] targetAngles = animationCommandQueue.peek();
 		boolean reachedTarget = true;
 
 		for (int i = 0; i < Blackboard.getInstance().getArmAngles().size(); i++) {
@@ -121,7 +117,7 @@ public class CobotPanel extends JPanel implements PropertyChangeListener {
 		}
 
 		if (reachedTarget) {
-			animationQueue.poll(); // Remove the command if target is reached
+			animationCommandQueue.poll();
 		}
 
 		repaint();
@@ -132,7 +128,7 @@ public class CobotPanel extends JPanel implements PropertyChangeListener {
 		if (evt.getPropertyName().equals("armAngles")) {
 			queueArmAngles((int[]) evt.getNewValue()); // Queue new command for animation
 		} else if (evt.getPropertyName().equals("origin")) {
-			repaint(); // Repaint on origin change
+			repaint();
 		}
 	}
 }
