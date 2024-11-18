@@ -1,14 +1,21 @@
 package app.View;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.io.IOException;
+
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+
+import affectTracker.TheSubscriber;
 import app.Controller.MainController;
-import app.Model.*;
-import app.library.TheSubscriber;
+import app.Model.Blackboard;
+import app.Model.RawDataProcessor;
+import app.Model.ViewDataProcessor;
 import test.EmotionDataServer;
 import test.EyeTrackingServer;
-
-import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
 
 /**
  * The {@code Main} class serves as the entry point for the Eye Tracking & Emotion Hub application.
@@ -108,8 +115,6 @@ public class Main extends JFrame {
 		emotionServerThread.start();
 		eyeTrackingThread.start();
 	}
-
-	//Todo: clean up threads, may not need CustomThread class at all
 
 	public static void main(String[] args) {
 		Main window = new Main();

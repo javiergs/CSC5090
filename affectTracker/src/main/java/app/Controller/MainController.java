@@ -1,17 +1,17 @@
 package app.Controller;
 
-import app.Model.Blackboard;
-import app.View.Main;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.JOptionPane;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
+import app.Model.Blackboard;
+import app.View.Main;
 
 /**
  * The {@code MainController} class serves as an event handler for UI actions, implementing
@@ -31,23 +31,29 @@ import javax.swing.*;
 public class MainController implements ActionListener, PropertyChangeListener {
 	
 	private static final Logger controllerLog = LoggerFactory.getLogger(MainController.class.getName());
-	private final Main parent;
+   private final Main parent;
+   private static final String CONNATTEMPT_STRING = "Connection attempted with:\n%s";
+   private static final String CONNDISCONNECT_STRING = "Stop Pressed. Disconnecting...";
+   private static final String CONNFAIL_STRING = "Unable to connect to %S server. \n" +
+           "Please check that the server is running and the IP address is correct.";
+           private static final String MQTTFAIL_STRING = "Issue with MQTT Broker\n%s";
 	
 	
 	public MainController(Main parent) {
 		this.parent = parent;
 	}
  
+   @Override
 	public void actionPerformed(ActionEvent e) {
 		switch (e.getActionCommand()) {
 			case ("Start") -> {
-				controllerLog.info(String.format("Connection attempted with:\n%s",
+				controllerLog.info(String.format(CONNATTEMPT_STRING,
 					Blackboard.getInstance().getFormattedConnectionSettings()));
 				Blackboard.getInstance().startedProcessing();
 				parent.connectClients();
 			}
 			case ("Stop") -> {
-				controllerLog.info("Stop Pressed. Disconnecting.");
+				controllerLog.info(CONNDISCONNECT_STRING);
 				Blackboard.getInstance().stoppedProcessing();
 				parent.cleanUpThreads();
 			}
@@ -55,21 +61,18 @@ public class MainController implements ActionListener, PropertyChangeListener {
 	}
 
 	@Override
-	//Todo: Main is not recommended to be observer. Move this to the controller.
 	public void propertyChange(PropertyChangeEvent evt) {
 		switch (evt.getPropertyName()) {
 			case Blackboard.EYE_DATA_LABEL -> {
 				parent.cleanUpThreads();
-				createConnectionErrorPopUp("Unable to connect to Eye Tracking server. \n" +
-						"Please check that the server is running and the IP address is correct.", (String) evt.getNewValue());
+            // evtgetNewValue() (via PropertyChangeEvent) returns an Object which needs to be casted
+				createConnectionErrorPopUp(String.format(CONNFAIL_STRING, "Emotion"), evt.getNewValue().toString());
             }
 			case Blackboard.EMOTION_DATA_LABEL -> {
-				createConnectionErrorPopUp("Unable to connect to Emotion server. \n" +
-						"Application will run without emotion data.", (String) evt.getNewValue());
-				break;
+				createConnectionErrorPopUp(String.format(CONNFAIL_STRING, "Eye Tracking"), evt.getNewValue().toString());
 			}
 			case Blackboard.MQTTBROKER_ERROR ->
-				JOptionPane.showMessageDialog(parent, String.format("Issue with MQTT Broker\n%s", (String) evt.getNewValue()));
+				JOptionPane.showMessageDialog(parent, String.format(MQTTFAIL_STRING, evt.getNewValue().toString()));
 		}
 	}
 
