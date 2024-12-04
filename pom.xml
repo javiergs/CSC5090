@@ -17,7 +17,6 @@
         <module>eyeSimulator</module>
         <module>headSimulatorTwo</module>
         <module>library</module>
-<!--        <module>library/headSimTwo</module>-->
     </modules>
 
     <properties>
