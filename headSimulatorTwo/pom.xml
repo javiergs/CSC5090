@@ -42,6 +42,13 @@
         </dependency>
 
         <!-- Additional library (if available in a repository) -->
+<!--        <dependency>-->
+<!--            <groupId>javiergs</groupId>-->
+<!--            <artifactId>library/headSimTwo</artifactId>-->
+<!--            <version>1.0-SNAPSHOT</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>javiergs</groupId>
             <artifactId>library</artifactId>
