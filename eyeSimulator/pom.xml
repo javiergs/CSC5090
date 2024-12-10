@@ -38,10 +38,11 @@
         </dependency>
         <dependency>
             <groupId>javiergs</groupId>
-            <artifactId>libraryEyeSimulator</artifactId>
+            <artifactId>library</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+
     </dependencies>
 
     <build>

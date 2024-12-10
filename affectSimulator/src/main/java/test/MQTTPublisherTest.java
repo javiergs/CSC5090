@@ -1,6 +1,6 @@
 package test;
 
-import app.Blackboard;
+import simulator_affect.Blackboard;
 import affectSimulator.MQTTPublisher;
 
 /**
