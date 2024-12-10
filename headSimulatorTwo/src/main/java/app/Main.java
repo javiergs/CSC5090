@@ -1,4 +1,4 @@
-package app.library;
+package app;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,13 +6,19 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import headSim.Blackboard;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import headSim.Publisher;
+import headSim.TheSubscriber;
+import headSim.TheSubscriberMQTT;
+
 /**
- * app.library.Main class is responsible for controlling the eye tracking simulation.
- * Authors as listed in your README.md file.
+ * The `Main` class is the entry point of the eye tracking simulation application. It sets up
+ * the main window, initializes key components (server, subscriber, UI elements), and manages
+ * their interaction.
  *
  * @author Ashton
  * @author David H.
@@ -21,13 +27,16 @@ import org.slf4j.LoggerFactory;
  */
 public class Main extends JFrame {
 
-	private Server server;
+	private Publisher server;
 	private TheSubscriber subscriber;
 	private static final Logger logger = LoggerFactory.getLogger(Main.class);
 	private String subscriberType;
 
+	/**
+	 * Constructs the main application window and initializes components.
+	 */
 	public Main() {
-		server = new Server();
+		server = new Publisher();
 		setLayout(new BorderLayout());
 
 		JPanel dropdownPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -36,16 +45,15 @@ public class Main extends JFrame {
 		dropdownPanel.add(dropdownMenu);
 		add(dropdownPanel, BorderLayout.NORTH);
 
-		Blackboard blackboard = new Blackboard();
-		TrackArea area = new TrackArea(server, dropdownMenu, blackboard);
+		TrackArea area = new TrackArea(server, dropdownMenu, ScreenController.getInstance());
 		add(area, BorderLayout.CENTER);
 
-		Controller c = new Controller(area, server, dropdownMenu);
+		EyeController c = new EyeController(area, server, dropdownMenu);
 		dropdownMenu.addActionListener(c);
 
-		blackboard.setDrawingState("Updated TrackArea");
+		ScreenController.getInstance().setDrawingState("Updated TrackArea");
 
-		DataRepository destination = DataRepository.getInstance();
+		Blackboard destination = Blackboard.getInstance();
 
 		// Default for now
 		subscriberType = "tcp";
@@ -57,7 +65,7 @@ public class Main extends JFrame {
 				String ipHost = "127.0.0.1"; // Example IP, replace with actual if needed
 				int port = 9090;             // Example port, replace with actual if needed
 				String dataPrefix = "PointData";
-				subscriber = new TheSubscriber(ipHost, port, dataPrefix, DataRepository.getInstance());
+				subscriber = new TheSubscriber(ipHost, port, dataPrefix, Blackboard.getInstance());
 				new Thread(subscriber).start();
 				logger.info("TheSubscriber initialized and started.");
 			} catch (IOException e) {
@@ -71,7 +79,6 @@ public class Main extends JFrame {
 			// Define topic and prefix pairs
 			Map<String, String> topicAndPrefixPairs = new HashMap<>();
 			topicAndPrefixPairs.put("device/coords", "XY");
-//			topicAndPrefixPairs.put("device/direction", "HUMID");
 			try {
 				// Instantiate the subscriber
 				TheSubscriberMQTT subscriber = new TheSubscriberMQTT(broker, clientID, topicAndPrefixPairs, destination);
@@ -81,19 +88,20 @@ public class Main extends JFrame {
 				subscriberThread.start();
 				logger.info("TheSubscriber initialized and started.");
 
-				// Optionally, stop the subscriber after a certain condition
-				// subscriber.stopSubscriber();
-				// subscriberThread.join();
-
 			} catch (MqttException e) {
 				System.out.println("An error occurred while initializing the subscriber: " + e.getMessage());
 			}
-        }else{
+		}else{
 			logger.error("Unknown subscriber type");
 		}
 
 	}
 
+	/**
+	 * Main method to launch the application.
+	 *
+	 * @param args Command line arguments.
+	 */
 	public static void main(String[] args) {
 		Main main = new Main();
 		main.setTitle("Eye Tracker Simulator");
@@ -103,6 +111,9 @@ public class Main extends JFrame {
 		logger.info("Eye Tracker Simulator application started.");
 	}
 
+	/**
+	 *  Called when the application window is closed.
+	 */
 	@Override
 	public void dispose() {
 		super.dispose();
